@@ -94,10 +94,11 @@ caller-supplied booleans to clear these blockers:
    does not invent one, infer it from success, or treat a smoke run as proof.
    The contract's disabled-administrative-bypass prerequisite remains unmet by
    this API slice.
-2. **Federation is not implemented.** No OIDC JWT/JWKS signature validation,
-   issuer/audience/subject/repository/environment claim verification, trusted
-   workflow-caller authentication, or Azure token exchange is included. No
-   home-grown cryptography or acceptance of unverified JWT claims is used.
+2. **This observer does not verify federation.** A dependent
+   [OIDC cryptographic verifier](github-oidc-verifier.md) now validates signatures
+   and exact signed workload claims. This native observer does not integrate
+   that evidence, perform Azure token exchange, or prove live installation
+   federation. Its blocker is deliberately not cleared by the separate library.
 3. **Human credential provenance is not proven.** GitHub's review history
    identifies an account, not whether a person clicked a button versus a
    program using that account's leaked credential. A service account may also

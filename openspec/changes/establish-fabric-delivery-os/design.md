@@ -50,6 +50,24 @@ of observations to an ApprovalBinding is unsupported and always denied.
 See [the verifier guide](../../../docs/native-approval-verifier.md). This is
 read-only evidence validation, not native-gate replacement or production proof.
 
+### GitHub OIDC cryptographic observation
+
+The next explicitly authorized continuation uses maintained PyJWT/cryptography
+for RS256 verification against fresh fixed-origin official GitHub public JWKS.
+It requires an exact explicitly configured subject/audience/issuer, immutable
+repository/owner IDs, ref and workflow path/ref/commit, signed run/attempt, and
+explicit environment/node context. A registered OIDC policy digest binds these
+settings to the existing authoritative private registered run and manifest.
+No default legacy subject is guessed; missing signed claims deny.
+
+JWT validity, lifetime, age, bounded skew, JWKS freshness/rotation, algorithm,
+key selection, and signed context are verified, but no execution grant follows.
+GitHub does not sign private workflow inputs or the private manifest digest.
+App provenance, fresh native-review integration, administrative bypass, human
+credential provenance, and live installation federation proof remain separate
+blockers. No raw JWT/key is logged, no token is exchanged, and no worker starts.
+See [the cryptographic verifier guide](../../../docs/github-oidc-verifier.md).
+
 ## Goals / Non-Goals
 
 **Goals**

@@ -12,6 +12,11 @@ can now observe authenticated GitHub API evidence against a private registry
 snapshot. It cannot issue an `ApprovalBinding`: administrative-bypass state,
 federation, and reviewer credential provenance remain explicit blockers.
 
+The further dependent [GitHub OIDC verifier](github-oidc-verifier.md) validates
+official-JWKS signatures and pinned signed workload claims. It also cannot issue
+an execution grant: signed private inputs, native-review integration, App
+provenance, and live installation federation remain unproven.
+
 Only a trusted service may construct manifests from private inputs, record
 approval bindings, revoke requests, or consume grants. Agents must have neither
 access to these methods nor write access to the database. These are Python
