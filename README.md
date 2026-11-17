@@ -4,9 +4,44 @@ Specification-first, human-governed delivery for Microsoft Fabric.
 
 ## Status
 
-This repository currently contains design proposals, not a working agent platform.
-Creating repositories or completing OpenSpec documents does not approve any
-implementation, build, infrastructure change, or deployment.
+The first bounded implementation is `fabric-delivery-core`, a Python 3.11+
+library for immutable request binding and durable, atomic, single-use grant
+consumption. This core build was explicitly authorized on 2026-11-17.
+It is **not a working agent platform or a deployed authorization service**.
+The broader OpenSpec design remains proposed; builds and each deployment still
+require their applicable human authorization.
+
+## Authorization core
+
+- Validated frozen manifests bind SHA-256 input/artifact, policy, baseline,
+  runtime, workflow, tool, skill, environment, action, and explicit effects.
+- A private local SQLite file persists pending, authorized, consumed, revoked,
+  and invalidated requests across processes and restarts.
+- Consumption permanently denies expiry, revocation, replay, changed approved
+  inputs, or mismatched protected-run evidence. One concurrent claimant wins.
+- Approval bindings are supplied by a **trusted adapter after external native
+  human-gate and identity verification**. Constructing a Python object is not
+  human approval. The library grants no credentials and launches no workers.
+
+See [API usage, lifecycle, and trust boundaries](docs/authorization-core.md).
+There are no runtime dependencies. From the repository root in PowerShell:
+
+```powershell
+$env:PYTHONPATH = 'src'
+python -m unittest discover -s tests -v
+```
+
+Tests use only synthetic data and project-local SQLite files, then clean them up.
+For packaging with already available build tools:
+
+```powershell
+python -m pip wheel --no-build-isolation --no-deps --wheel-dir .build\dist .
+```
+
+Build tooling requires setuptools 68+ (and wheel for older setuptools); package
+installation is separate from tests. No cloud access, model calls, source
+queries, approval adapter, or model-agent loop is included. Microsoft Agent
+Framework and Foundry remain the intended future model runtime.
 
 ## Three-repository architecture
 

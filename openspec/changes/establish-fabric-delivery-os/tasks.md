@@ -1,3 +1,11 @@
+## 0. Authorized bounded framework core (2026-11-17)
+
+- [x] 0.1 Record the human-authorized scope: implement only immutable-request and durable one-attempt authorization primitives; no platform or deployment authorization is inferred.
+- [x] 0.2 Package a reusable offline Python core with frozen manifest/schema/digest validation and real local-file SQLite state.
+- [x] 0.3 Verify binding drift, expired/revoked grants, run/attempt mismatch, durable replay denial, and competing process claims using synthetic tests.
+- [x] 0.4 Document the trusted-adapter boundary, local-filesystem limits, and burned-grant behavior after a crash; do not claim approval verification or worker scheduling.
+- [ ] 0.5 Obtain human implementation review; do not self-approve or merge the core.
+
 ## 1. Human review and bounded proof
 
 - [ ] 1.1 Obtain explicit human approval of the applicable framework and control-test revisions; verify the approval identifies scope and revision rather than merely a completed checklist.
@@ -10,7 +18,9 @@
 - [ ] 2.2 Implement a read-only prerequisite report; verify unsupported GitHub, model, tool, capacity, and identity capabilities block dependent setup.
 - [ ] 2.3 Present an exact bootstrap plan before creating identities or rights; verify approved grants are minimal and ordinary workers cannot change them.
 - [ ] 2.4 Implement the private issue adapter and immutable request/evidence storage; verify public events contain only opaque request references.
-- [ ] 2.5 Implement version-bound requests and atomic single-use consumption; verify duplicates, changed inputs, revoked requests, and retries cannot reuse a grant.
+- [ ] 2.5 Integrate version-bound requests and atomic single-use consumption with private production request storage and safe worker scheduling; local core completion alone does not complete this dispatcher integration.
+  - [x] 2.5.1 Implement and test immutable binding and durable local atomic consumption in the bounded core (section 0).
+  - [ ] 2.5.2 Verify authenticated adapter inputs, authoritative policy/target freshness, cloud durability, and consumption/scheduling failure handling before enabling dispatch.
 - [ ] 2.6 Configure approved public control federation and policy verification; verify tokens from solution repos, other refs, and wrong environments cannot launch workers.
 
 ## 3. Isolated agent runtime
