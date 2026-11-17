@@ -21,6 +21,12 @@ API identity/policy/history bindings but issues no execution grant; bypass
 state, human credential provenance, and federation remain unsupported.
 See [its boundaries](../../../docs/native-approval-verifier.md).
 
+A further directly dependent software slice validates GitHub OIDC signatures
+and exact signed workload context using maintained JWT/crypto libraries and
+official public JWKS. It does not infer a subject format, sign private inputs,
+join native-review evidence into a grant, prove App provenance, or claim live
+installation federation. See [the OIDC guide](../../../docs/github-oidc-verifier.md).
+
 ## What Changes
 
 - Define three repository responsibilities: a public framework, a public

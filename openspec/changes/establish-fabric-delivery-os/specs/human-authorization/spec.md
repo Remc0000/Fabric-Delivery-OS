@@ -9,7 +9,12 @@ The human-authorized 2026-11-17 builds implement frozen manifest binding,
 durable local single-use consumption, and a read-only native GitHub evidence
 observer. Approval objects remain privileged trusted-adapter inputs. The observer
 checks authenticated API history against a private registry but cannot convert
-its observations into execution grants. Complete native protection verification
+its observations into execution grants. A further dependent verifier now checks
+official-JWKS OIDC signatures and exact configured signed workload context using
+maintained JWT/crypto libraries, not inferred/default subjects. Its observations
+also cannot issue grants: signed private inputs, native-review/grant integration,
+exact runtime App provenance, and live installation federation are unproven.
+Complete native protection verification
 (including administrative bypass), reviewer credential provenance, identity
 separation, federation, cloud state, worker scheduling, and per-deployment
 integration remain required and are not proven by these tests.
@@ -83,6 +88,23 @@ before enabling execution. Agents MUST NOT administer these protections.
 - **WHEN** administrative bypass, reviewer credential provenance, or federation cannot be verified
 - **THEN** read-only observations do not become an execution grant
 - **AND** no caller-provided boolean clears that unsupported boundary
+
+#### Scenario: A valid GitHub signature has the wrong installation context
+- **WHEN** a signed token has the wrong configured audience/subject, immutable repository/owner ID, workflow revision, ref, run/attempt, or environment context
+- **THEN** workload identity verification is denied rather than accepting a generic GitHub-signed JWT
+
+#### Scenario: Token or signing-key evidence cannot be trusted
+- **WHEN** a JWT has an unsupported algorithm, invalid signature, invalid validity interval, unknown key, or stale/unavailable official JWKS
+- **THEN** verification fails closed without a cached, token-provided, or alternate-origin key fallback
+
+#### Scenario: A newer repository uses a different subject format
+- **WHEN** installation policy has not explicitly recorded the actual exact subject
+- **THEN** verification is blocked instead of guessing a legacy default subject
+
+#### Scenario: Workload identity is mistaken for input or human authorization
+- **WHEN** a token signs a registered run and environment but not the private manifest or native human decision
+- **THEN** identity observations do not become an execution grant or private input-content proof
+- **AND** native human provenance and one-time request consumption remain independently required
 
 ### Requirement: Every stage deployment requires separate permission
 Build approval, code review, development approval, test approval, functional

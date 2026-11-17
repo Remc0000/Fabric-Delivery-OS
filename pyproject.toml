@@ -12,6 +12,7 @@ dependencies = []
 
 [project.optional-dependencies]
 github = ["requests>=2.32.5,<3"]
+oidc = ["requests>=2.32.5,<3", "PyJWT[crypto]>=2.13,<3", "cryptography>=46,<51"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

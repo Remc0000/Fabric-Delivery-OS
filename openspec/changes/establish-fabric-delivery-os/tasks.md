@@ -10,6 +10,10 @@
 - [x] 0.8 Test missing, pending, rejected, bot, wrong-ref/environment, stale, malformed, truncated, and changed evidence denials; preserve core replay/race tests.
 - [x] 0.9 Document unsupported bypass verification, reviewer credential provenance, federation, rerun attribution, and execution-grant conversion; leave execution disabled.
 - [ ] 0.10 Obtain human review of the dependent verifier; no approval/merge/deployment authority follows from successful tests.
+- [x] 0.11 Implement the separately authorized PyJWT/cryptography OIDC verifier with fixed official public JWKS, exact explicitly configured subject/audience, and pinned immutable signed context.
+- [x] 0.12 Test actual RSA signature verification, wrong key/algorithm/context, lifetime/skew/expiry, ambiguous signed JSON, registry/policy drift, and JWKS rotation/staleness/network denial using ephemeral in-memory signing keys.
+- [x] 0.13 Keep private input assertions, native-review/grant integration, App provenance, and live installation federation visibly unsupported; verify no observation can issue an execution grant.
+- [ ] 0.14 Obtain human implementation review and later live-token bootstrap proof only after the separate control test is human-merged/enabled; do not activate workers from these synthetic checks.
 
 ## 1. Human review and bounded proof
 
