@@ -1,0 +1,27 @@
+schema: spec-driven
+context: |
+  Product: Fabric Delivery OS, a reusable Microsoft Fabric engineering framework.
+  Status: specification proposals only; no implementation has been approved.
+  Selected architecture: GitHub Free, a public framework repository, a separate
+  public control repository per installation, and private solution repositories.
+  Native human approval jobs run in the public control repository itself.
+  Private workflows cannot borrow public repository billing or approval features.
+  Agent workers run in the adopter's Azure environment and use Foundry models.
+  Human approval is required before building and separately before every
+  deployment to development, test, or production. Agents never authorize work.
+  Skills update automatically from approved sources; every run uses a recorded
+  immutable skill snapshot. Framework upgrades remain explicitly reviewed.
+  Source-record access by AI is denied by default and governed per solution.
+  Public artifacts must not contain private installation mappings or source data.
+  Reference repositories under .agent_cache are read-only and are not project scope.
+rules:
+  proposal:
+    - Clearly distinguish agreed scope, proposed design, and deferred ideas.
+  specs:
+    - Include observable denial and failure scenarios, not only successful flows.
+    - Do not confuse document completeness with human approval or runtime proof.
+  design:
+    - Identify trust boundaries, public metadata exposure, and verification limits.
+  tasks:
+    - Leave implementation tasks unchecked until authorized and actually completed.
+    - Include explicit verification and human approval prerequisites.
