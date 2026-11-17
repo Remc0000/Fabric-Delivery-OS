@@ -26,6 +26,8 @@ with no runner or steps started and no review history. The run was cancelled
 without approval, the workflow disabled, and the temporary environment removed.
 This tests that Actions token only, not every future GitHub App identity. The
 author's control repository is proof evidence, not a shared service for adopters.
+The [control evidence/removal PR #7](https://github.com/Remc0000/Fabric-Delivery-OS-Control/pull/7)
+is open for human review; it has not been merged.
 
 ## Repository and execution boundaries
 
