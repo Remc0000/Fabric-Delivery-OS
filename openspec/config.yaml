@@ -1,7 +1,10 @@
 schema: spec-driven
 context: |
   Product: Fabric Delivery OS, a reusable Microsoft Fabric engineering framework.
-  Status: specification proposals only; no implementation has been approved.
+  Status: broader specification proposals plus a bounded Python authorization core.
+  Explicit human authorization on 2026-11-17 permits the immutable-request and
+  local durable single-use-grant core build, not a full platform or deployment.
+  Native gate/identity verification, cloud state, workers, and runtime remain outside it.
   Selected architecture: GitHub Free, a public framework repository, a separate
   public control repository per installation, and private solution repositories.
   Native human approval jobs run in the public control repository itself.

@@ -3,6 +3,14 @@
 Make human authorization an enforced boundary for building and deployment,
 independent of agent instructions and private repository plan limitations.
 
+## Implementation status
+
+The human-authorized 2026-11-17 core build implements only frozen manifest
+binding and durable local single-use consumption. Approval objects are trusted
+adapter inputs, not verified human identities. Native protection verification,
+identity separation, federation, cloud state, worker scheduling, and complete
+per-deployment integration remain required and are not proven by these tests.
+
 ## ADDED Requirements
 
 ### Requirement: Human roles are configurable from the first version
@@ -77,6 +85,25 @@ require a new request and approval.
 - **WHEN** a previous production request has already been consumed
 - **THEN** retry requires a new explicit production grant
 - **AND** rerunning the old workflow cannot reuse its approval
+
+#### Scenario: Concurrent callbacks claim one grant
+- **WHEN** separate processes consume the same authorized request concurrently
+- **THEN** at most one durable execution claim is committed
+- **AND** the other callbacks are denied even after the store is reopened
+
+#### Scenario: Approval expires while waiting for the store
+- **WHEN** a callback acquires the claim lock at or after approval or request expiry
+- **THEN** it commits no execution claim and permanently invalidates the request
+
+#### Scenario: An observed change is reverted
+- **WHEN** current trusted input, policy, target, or profile observations invalidate a grant
+- **THEN** restoring the old observation does not restore that grant
+- **AND** renewed authorization requires a new request
+
+#### Scenario: A service stops after consuming a grant
+- **WHEN** a claim commits but execution does not start
+- **THEN** restarting the service cannot consume the old request again
+- **AND** recovery requires reconciliation and a separately authorized request
 
 ### Requirement: Grants define operational side effects
 Requests SHALL distinguish deploying definitions, loading data, scheduling

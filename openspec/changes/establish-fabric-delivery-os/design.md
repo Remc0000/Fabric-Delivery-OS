@@ -5,8 +5,32 @@ deployment model uses GitHub Free with two public repositories and private
 solutions. Native required reviewers are available on public control runs;
 this does not add native protection to private solution branches.
 
-All documents are proposals. No runtime, executable workflow, model, identity,
-tenant change, or Fabric resource is authorized by their existence.
+The broader design remains proposed. Explicit human authorization on 2026-11-17
+permits only the bounded framework authorization-core build described below.
+No executable workflow, model, identity, tenant change, or Fabric resource is
+authorized by these documents themselves.
+
+### Implemented bounded core
+
+`fabric-delivery-core` implements version-1 frozen SHA-256-bound manifests and a
+private local-file SQLite store. It records externally verified approval bindings,
+uses write transactions to consume each grant once, persists claim receipts,
+and permanently denies replay, revocation, expiry, and observed binding drift.
+This is the immutable-request portion of decision 4, not the complete dispatcher
+of decision 2. See [the implementation guide](../../../docs/authorization-core.md).
+
+SQLite is an explicit single-host library backend, not a selection of Azure
+storage or worker infrastructure. Native gate/identity/federation verification
+must happen in an external trusted adapter. The core does not assert that a
+caller-created approval object proves a human decision.
+
+One protected repository/run/attempt/gate tuple may bind only one request.
+The lifecycle is pending -> authorized -> consumed, with permanent revocation
+or consume-time invalidation before consumption. Time is checked after obtaining
+the write lock. Drift cannot be reverted to resurrect a grant. A crash after a
+claim commits burns the grant; no atomic worker launch/outbox is claimed.
+The existing requirement for atomic consumption plus safe scheduling still
+requires integration work before any worker dispatch is enabled.
 
 ## Goals / Non-Goals
 

@@ -5,6 +5,16 @@ without giving agents authority to approve their own work. The framework must
 be independently installable and support GitHub Free without exposing private
 solution code or substituting agent judgment for human authorization.
 
+### Current implementation boundary
+
+The original proposal below is broader than the implemented slice. Explicit human
+authorization on 2026-11-17 permits the Python immutable-request/authorization
+core build. It now provides validated frozen manifests and local-file SQLite
+single-use claims with synthetic tests. It does not implement approval identity
+verification, federation, worker scheduling, models, or cloud provisioning.
+See [the core guide](../../../docs/authorization-core.md). Remaining proposal
+work and every deployment still need their applicable human authorization.
+
 ## What Changes
 
 - Define three repository responsibilities: a public framework, a public
@@ -20,7 +30,7 @@ solution code or substituting agent judgment for human authorization.
 - Establish an approval-only smoke test as the first implementation milestone,
   before attempting the complete reference data solution.
 
-This is a draft behavior contract, not implementation authorization. Public
+This is a behavior contract, not by itself implementation authorization. Public
 control processing is an explicit architecture choice with public timing and
 workflow metadata, not a way to make private GitHub Free features available.
 
@@ -45,7 +55,8 @@ None. There are no accepted baseline specifications yet.
 
 The future implementation touches GitHub Apps and Actions, Azure worker and
 identity infrastructure, Foundry model deployments, Fabric APIs, and skill
-sources. This change adds specifications and review tasks only. Installation
+sources. The original proposal added specifications and review tasks; the bounded core
+build described above is the only framework implementation to date. Installation
 control and the private reference solution have separate OpenSpec proposals
 that depend on this contract. No dependencies, executable workflows, tenant
 settings, credentials, or Fabric resources are installed by this proposal.
