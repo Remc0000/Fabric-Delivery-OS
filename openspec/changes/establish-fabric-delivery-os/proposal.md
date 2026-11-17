@@ -15,6 +15,12 @@ verification, federation, worker scheduling, models, or cloud provisioning.
 See [the core guide](../../../docs/authorization-core.md). Remaining proposal
 work and every deployment still need their applicable human authorization.
 
+The directly dependent, separately authorized continuation adds a read-only
+GitHub native-approval evidence observer. It verifies private registry and
+API identity/policy/history bindings but issues no execution grant; bypass
+state, human credential provenance, and federation remain unsupported.
+See [its boundaries](../../../docs/native-approval-verifier.md).
+
 ## What Changes
 
 - Define three repository responsibilities: a public framework, a public

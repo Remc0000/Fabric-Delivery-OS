@@ -7,6 +7,11 @@ of the [human-authorization contract](../openspec/changes/establish-fabric-deliv
 Human authorization on 2026-11-17 permits this bounded build, not a deployment
 or a claim that the complete dispatcher is implemented.
 
+The dependent [read-only native approval verifier](native-approval-verifier.md)
+can now observe authenticated GitHub API evidence against a private registry
+snapshot. It cannot issue an `ApprovalBinding`: administrative-bypass state,
+federation, and reviewer credential provenance remain explicit blockers.
+
 Only a trusted service may construct manifests from private inputs, record
 approval bindings, revoke requests, or consume grants. Agents must have neither
 access to these methods nor write access to the database. These are Python
