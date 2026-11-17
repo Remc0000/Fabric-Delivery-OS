@@ -4,7 +4,10 @@ context: |
   Status: broader specification proposals plus a bounded Python authorization core.
   Explicit human authorization on 2026-11-17 permits the immutable-request and
   local durable single-use-grant core build, not a full platform or deployment.
-  Native gate/identity verification, cloud state, workers, and runtime remain outside it.
+  A separately authorized read-only native GitHub evidence observer checks private
+  registry/run/policy bindings; it cannot issue an execution grant. Administrative
+  bypass, federation, human credential provenance, cloud state, workers, and runtime
+  remain unverified or outside this slice.
   Selected architecture: GitHub Free, a public framework repository, a separate
   public control repository per installation, and private solution repositories.
   Native human approval jobs run in the public control repository itself.

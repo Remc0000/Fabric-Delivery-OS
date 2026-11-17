@@ -5,11 +5,14 @@ independent of agent instructions and private repository plan limitations.
 
 ## Implementation status
 
-The human-authorized 2026-11-17 core build implements only frozen manifest
-binding and durable local single-use consumption. Approval objects are trusted
-adapter inputs, not verified human identities. Native protection verification,
-identity separation, federation, cloud state, worker scheduling, and complete
-per-deployment integration remain required and are not proven by these tests.
+The human-authorized 2026-11-17 builds implement frozen manifest binding,
+durable local single-use consumption, and a read-only native GitHub evidence
+observer. Approval objects remain privileged trusted-adapter inputs. The observer
+checks authenticated API history against a private registry but cannot convert
+its observations into execution grants. Complete native protection verification
+(including administrative bypass), reviewer credential provenance, identity
+separation, federation, cloud state, worker scheduling, and per-deployment
+integration remain required and are not proven by these tests.
 
 ## ADDED Requirements
 
@@ -63,6 +66,23 @@ before enabling execution. Agents MUST NOT administer these protections.
 #### Scenario: Control protection is weakened
 - **WHEN** reviewers, visibility, trusted refs, or bypass settings diverge from policy
 - **THEN** affected execution is disabled rather than falling back to an unprotected job
+
+#### Scenario: An empty pending queue is mistaken for approval
+- **WHEN** a run has no pending deployments but no matching approved native environment history
+- **THEN** the read-only verifier rejects it rather than inferring a human decision from run success
+
+#### Scenario: A mutable public name points to different authority
+- **WHEN** a repository, workflow, environment, reviewer, branch, or revision differs from the private registered binding
+- **THEN** native evidence is rejected even if display names or public request labels look unchanged
+
+#### Scenario: Review history cannot identify the execution attempt
+- **WHEN** the current native history does not attribute reviews to the requested rerun attempt
+- **THEN** the bounded verifier rejects reruns and requires a newly registered run and request
+
+#### Scenario: An API cannot prove a mandatory protection
+- **WHEN** administrative bypass, reviewer credential provenance, or federation cannot be verified
+- **THEN** read-only observations do not become an execution grant
+- **AND** no caller-provided boolean clears that unsupported boundary
 
 ### Requirement: Every stage deployment requires separate permission
 Build approval, code review, development approval, test approval, functional

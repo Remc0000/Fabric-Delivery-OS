@@ -5,6 +5,11 @@
 - [x] 0.3 Verify binding drift, expired/revoked grants, run/attempt mismatch, durable replay denial, and competing process claims using synthetic tests.
 - [x] 0.4 Document the trusted-adapter boundary, local-filesystem limits, and burned-grant behavior after a crash; do not claim approval verification or worker scheduling.
 - [ ] 0.5 Obtain human implementation review; do not self-approve or merge the core.
+- [x] 0.6 Implement the separately authorized read-only GitHub native-history observer with a tested HTTP client and explicit nonhuman installation-token provider boundary.
+- [x] 0.7 Verify private registry/manifest, numeric repository/workflow/run/attempt/environment, exact ref/revision, workflow bytes, reviewer IDs, and current branch/protection policy bindings using synthetic API evidence.
+- [x] 0.8 Test missing, pending, rejected, bot, wrong-ref/environment, stale, malformed, truncated, and changed evidence denials; preserve core replay/race tests.
+- [x] 0.9 Document unsupported bypass verification, reviewer credential provenance, federation, rerun attribution, and execution-grant conversion; leave execution disabled.
+- [ ] 0.10 Obtain human review of the dependent verifier; no approval/merge/deployment authority follows from successful tests.
 
 ## 1. Human review and bounded proof
 

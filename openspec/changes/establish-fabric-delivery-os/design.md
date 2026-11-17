@@ -32,6 +32,24 @@ claim commits burns the grant; no atomic worker launch/outbox is claimed.
 The existing requirement for atomic consumption plus safe scheduling still
 requires integration work before any worker dispatch is enabled.
 
+### Read-only native approval observation
+
+The explicitly authorized continuation provides an optional Requests-based
+GitHub.com REST observer. A trusted private registry binds one manifest and
+reviewed policy snapshot to the actual numeric repository/workflow/run/attempt
+and environment identities. The observer reads native history and current
+reviewer/ref/branch/environment policy, verifies workflow bytes at the pinned
+commit, compares two observations, and returns typed bound evidence.
+
+The documented history lacks per-review timestamps and attempt attribution:
+only first attempts are supported, and age is conservatively bounded by run
+creation time. The documented environment schema omits administrative bypass.
+The observer does not infer a bypass setting, authenticate OIDC/JWKS, or prove
+human credential provenance; those are explicit execution blockers. Conversion
+of observations to an ApprovalBinding is unsupported and always denied.
+See [the verifier guide](../../../docs/native-approval-verifier.md). This is
+read-only evidence validation, not native-gate replacement or production proof.
+
 ## Goals / Non-Goals
 
 **Goals**
