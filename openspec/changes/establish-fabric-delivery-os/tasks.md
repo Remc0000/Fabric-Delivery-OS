@@ -8,6 +8,15 @@
 
 ## 1. Human review and bounded proof
 
+### Separately authorized bounded local spend slice (2026-11-17)
+
+- [x] S.1 Implement immutable installation/month policy and version/validity-bound trusted price cards using integer fixed-point money, without public installation values.
+- [x] S.2 Reserve maximum operation cost atomically before effects; aggregate outstanding and settled spend in one private authoritative local SQLite file.
+- [x] S.3 Verify competing threads/processes, replay, invalid/stale pricing, currency/month mismatch, finite limits, durable settlement and visible excess-cost freeze.
+- [x] S.4 Document no real adapter integration/model calls, no distributed or infrastructure invoice guarantee, no automatic release, and private recovery assumptions.
+- [ ] S.5 Obtain human review of this slice stacked against the immutable authorization core; do not self-approve or merge.
+- [ ] S.6 Separately review actual adapter enforcement, authorization/reservation/dispatch crash handling, trusted final usage and recovery before enabling any model calls.
+
 - [ ] 1.1 Obtain explicit human approval of the applicable framework and control-test revisions; verify the approval identifies scope and revision rather than merely a completed checklist.
 - [ ] 1.2 Implement only the separately approved synthetic control smoke test; verify its job remains blocked before approval and has no model, source, Fabric, or Azure-resource side effects.
 - [ ] 1.3 Exercise human approval, rejection, and an unauthorized agent actor; verify the human gate cannot be satisfied by the agent.

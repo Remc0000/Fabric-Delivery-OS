@@ -7,7 +7,11 @@ deployment. Draft OpenSpec artifacts, successful validation, repository creation
 and an implementation checklist are not authorization.
 
 The core only validates/binds immutable requests and records/consumes externally
-verified grants in a private local SQLite file. It does not authenticate humans,
+verified grants in a private local SQLite file. The separately authorized
+2026-11-17 spend slice adds local atomic cost reservation/settlement with private
+installation configuration; it does not authorize actual model calls or claim
+to cap infrastructure/cloud invoices. See `docs/spend-guardrails.md`.
+It does not authenticate humans,
 verify GitHub gates/federation, issue credentials, dispatch workers, or provision
 cloud resources. Microsoft Agent Framework/Foundry remains the intended model
 runtime, outside this library. Keep synthetic tests offline and public.

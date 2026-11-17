@@ -170,6 +170,35 @@ Financial limits can be explicitly unset, but finite iteration/time/retry
 limits remain required. Foundry and Azure compute costs are separate from
 GitHub AI credits.
 
+#### Authorized local spend guard slice (2026-11-17)
+
+The approved reusable spend slice uses a separate private, single-authority
+local SQLite file and standard-library Python. Immutable installation/month
+policy defines mandatory finite token/call limits, currency, and cap; immutable
+versioned trusted price cards define all-in conservative integer fixed-point
+rates and validity. Reserve the computed maximum under `BEGIN IMMEDIATE` before
+effects; outstanding plus final settled amounts must fit the monthly cap.
+Bind operation-attempt digest, configuration/card digests, currency and UTC
+month. Deny missing/stale/unknown prices, incompatible bindings and replay.
+
+Settlement is final and single-use. Excess actual cost or usage is committed as
+a visible breach and freezes new reservations across the installation, including
+future months; it cannot undo an external bill. Unknown outcomes stay reserved.
+There is no automatic refund, expiry release, unfreeze, model call, or atomic
+authorization/dispatch integration. The adapter must enforce usage and the
+exclusive deadline (card expiry or UTC month end), authenticate complete final
+usage and avoid duplicate dispatch. Delayed reporting uses the original month.
+Excess usage freezes even when its reported cost is low. Conservative price
+maxima are not minimum actual charges; authenticating complete final cost is an
+adapter responsibility, not something this local ledger can prove.
+
+See `docs/spend-guardrails.md` for exact API, fixed 10^-9 currency units, closed
+denials and recovery assumptions. Tested local SQLite concurrency is not
+distributed accounting or a guarantee of any cloud invoice ceiling; Azure
+budget alerts are not hard caps. Infrastructure and other untracked charges
+remain outside this library. Real budgets and installation details stay private.
+This implementation does not complete the planned runtime/harness integration.
+
 ### 7. Refresh skills without changing permission or approved inputs
 
 Resolve approved skill sources for each new request, verify and snapshot the
