@@ -82,6 +82,11 @@ broaden grants or perform a human approval to complete setup.
 - **THEN** it distinguishes that ID from the App ID and excludes credential URLs, OAuth callbacks and query parameters
 - **AND** a human report or ordinary CLI repository access is not substituted for authenticated installation and effective-scope evidence
 
+#### Scenario: An explicit owner-local flow verifies native installation scope
+- **WHEN** an adopter confirms a reviewed source/private-registry-bound native verification plan outside the agent
+- **THEN** a supported helper authenticates the App/owner/installation and exact selected-only permissions, uses at most one temporary metadata-read-only token per role to enumerate the full existing selected repository scope without repository narrowing, and confirms revocation before a safe receipt
+- **AND** unknown token issuance or cleanup never triggers retry or success, real keys/tokens remain outside agent context, and this separate metadata operation neither repeats Azure credential enrollment nor proves a live broker/runtime
+
 #### Scenario: An operator-local enrollment is interrupted or its proof expires
 - **WHEN** a possible credential write lacks a verified receipt or the code/bindings/runtime/proof lifetime no longer match
 - **THEN** setup reports unknown or blocks before key input, preserves the original checkpoint and permits only read-only verification of that attempt

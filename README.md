@@ -234,6 +234,16 @@ That script and the protected credential uploader are not supplied yet.
    A normal CLI login is not automatically an App-authorized API token.
    Report a rejected installation lookup without switching identities,
    broadening scopes or treating the owner's report as authenticated API proof.
+   A separately reviewed owner-local verification flow may instead use the
+   documented App-JWT endpoints with explicit local confirmation. It must bind
+   the reviewed source/private registry and use only a temporary metadata-read
+   token covering the installation's full existing selected scope, not a
+   repository-narrowed token that hides extra access. Exact repository and
+   permission checks, complete enumeration and confirmed token revocation are
+   required before a safe receipt. Unknown issuance/cleanup must not retry or
+   become success. Such a helper is currently a private pilot, not a released
+   public installer; assistants never run its real-key step. No repeat Azure
+   enrollment/canary or runtime activation follows from this metadata check.
 
 App permissions are not the agent sandbox: the solution App's write rights can
 permit review/merge operations. A trusted broker must deny those operations,
