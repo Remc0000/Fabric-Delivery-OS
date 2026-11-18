@@ -72,6 +72,16 @@ broaden grants or perform a human approval to complete setup.
 - **THEN** setup pauses until approved protected key enrollment and redacted synthetic checks are ready
 - **AND** keys and tokens never enter chat, Git, command-line literals or public Actions
 
+#### Scenario: An operator-local enrollment is interrupted or its proof expires
+- **WHEN** a possible credential write lacks a verified receipt or the code/bindings/runtime/proof lifetime no longer match
+- **THEN** setup reports unknown or blocks before key input, preserves the original checkpoint and permits only read-only verification of that attempt
+- **AND** another probe requires a new explicitly authorized attempt identity rather than silent resubmission or journal deletion
+
+#### Scenario: A local ACL or disabled vault copy is mistaken for stronger isolation
+- **WHEN** an adopter prepares per-user protected storage or disables a stored credential
+- **THEN** README explains that administrators/same-user processes remain in the workstation trust boundary and vault disabling is not GitHub key revocation
+- **AND** real key operations remain human-local, not agent tools or distributed cloud-lock guarantees
+
 #### Scenario: An Azure provider is not registered
 - **WHEN** a required service namespace is unavailable in the selected subscription
 - **THEN** setup reports the exact prerequisite and waits for applicable authorization

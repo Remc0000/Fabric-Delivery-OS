@@ -272,6 +272,15 @@ scanner outcomes, including unavailable tooling and any policy-permitted manual
 review exception, before the separate risk-acknowledged deployment checkpoint.
 Do not silently relax an enforced protection or present a missing scan as passed.
 
+Protected key enrollment is operator-local with a fresh matching synthetic
+proof, exact App/owner identity and permission checks and a pre-write local
+checkpoint. Read-only inspection resolves an interrupted attempt without
+repeating its write; fresh probes need distinct explicit authorization.
+Per-user ACLs do not protect from administrators/same-user processes, a
+disabled vault copy is not GitHub revocation, and local journals are not
+distributed locks. Shared CLI defaults remain unchanged; authoritative tenant
+checks bind the explicitly selected subscription identity.
+
 An approved bootstrap plan creates or reuses the GitHub App, Azure identities,
 Fabric grants, trusted workflows, and policy assignments. Bootstrap authority
 is not available to ordinary workers. Azure authentication does not imply

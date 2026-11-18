@@ -278,6 +278,25 @@ actual state, and never turn a partial setup into a live-ready success.
 Scripted provisioning still requires the applicable reviewed plan and human
 authorization; scripts must not perform approvals for a human.
 
+Protected enrollment must be an **operator-local** operation, not a way to
+pass real key files through an agent. Reverify a fresh, unexpired synthetic
+proof for the exact bindings/code/templates/runtime before key input; use a
+separately authorized unique attempt ID for each probe. A private disabled
+canary expires but does not automatically delete itself. Check actual App and
+owner numeric identities, exact permissions and event subscriptions before
+storage. Disabling a vault secret does **not** revoke its GitHub App key.
+
+Use narrowly protected local storage outside Git and reject unsafe paths/ACLs;
+per-user Windows ACLs do not isolate against administrators or same-user
+processes. Preserve an exclusive pre-write checkpoint, report interrupted or
+unverifiable writes as unknown, and recover through read-only verification
+rather than automatic resubmission, rotation or journal deletion. Such local
+checkpoints are not distributed locks or atomic cloud create-only guarantees.
+On shared multi-account devices, select the approved cached subscription
+identity without changing defaults and verify its authoritative tenant; never
+use another identity to evade a denial. These remain public implementation
+requirements, not a claim that an enrollment installer is supplied here.
+
 ### Use the bounded package locally
 
 Python 3.11 or newer is required. Install from a reviewed checkout using your
