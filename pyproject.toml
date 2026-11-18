@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fabric-delivery-core"
+version = "0.1.0"
+description = "Offline delivery preflight, immutable authorization, identity evidence and spend guards"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+fabric-delivery = "fabric_delivery_core.operator:main"
+
+[project.optional-dependencies]
+github = ["requests>=2.32.5,<3"]
+oidc = ["requests>=2.32.5,<3", "PyJWT[crypto]>=2.13,<3", "cryptography>=46,<51"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

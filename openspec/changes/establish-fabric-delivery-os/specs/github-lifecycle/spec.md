@@ -15,8 +15,37 @@ links between related work without copying private details into public issues.
 - **THEN** a proposed public issue contains only sanitized framework information
 - **AND** the private issue retains the detailed reproduction and linkage
 
+### Requirement: Agent-created issues are proposals, not work authorization
+An agent MAY create proposal issues from observations already authorized for
+its current work, without a build grant for the proposed work, only where
+repository/visibility policy permits issue creation. Public framework proposals
+SHALL contain sanitized reusable information; solution details SHALL remain in
+the allowed private solution repository. Proposal creation MUST NOT grant new
+source access, discovery, design, implementation or deployment authority.
+New agent-filed requests SHALL remain proposed/awaiting approval until an
+authorized human approves the exact first substantive requested scope and
+revision through the existing immutable human-authorization boundary.
+Author identity, labels, assignment, validation, another agent's review and
+mutable issue text alone MUST NOT be interpreted as approval.
+
+#### Scenario: An agent proposes an improvement
+- **WHEN** an agent files an allowed issue from already authorized observations
+- **THEN** the issue remains proposed/awaiting approval with no execution started
+- **AND** no new metadata/source access, investigation or design is performed for that proposal
+
+#### Scenario: The agent labels its proposal approved
+- **WHEN** an agent adds an approved label, assigns itself or receives another agent's approval
+- **THEN** the trusted boundary still denies substantive work without the authorized human decision
+- **AND** mutable issue status cannot create an execution grant
+
+#### Scenario: A private observation motivates a public proposal
+- **WHEN** an agent has permission to file a reusable framework improvement
+- **THEN** it includes only sanitized public information in the permitted repository
+- **AND** it does not copy private source details or discover more data to strengthen the proposal
+
 ### Requirement: Discovery precedes implementation
-The system SHALL discover relevant source metadata, existing artifacts, code,
+Only within an applicable human-authorized discovery/design scope and existing
+data-access policy, the system SHALL discover relevant source metadata, existing artifacts, code,
 dependencies, and policies before proposing OpenSpec changes. It MUST ask for
 missing intent and distinguish observations, assumptions, and proposed business
 definitions. Drafting a specification MUST NOT start implementation.
@@ -27,10 +56,17 @@ definitions. Drafting a specification MUST NOT start implementation.
 - **AND** it does not treat the proposal as an accepted business rule
 
 ### Requirement: Human checkpoints govern the lifecycle
-The system SHALL track specification review, authorized building, implementation
+The system SHALL track first substantive scope authorization, specification review, authorized building, implementation
 review, separately authorized deployments, functional acceptance, and delivery.
 Human approval of a specification SHALL explicitly identify whether it also
 authorizes the corresponding build request. It MUST NOT authorize deployment.
+Initial proposal approval SHALL NOT waive the later specification, build,
+implementation-review or independent stage-deployment decisions.
+
+#### Scenario: A human approves bounded discovery only
+- **WHEN** an authorized human approves the exact frozen revision for a bounded metadata investigation
+- **THEN** only that investigation and its enumerated effects may execute under applicable access policy
+- **AND** implementation and deployment remain blocked pending their separate applicable approvals
 
 #### Scenario: Specifications are approved without a build grant
 - **WHEN** the current specifications are accepted but no build request is authorized

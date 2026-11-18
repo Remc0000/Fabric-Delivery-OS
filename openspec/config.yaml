@@ -1,7 +1,28 @@
 schema: spec-driven
 context: |
-  Product: Fabric Delivery OS, a reusable Microsoft Fabric engineering framework.
-  Status: specification proposals only; no implementation has been approved.
+  Product: Fabric-Delivery-OS, a reusable Microsoft Fabric engineering framework.
+  Status: broader proposals plus one bounded Python core/evidence/spend package
+  and a credential-free offline operator; not an installed delivery runtime.
+  Explicit human authorization on 2026-11-17 permits the immutable-request and
+  local durable single-use-grant core build, not a full platform or deployment.
+  A separately authorized read-only native GitHub evidence observer checks private
+  registry/run/policy bindings; it cannot issue an execution grant. Administrative
+  bypass, human credential provenance, cloud state, workers, and runtime remain
+  unverified or outside this slice. A further authorized optional PyJWT/cryptography
+  verifier validates official-JWKS signatures and explicit signed OIDC workload
+  context; private-input binding, native-review integration, exact runtime App
+  provenance, and live installation federation remain unproven and issue no grants.
+  Local finite spend reservations/settlements use a separate authoritative SQLite
+  file, not an infrastructure invoice cap. The explicitly authorized 2026-11-18
+  software continuation adds a single-host atomic attached-file outbox joining
+  grant consumption, maximum reservation and ready work, with one non-reclaimable
+  worker claim and coordinated terminal usage. DELETE journals and supported
+  private local storage are mandatory. No live adapter or worker is supplied.
+  Offline preflight checks manifest validity, optional supplied spend bounds and
+  supported Python imports only; unknown remote capabilities remain blockers.
+  Those two commands never contact APIs, open ledgers, consume grants or activate
+  workers. A separate inert self-test exercises disposable synthetic stores only;
+  success still reports live execution unsupported.
   Selected architecture: GitHub Free, a public framework repository, a separate
   public control repository per installation, and private solution repositories.
   Native human approval jobs run in the public control repository itself.
@@ -9,6 +30,11 @@ context: |
   Agent workers run in the adopter's Azure environment and use Foundry models.
   Human approval is required before building and separately before every
   deployment to development, test, or production. Agents never authorize work.
+  Agents may file permitted sanitized proposal issues from existing authorized
+  observations, but new proposals await authorized human approval of the exact
+  first substantive scope/revision; filing, labels and agent reviews confer no
+  new source access, discovery, design, build or deployment authority. The issue
+  adapter is unsupported until this boundary and later lifecycle gates are enforced.
   Skills update automatically from approved sources; every run uses a recorded
   immutable skill snapshot. Framework upgrades remain explicitly reviewed.
   Source-record access by AI is denied by default and governed per solution.

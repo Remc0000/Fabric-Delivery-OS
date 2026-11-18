@@ -1,4 +1,44 @@
+## 0. Authorized bounded framework core (2026-11-17)
+
+- [x] 0.1 Record the human-authorized scope: implement only immutable-request and durable one-attempt authorization primitives; no platform or deployment authorization is inferred.
+- [x] 0.2 Package a reusable offline Python core with frozen manifest/schema/digest validation and real local-file SQLite state.
+- [x] 0.3 Verify binding drift, expired/revoked grants, run/attempt mismatch, durable replay denial, and competing process claims using synthetic tests.
+- [x] 0.4 Document the trusted-adapter boundary, local-filesystem limits, and burned-grant behavior after a crash; do not claim approval verification or worker scheduling.
+- [ ] 0.5 Obtain human implementation review; do not self-approve or merge the core.
+- [x] 0.6 Implement the separately authorized read-only GitHub native-history observer with a tested HTTP client and explicit nonhuman installation-token provider boundary.
+- [x] 0.7 Verify private registry/manifest, numeric repository/workflow/run/attempt/environment, exact ref/revision, workflow bytes, reviewer IDs, and current branch/protection policy bindings using synthetic API evidence.
+- [x] 0.8 Test missing, pending, rejected, bot, wrong-ref/environment, stale, malformed, truncated, and changed evidence denials; preserve core replay/race tests.
+- [x] 0.9 Document unsupported bypass verification, reviewer credential provenance, federation, rerun attribution, and execution-grant conversion; leave execution disabled.
+- [ ] 0.10 Obtain human review of the dependent verifier; no approval/merge/deployment authority follows from successful tests.
+- [x] 0.11 Implement the separately authorized PyJWT/cryptography OIDC verifier with fixed official public JWKS, exact explicitly configured subject/audience, and pinned immutable signed context.
+- [x] 0.12 Test actual RSA signature verification, wrong key/algorithm/context, lifetime/skew/expiry, ambiguous signed JSON, registry/policy drift, and JWKS rotation/staleness/network denial using ephemeral in-memory signing keys.
+- [x] 0.13 Keep private input assertions, native-review/grant integration, App provenance, and live installation federation visibly unsupported; verify no observation can issue an execution grant.
+- [ ] 0.14 Obtain human implementation review and later live-token bootstrap proof only after the separate control test is human-merged/enabled; do not activate workers from these synthetic checks.
+- [x] 0.15 Consolidate core, spend, native and OIDC source slices on the human-merged main documentation, preserving original branches without self-merging.
+- [x] 0.16 Add a real credential-free offline manifest/preflight operator with bounded strict inputs, shared spend arithmetic, supported import checks and explicit live-blocked output/exit behavior.
+- [x] 0.17 Verify cross-component evidence bindings cannot grant execution; test durable separate-ledger replay/breach and wrong-store identity denial, plus safe operator failures.
+- [ ] 0.18 Obtain human review of the coherent integrated revision; leave live native/input/OIDC joining, App provenance and dispatch disabled.
+- [x] 0.19 Record the explicit agent-proposal requirement and denial scenarios: permitted proposals from existing authorized observations confer no new substantive work authority; later human gates remain intact.
+
+### Authorized bounded local dispatch continuation (2026-11-18)
+
+- [x] D.1 Reuse authorization/spend checks in a single attached-file SQLite grant/reservation/ready transaction, retaining permanent authorization invalidation and existing standalone APIs.
+- [x] D.2 Bind the complete reviewed worker/cost/limit profile and implement one claim, pre-claim cancellation, permanent drift/expiry blocking and visible ambiguous outcomes without retry/refund.
+- [x] D.3 Coordinate terminal evidence, complete trusted usage and breach freeze; surface late completion without success.
+- [x] D.4 Add a disposable, input-free synthetic operator cycle with real local state and explicit live-disabled output; do not activate any worker or model.
+- [x] D.5 Verify targeted/full existing suites, package/operator entry points, abrupt-process/rollback/race cases and strict OpenSpec before publishing.
+- [ ] D.6 Obtain human review of this exact integrated revision and separately prove real adapter, private storage, identity and isolated-worker boundaries before activation.
+
 ## 1. Human review and bounded proof
+
+### Separately authorized bounded local spend slice (2026-11-17)
+
+- [x] S.1 Implement immutable installation/month policy and version/validity-bound trusted price cards using integer fixed-point money, without public installation values.
+- [x] S.2 Reserve maximum operation cost atomically before effects; aggregate outstanding and settled spend in one private authoritative local SQLite file.
+- [x] S.3 Verify competing threads/processes, replay, invalid/stale pricing, currency/month mismatch, finite limits, durable settlement and visible excess-cost freeze.
+- [x] S.4 Document no real adapter integration/model calls, no distributed or infrastructure invoice guarantee, no automatic release, and private recovery assumptions.
+- [ ] S.5 Obtain human review of spend accounting in the integrated package; do not self-approve or merge.
+- [ ] S.6 Separately review actual adapter enforcement, authorization/reservation/dispatch crash handling, trusted final usage and recovery before enabling any model calls.
 
 - [ ] 1.1 Obtain explicit human approval of the applicable framework and control-test revisions; verify the approval identifies scope and revision rather than merely a completed checklist.
 - [ ] 1.2 Implement only the separately approved synthetic control smoke test; verify its job remains blocked before approval and has no model, source, Fabric, or Azure-resource side effects.
@@ -8,9 +48,17 @@
 
 - [ ] 2.1 Define installation schemas and role-separation validation; verify both the allowed solo profile and a disallowed conflicting assignment.
 - [ ] 2.2 Implement a read-only prerequisite report; verify unsupported GitHub, model, tool, capacity, and identity capabilities block dependent setup.
+  - [x] 2.2.1 Implement only offline manifest/spend-plan/import checks with explicit unknown live capabilities; this does not complete cloud/installation preflight.
+  - [ ] 2.2.2 Verify actual installation configuration, CLI/tool capabilities, identities, models, GitHub protection/federation and Fabric capacity before setup activation.
 - [ ] 2.3 Present an exact bootstrap plan before creating identities or rights; verify approved grants are minimal and ordinary workers cannot change them.
 - [ ] 2.4 Implement the private issue adapter and immutable request/evidence storage; verify public events contain only opaque request references.
-- [ ] 2.5 Implement version-bound requests and atomic single-use consumption; verify duplicates, changed inputs, revoked requests, and retries cannot reuse a grant.
+  - [ ] 2.4.1 Enforce allowed issue repository/visibility and sanitized agent proposals without new observation/source authority; newly agent-filed requests remain proposed/awaiting approval.
+  - [ ] 2.4.2 Freeze an authorized human's exact initial scope/revision/effects before discovery/design; deny labels, author identity, assignments, mutable text, validation and agent reviews as approval.
+  - [ ] 2.4.3 Test proposal-without-execution, discovery-only approval without build/deploy, self-approved labels denied, changed-scope invalidation and later independent lifecycle gates before enabling ingestion.
+- [ ] 2.5 Integrate version-bound requests and atomic single-use consumption with private production request storage and safe worker scheduling; local core completion alone does not complete this dispatcher integration.
+  - [x] 2.5.1 Implement and test immutable binding and durable local atomic consumption in the bounded core (section 0).
+  - [x] 2.5.3 Implement the bounded local atomic grant/reservation/outbox, one worker claim and conservative unknown-state protocol without claiming cloud dispatch.
+  - [ ] 2.5.2 Verify authenticated adapter inputs, authoritative policy/target freshness, cloud durability, and consumption/scheduling failure handling before enabling dispatch.
 - [ ] 2.6 Configure approved public control federation and policy verification; verify tokens from solution repos, other refs, and wrong environments cannot launch workers.
 
 ## 3. Isolated agent runtime

@@ -5,8 +5,133 @@ deployment model uses GitHub Free with two public repositories and private
 solutions. Native required reviewers are available on public control runs;
 this does not add native protection to private solution branches.
 
-All documents are proposals. No runtime, executable workflow, model, identity,
-tenant change, or Fabric resource is authorized by their existence.
+The broader design remains proposed. Explicit human authorization on 2026-11-17
+permits the bounded core and later explicitly scoped software continuations below,
+not the complete proposed runtime.
+No executable workflow, model, identity, tenant change, or Fabric resource is
+authorized by these documents themselves.
+
+### Implemented bounded core
+
+`fabric-delivery-core` implements version-1 frozen SHA-256-bound manifests and a
+private local-file SQLite store. It records externally verified approval bindings,
+uses write transactions to consume each grant once, persists claim receipts,
+and permanently denies replay, revocation, expiry, and observed binding drift.
+This is the immutable-request portion of decision 4, not the complete dispatcher
+of decision 2. See [the implementation guide](../../../docs/authorization-core.md).
+
+SQLite is an explicit single-host library backend, not a selection of Azure
+storage or worker infrastructure. Native gate/identity/federation verification
+must happen in an external trusted adapter. The core does not assert that a
+caller-created approval object proves a human decision.
+
+One protected repository/run/attempt/gate tuple may bind only one request.
+The lifecycle is pending -> authorized -> consumed, with permanent revocation
+or consume-time invalidation before consumption. Time is checked after obtaining
+the write lock. Drift cannot be reverted to resurrect a grant. A crash after a
+standalone claim commits burns the grant; that standalone API schedules no work.
+The later local outbox below coordinates preparation and one worker claim
+without implying atomic external launch or live dispatch readiness.
+
+### Read-only native approval observation
+
+The explicitly authorized continuation provides an optional Requests-based
+GitHub.com REST observer. A trusted private registry binds one manifest and
+reviewed policy snapshot to the actual numeric repository/workflow/run/attempt
+and environment identities. The observer reads native history and current
+reviewer/ref/branch/environment policy, verifies workflow bytes at the pinned
+commit, compares two observations, and returns typed bound evidence.
+
+The documented history lacks per-review timestamps and attempt attribution:
+only first attempts are supported, and age is conservatively bounded by run
+creation time. The documented environment schema omits administrative bypass.
+The observer does not infer a bypass setting, authenticate OIDC/JWKS, or prove
+human credential provenance; those are explicit execution blockers. Conversion
+of observations to an ApprovalBinding is unsupported and always denied.
+See [the verifier guide](../../../docs/native-approval-verifier.md). This is
+read-only evidence validation, not native-gate replacement or production proof.
+
+### GitHub OIDC cryptographic observation
+
+The next explicitly authorized continuation uses maintained PyJWT/cryptography
+for RS256 verification against fresh fixed-origin official GitHub public JWKS.
+It requires an exact explicitly configured subject/audience/issuer, immutable
+repository/owner IDs, ref and workflow path/ref/commit, signed run/attempt, and
+explicit environment/node context. A registered OIDC policy digest binds these
+settings to the existing authoritative private registered run and manifest.
+No default legacy subject is guessed; missing signed claims deny.
+
+JWT validity, lifetime, age, bounded skew, JWKS freshness/rotation, algorithm,
+key selection, and signed context are verified, but no execution grant follows.
+GitHub does not sign private workflow inputs or the private manifest digest.
+App provenance, fresh native-review integration, administrative bypass, human
+credential provenance, and live installation federation proof remain separate
+blockers. No raw JWT/key is logged, no token is exchanged, and no worker starts.
+See [the cryptographic verifier guide](../../../docs/github-oidc-verifier.md).
+
+### Integrated offline package and operator
+
+The authorized main-based integration co-packages the core, native/OIDC
+observers and separate-file finite spend ledger without replacing the merged
+human-governed lifecycle/onboarding documentation. Cross-component tests verify
+matching evidence bindings, unsupported grant conversion, ledger replay/breach
+and wrong-file rejection; none proves a live identity or atomic coordination.
+Authorization rejects spend/unrelated schemas while preserving existing
+version-1 authorization databases.
+
+The standard-library offline operator validates bounded local manifest JSON,
+current validity, optional exact-schema spend-plan binding/arithmetic, and
+supported optional imports. Its maximum-cost calculation is shared with the
+ledger, but no ledger is opened or changed. It emits allowlisted values and
+explicit live blockers without identifiers, paths or private input values.
+Manifest-check exit 0 means only local validity. Preflight exit 3 means offline
+checks passed but live execution is unsupported; missing/invalid/unknown local
+checks exit 2. No API, credentials, grant, reservation or worker is used.
+See [the operator guide](../../../docs/offline-operator.md).
+
+The next boundary remains an authenticated authoritative private request/policy
+adapter joining revalidated inputs, actual App provenance, native human evidence,
+OIDC and independently inspected bypass/credential policy. Standard GitHub
+claims do not sign private workflow inputs. Even after that join, durable
+live authorization/reservation/dispatch integration/recovery, the isolated
+Agent Framework/Foundry harness, independently approved stage workers and Fabric
+modules remain unimplemented. Offline checks are only a partial onboarding implementation.
+
+### Authorized durable local outbox (2026-11-18)
+
+The explicit continuation reuses the authorization and spend checks in one
+SQLite attached-file transaction: consume a grant, reserve the exact approved
+maximum and persist ready work together. Existing standalone methods retain
+their behavior. Permanent authorization invalidation commits before denial;
+budget/configuration/storage failures instead roll back all preparation writes.
+The profile digest binds the reviewed worker/runtime configuration, immutable
+budget/price digests, operation, period/currency and finite token/call/time bounds.
+
+The outbox uses a third distinct private local database with its own identity.
+All files require a common reliable local filesystem, DELETE rollback journals,
+full synchronous transactions and trusted-service access controls. Unsupported
+journal modes and missing/unrelated attached stores fail closed without
+conversion or recreation. This uses SQLite super-journal semantics, not an
+Azure distributed-storage guarantee; process-crash tests do not certify
+power-loss behavior or backups.
+
+Fresh trusted bindings, valid reservation/freeze state and expiry are checked
+again before one worker claim. A durable ready job may receive its first claim
+after restart. A committed worker claim is never reclaimed, including when
+launch is ambiguous. Pre-claim cancellation, permanent ready-state blocking and
+unknown outcomes never refund cost or restore grants. Final complete trusted
+usage and terminal result commit together; breach/freeze are durable before
+error, and late completion cannot report success. No reset/requeue/unfreeze or
+unknown-usage reconciliation endpoint is introduced.
+
+The input-free operator self-test exercises this protocol in fresh disposable
+synthetic stores, with no external worker or human identity assertion. It
+reports live execution unsupported even on local success. The coordinator
+exposes no callback, shell command, network endpoint, credentials or scheduler.
+Native/OIDC-to-grant joining, actual private-input/App/federation proof,
+ongoing cancellation, target-conflict controls, isolated workers and real
+storage/recovery acceptance remain separate activation prerequisites.
+See [the local dispatch guide](../../../docs/durable-dispatch.md).
 
 ## Goals / Non-Goals
 
@@ -50,6 +175,20 @@ private issues/events, validates installation membership, freezes a private
 execution manifest, and publishes a private review summary linking to the
 public control run. Only a random opaque request ID goes to the public run.
 
+Agents may file proposal issues using already authorized observations, only
+where repository/visibility policy permits; public framework proposals must be
+sanitized while solution details stay private. Filing is not an implicit new
+discovery/design task or permission to access more sources. An agent-filed issue
+starts proposed/awaiting authorized human approval of the exact first substantive
+scope/revision and enumerated effects. The trusted adapter must freeze that
+decision through the existing private manifest/native human boundary; author
+identity, labels, assignments, validation, agent reviews or mutable text alone
+are not authority. Bounded discovery/design approval cannot authorize builds or
+deployments; later specification/build/stage gates remain separate, and scope
+changes invalidate affected approval. This automatic issue adapter is not
+implemented and must remain disabled until these checks are enforced outside
+the model. No automatic ingestion service is claimed by this package.
+
 The public control repository owns native environments for build and individual
 stage deployments. Required reviewers contain the authorized humans. Trusted
 refs and disabled administrative bypass are prerequisites. Agents cannot write
@@ -61,8 +200,10 @@ repository identity and approved environment/context; no wildcard acceptance of
 solution repositories or arbitrary workflow refs is allowed.
 
 The dispatcher validates the request, environment, state, policy, workflow
-revision, and artifact binding, then atomically consumes the grant and starts
-the proper worker. It is not a custom replacement for GitHub's human reviewer
+revision, and artifact binding, then atomically consumes the grant, reserves
+bounded cost and records ready work. A separate one-time claim precedes the
+proper worker launch; an ambiguous claimed attempt is never automatically
+relaunched. It is not a custom replacement for GitHub's human reviewer
 decision. It does supply private state, anti-replay, and safe worker scheduling,
 which native approval alone does not provide.
 
@@ -145,6 +286,37 @@ evidence links; interrupted workers do not infer progress from chat memory.
 Financial limits can be explicitly unset, but finite iteration/time/retry
 limits remain required. Foundry and Azure compute costs are separate from
 GitHub AI credits.
+
+#### Authorized local spend guard slice (2026-11-17)
+
+The approved reusable spend slice uses a separate private, single-authority
+local SQLite file and standard-library Python. Immutable installation/month
+policy defines mandatory finite token/call limits, currency, and cap; immutable
+versioned trusted price cards define all-in conservative integer fixed-point
+rates and validity. Reserve the computed maximum under `BEGIN IMMEDIATE` before
+effects; outstanding plus final settled amounts must fit the monthly cap.
+Bind operation-attempt digest, configuration/card digests, currency and UTC
+month. Deny missing/stale/unknown prices, incompatible bindings and replay.
+
+Settlement is final and single-use. Excess actual cost or usage is committed as
+a visible breach and freezes new reservations across the installation, including
+future months; it cannot undo an external bill. Unknown outcomes stay reserved.
+There is no automatic refund, expiry release, unfreeze or model call. The
+standalone spend API supplies no atomic authorization/dispatch integration;
+the later local outbox reuses its checks without supplying a live adapter.
+The adapter must enforce usage and the
+exclusive deadline (card expiry or UTC month end), authenticate complete final
+usage and avoid duplicate dispatch. Delayed reporting uses the original month.
+Excess usage freezes even when its reported cost is low. Conservative price
+maxima are not minimum actual charges; authenticating complete final cost is an
+adapter responsibility, not something this local ledger can prove.
+
+See `docs/spend-guardrails.md` for exact API, fixed 10^-9 currency units, closed
+denials and recovery assumptions. Tested local SQLite concurrency is not
+distributed accounting or a guarantee of any cloud invoice ceiling; Azure
+budget alerts are not hard caps. Infrastructure and other untracked charges
+remain outside this library. Real budgets and installation details stay private.
+This implementation does not complete the planned runtime/harness integration.
 
 ### 7. Refresh skills without changing permission or approved inputs
 

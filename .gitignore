@@ -2,3 +2,14 @@
 .env
 .env.*
 !.env.example
+__pycache__/
+*.py[cod]
+*.egg-info/
+.build/
+build/
+dist/
+.test-state/
+*.sqlite3
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
