@@ -83,6 +83,7 @@ detailed installation evidence remain in the private solution.
   - [ ] 2.5.2 Verify authenticated adapter inputs, authoritative policy/target freshness, cloud durability, and consumption/scheduling failure handling before enabling dispatch.
 - [ ] 2.6 Configure approved public control federation and policy verification; verify tokens from solution repos, other refs, and wrong environments cannot launch workers.
   - [ ] 2.6.1 Authenticate actual App installation identities/effective scopes and bind private inputs, native review, OIDC, bypass policy and runtime identity in an authoritative live adapter.
+    - [x] 2.6.1.1 Complete the pilot's owner-local native installation/full-selected-scope observations and confirm temporary metadata-token revocation, with safe receipts checked against the unchanged reviewed plan; live broker and authoritative authorization joining remain incomplete.
 
 ## 3. Isolated agent runtime
 
