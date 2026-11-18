@@ -244,6 +244,11 @@ That script and the protected credential uploader are not supplied yet.
    become success. Such a helper is currently a private pilot, not a released
    public installer; assistants never run its real-key step. No repeat Azure
    enrollment/canary or runtime activation follows from this metadata check.
+   Once both safe receipts match the reviewed plan and confirm revocation,
+   record completion privately and do not repeat the consumed attempt. Keep
+   the original plan/registry inputs frozen and store any verified as-of
+   snapshot separately. The snapshot is not a continuous scope guarantee or
+   a grant to retrieve/enable credentials or activate a broker/runtime.
 
 App permissions are not the agent sandbox: the solution App's write rights can
 permit review/merge operations. A trusted broker must deny those operations,
