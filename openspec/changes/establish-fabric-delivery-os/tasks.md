@@ -72,6 +72,7 @@ detailed installation evidence remain in the private solution.
 - [ ] 2.3 Present an exact bootstrap plan before creating identities or rights; verify approved grants are minimal and ordinary workers cannot change them.
   - [x] 2.3.1 Record separately authorized private bootstrap plans and verify deployed credential storage preserves existing resources; this does not prove worker IAM or private retrieval.
   - [x] 2.3.2 Implement protected human-local App-key enrollment, authenticate registered App/owner permissions, and verify disabled version-bound storage; actual installation scopes and broker/runtime activation remain pending.
+  - [x] 2.3.3 Implement and synthetically verify a separate private-pilot owner-local installation verifier, with source/registry-bound plan, metadata-only full-scope enumeration and mandatory token revocation; actual owner-local native proof remains pending in 2.6.1.
 - [ ] 2.4 Implement the private issue adapter and immutable request/evidence storage; verify public events contain only opaque request references.
   - [ ] 2.4.1 Enforce allowed issue repository/visibility and sanitized agent proposals without new observation/source authority; newly agent-filed requests remain proposed/awaiting approval.
   - [ ] 2.4.2 Freeze an authorized human's exact initial scope/revision/effects before discovery/design; deny labels, author identity, assignments, mutable text, validation and agent reviews as approval.
