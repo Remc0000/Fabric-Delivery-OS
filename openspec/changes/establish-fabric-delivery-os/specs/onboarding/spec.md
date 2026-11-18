@@ -50,6 +50,33 @@ mean only the inert local cycle passed, with live execution still unsupported.
 - **THEN** local exercise success is reported without private values or live-readiness authority
 - **AND** no existing installation ledger, human credential, external worker or API is used
 
+### Requirement: Setup is reusable and its manual boundaries are documented
+The framework SHALL prefer reviewed, parameterized scripts for supported setup
+operations across adopter-owned projects, with private installation
+configuration rather than embedded installation values. Every setup change
+SHALL update the related OpenSpec and README instructions, including prerequisites,
+automation availability, exact manual UI steps, credential/permission scope,
+observable verification, failure/pause behavior and recovery or cleanup.
+Scripts SHALL report incomplete, human-action-required, blocked or unknown state
+without live-ready success. Proposed automation SHALL NOT be described as shipped.
+Resumption SHALL revalidate actual state and SHALL NOT weaken protections,
+broaden grants or perform a human approval to complete setup.
+
+#### Scenario: An App registration form ignores URL-prefilled values
+- **WHEN** the actual form lacks the intended fields or permissions
+- **THEN** the README supplies the exact manual configuration and requires inspection
+- **AND** onboarding never treats URL intent as verified App or installation state
+
+#### Scenario: Installation requires a private key
+- **WHEN** GitHub requires key generation before installing an App
+- **THEN** setup pauses until approved protected key enrollment and redacted synthetic checks are ready
+- **AND** keys and tokens never enter chat, Git, command-line literals or public Actions
+
+#### Scenario: An Azure provider is not registered
+- **WHEN** a required service namespace is unavailable in the selected subscription
+- **THEN** setup reports the exact prerequisite and waits for applicable authorization
+- **AND** an RG-only plan does not silently register providers or expand permissions
+
 ### Requirement: Tooling checks are task specific
 Preflight SHALL assess Azure CLI, Fabric CLI, GitHub CLI/MCP, Microsoft Learn
 MCP, and task-specific tooling where required. Rayfin tooling SHALL be checked

@@ -177,6 +177,80 @@ preflight/provisioning workflow. The offline tool below checks local inputs only
    effects, identities, and cleanup. Readiness or an authenticated session is not
    authorization.
 
+### Manual GitHub App setup
+
+These are preparation steps, **not an installer or permission to activate a
+runtime**. Use adopter-owned accounts and repositories throughout. The intended
+setup script must eventually collect installation-specific values, automate
+supported operations and stop with explicit instructions at human-only steps.
+That script and the protected credential uploader are not supplied yet.
+
+1. In GitHub **Settings > Developer settings > GitHub Apps**, register two
+   separate Apps. Organizations use their organization settings. Choose distinct
+   solution-broker and control-dispatcher names; names are labels, not authority.
+   The description's **Write / Preview** tabs are just a text editor.
+2. Set **Homepage URL** to your framework/documentation repository URL; a separate
+   website is unnecessary. Leave Redirect URI and Setup URL empty, wildcard
+   matching off, **Request user authorization (OAuth) during installation** off,
+   **Enable Device Flow** off and **Webhook > Active** off. No live webhook
+   receiver is provided. Keep **Only on this account** selected.
+3. Expand **Repository permissions** and set the exact permissions below.
+   Leave all other repository permissions, including **Workflows**, and all
+   organization, account and enterprise permissions at **No access**.
+   Inspect the actual fields: defaults or URL-prefilled forms can differ from
+   the intended configuration.
+
+| App | Repository permissions | Installation scope |
+| --- | --- | --- |
+| Solution broker | Contents, Issues, Pull requests: **Read and write**; Metadata: **Read-only** (automatic) | Only the intended private solution repository |
+| Control dispatcher | Actions: **Read and write**; Contents and Metadata: **Read-only** | Only the intended public control repository |
+
+4. Choose **Create GitHub App** and privately record each non-secret **App ID**.
+   Registration is separate from installation. GitHub's registration UI can
+   require a private key before installation; do not assume there is a key-free
+   installation path.
+5. **Pause before Generate private key.** First establish the approved protected
+   local-file/upload/storage path and verify redacted diagnostics with synthetic
+   input. Never paste keys, client secrets or tokens into chat, Git, screenshots,
+   command-line literals, plaintext parameter files or public Actions. A proposed
+   upload path is not a shipped or verified uploader.
+6. Only after that path is ready, complete protected key enrollment and choose
+   **Install App > Only select repositories**, selecting exactly the one
+   repository for that App. **Only on this account** does not restrict which of
+   that account's repositories can be selected. Never choose All repositories.
+   Privately record installation IDs and verify actual numeric identities,
+   effective permissions and selected repositories before use.
+
+App permissions are not the agent sandbox: the solution App's write rights can
+permit review/merge operations. A trusted broker must deny those operations,
+keep App credentials/tokens away from agents, and limit control dispatch to the
+reviewed workflow/ref. Registration, installation and a successful login do not
+prove native human-gate enforcement or start any worker.
+
+### Azure setup checkpoints
+
+Before provisioning, inspect the selected subscription's required resource
+providers and permissions. A missing provider registration is a separate
+subscription-scoped prerequisite, not something an RG-only setup plan may
+silently enable. Report the exact namespace and obtain the applicable approval;
+do not grant broader rights to make setup pass.
+
+Keep actual tenant/subscription IDs, repositories, App/installation IDs, endpoints,
+capacity choices, secret references and raw evidence in private installation
+configuration, never in the reusable public defaults. Reference and preserve
+existing resources; do not recreate or relax them to make onboarding easier.
+
+### Reproducible setup contract
+
+Every new setup operation must update its OpenSpec contract and this README in
+the same change: prerequisites, exact automation or manual UI actions, identity
+and permission scope, safe success evidence, failure/pause behavior and recovery
+or cleanup. Future parameterized setup scripts must distinguish completed,
+human-action-required, blocked and unknown states, resume only after verifying
+actual state, and never turn a partial setup into a live-ready success.
+Scripted provisioning still requires the applicable reviewed plan and human
+authorization; scripts must not perform approvals for a human.
+
 ### Use the bounded package locally
 
 Python 3.11 or newer is required. Install from a reviewed checkout using your

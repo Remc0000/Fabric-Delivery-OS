@@ -252,6 +252,16 @@ mutable issue text. Changing accepted inputs produces a new request.
 
 ### 5. Separate bootstrap, human authority, and workloads
 
+Setup must work for another adopter, not just reproduce the author's machine.
+Prefer reviewed scripts with private installation parameters. Keep every manual
+GitHub/Azure action, prerequisite, exact scope, verification, pause condition and
+recovery step in README alongside its OpenSpec changes. Observed form defaults
+and URL prefill are not proof; a human must inspect the actual App permissions.
+Private-key enrollment is a sensitive manual checkpoint until its protected
+uploader and storage are verified. No shipped installer or completed onboarding
+is implied by these instructions. Provider registration is a separately scoped
+subscription operation, never an implicit side effect of an RG-only plan.
+
 An approved bootstrap plan creates or reuses the GitHub App, Azure identities,
 Fabric grants, trusted workflows, and policy assignments. Bootstrap authority
 is not available to ordinary workers. Azure authentication does not imply
