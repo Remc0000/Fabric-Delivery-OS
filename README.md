@@ -250,6 +250,23 @@ capacity choices, secret references and raw evidence in private installation
 configuration, never in the reusable public defaults. Reference and preserve
 existing resources; do not recreate or relax them to make onboarding easier.
 
+For Bicep-based setup, use **distinct explicit output filenames** for compiled
+templates and parameters, such as `infra\main.template.json` and
+`infra\main.parameters.json`. With matching source basenames, default output
+names can collide and the parameter document can overwrite `main.json`.
+Reject missing, swapped or colliding artifacts, changed private bindings and
+any unexpected, duplicate, incomplete or non-create effect in an additive
+preview. Compare existing ARM IDs case-insensitively; an Ignore/NoChange result
+is a preview observation, not post-deployment preservation proof. Bind approval
+to the reviewed immutable revision/blob, not platform-dependent CRLF worktree
+bytes. These are implementation requirements, not additional shipped commands.
+
+Show actual validation and security-review outcomes before requesting deployment.
+If a required scanner is unavailable, state that it **did not run** and disclose
+any policy-permitted manual-review exception; never claim an automated clean
+scan or silently weaken an enforced protection. Human resource-list approval or
+provider registration is not the later risk-acknowledged deployment decision.
+
 ### Reproducible setup contract
 
 Every new setup operation must update its OpenSpec contract and this README in

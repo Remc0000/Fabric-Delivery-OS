@@ -83,6 +83,16 @@ broaden grants or perform a human approval to complete setup.
 - **AND** public vault access and VM policies remain unchanged
 - **AND** control-plane write success is not private data-plane or runtime proof
 
+#### Scenario: An additive preview has drifted or incomplete inputs
+- **WHEN** compiler artifacts collide or are missing/swapped, private bindings drift, or native what-if has duplicate, missing, unexpected or non-create effects
+- **THEN** setup blocks rather than reporting an accepted preview
+- **AND** existing resource IDs compare case-insensitively while approval binds the reviewed immutable revision/blob, not platform-dependent worktree bytes
+
+#### Scenario: A required security scanner is unavailable
+- **WHEN** setup cannot run its required scanner
+- **THEN** it reports not-run and any policy-permitted review exception without claiming a clean scan or weakening enforced protections
+- **AND** resource-list/provider authorization does not replace the separate risk-acknowledged deployment decision
+
 ### Requirement: Tooling checks are task specific
 Preflight SHALL assess Azure CLI, Fabric CLI, GitHub CLI/MCP, Microsoft Learn
 MCP, and task-specific tooling where required. Rayfin tooling SHALL be checked

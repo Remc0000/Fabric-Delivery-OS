@@ -262,6 +262,16 @@ uploader and storage are verified. No shipped installer or completed onboarding
 is implied by these instructions. Provider registration is a separately scoped
 subscription operation, never an implicit side effect of an RG-only plan.
 
+Additive setup previews fail closed on missing/colliding compiler artifacts,
+binding drift and unexpected/duplicate/missing/non-create effects. Bicep template
+and parameter outputs use distinct explicit filenames. Compare ARM IDs
+case-insensitively without confusing preview Ignore/NoChange with actual
+post-deployment preservation. Approval identity binds the reviewed immutable
+revision/blob, not CRLF-dependent local bytes. Report actual validation and
+scanner outcomes, including unavailable tooling and any policy-permitted manual
+review exception, before the separate risk-acknowledged deployment checkpoint.
+Do not silently relax an enforced protection or present a missing scan as passed.
+
 An approved bootstrap plan creates or reuses the GitHub App, Azure identities,
 Fabric grants, trusted workflows, and policy assignments. Bootstrap authority
 is not available to ordinary workers. Azure authentication does not imply
