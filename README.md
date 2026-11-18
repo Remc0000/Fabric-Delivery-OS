@@ -16,7 +16,8 @@ repository does not start agents, configure approvals, or provision resources.
 | Framework in this revision | One usable Python package: immutable manifests, local single-use authorization, local spend reservations, a [transactional local outbox](docs/durable-dispatch.md), read-only native approval evidence, cryptographic GitHub OIDC verification, and an [offline operator entry point](docs/offline-operator.md). Human review and installation acceptance remain separate requirements. |
 | Authorization and identity boundary | Native/OIDC observations cannot become execution grants. Private request/input binding, actual App provenance, bypass policy, human credential provenance, and live installation proof are unresolved. The local authorization store accepts only externally verified bindings from a trusted adapter, not agent assertions. |
 | Native GitHub gate proof | Separate public control smoke tests demonstrated human approval, human rejection, and refusal of a representative Actions-bot token. These are bounded gate tests, not production authorization or worker/cloud integration. |
-| Azure runtime and onboarding | Not wired by this package. No released installer, complete cloud preflight, active worker, model call, or Fabric integration is supplied. |
+| Azure runtime and onboarding | Not wired by this package. No released installer, complete cloud preflight, active worker, model call, or verified live Fabric integration is supplied. |
+| First Fabric module | [SQL-to-Bronze compiler](docs/sql-bronze-module.md): explicit metadata to three stage-bound notebook payloads and a hashed release, with a fixed bounded create-only Spark worker. Compilation is usable offline; actual identity/deployment/load behavior is not live-verified. |
 
 The [bot-refusal proof run](https://github.com/Remc0000/Fabric-Delivery-OS-Control/actions/runs/44172361707)
 used workflow revision `3c8ab11dfb2660dd451d701e11458527c67bc868`.
@@ -187,6 +188,7 @@ python -m pip install ".[oidc]"
 fabric-delivery validate-manifest "D:\PrivateInstallation\manifest.json"
 fabric-delivery preflight --manifest "D:\PrivateInstallation\manifest.json" --spend-plan "D:\PrivateInstallation\offline-spend.json"
 fabric-delivery self-test-dispatch
+fabric-delivery compile-sql-bronze ".\examples\sql-bronze.synthetic.json" --output "D:\PrivateInstallation\synthetic-bronze-release"
 ```
 
 These are placeholder local paths, not files included in this repository.
@@ -201,6 +203,10 @@ accept no credentials. `self-test-dispatch` exercises a real atomic local
 grant/reservation/outbox cycle with synthetic fixtures in disposable storage
 only. Its exit 0 means that inert exercise passed, not live readiness; it also
 reports `execution_enabled: false` and accepts no existing installation files.
+`compile-sql-bronze` writes a **new private** artifact directory from explicit
+metadata, without contacting Fabric or reading source records. Exit 0 means
+compiled-not-deployed, never permission to load data. Its checked-in example is
+synthetic; real contracts and generated artifacts must remain private.
 
 Read the [operator/schema guide](docs/offline-operator.md) and the component guides:
 [authorization](docs/authorization-core.md),
@@ -230,8 +236,12 @@ handling. This does not supply a live dispatcher: trusted adapter/worker
 integration, actual storage/recovery proof, ongoing cancellation and
 target-conflict control remain required before external effects. The isolated Microsoft
 Agent Framework/Foundry harness, mediated tools and trusted usage reporting,
-independently approved stage deployment workers, and Fabric ingestion,
-Lakehouse, semantic-model and report modules still need implementation.
+independently approved stage deployment workers, and complete live ingestion,
+Lakehouse, semantic-model and report delivery still need implementation.
+The first bounded SQL-to-Bronze artifact compiler is now present; its create-only
+behavior is not an implicit choice for any private solution. Real discovery,
+identity/runtime acceptance, deployment/load integration, Silver/Gold logic and
+semantic/report delivery remain outstanding.
 
 These need separately authorized builds/bootstrap work and end-to-end negative
 tests before activation. A local core or passing native gate does not close

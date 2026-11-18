@@ -17,6 +17,7 @@ Installations are operator actions, not actions performed by the CLI.
 fabric-delivery validate-manifest "D:\PrivateInstallation\manifest.json"
 fabric-delivery preflight --manifest "D:\PrivateInstallation\manifest.json" --spend-plan "D:\PrivateInstallation\offline-spend.json"
 fabric-delivery self-test-dispatch
+fabric-delivery compile-sql-bronze ".\examples\sql-bronze.synthetic.json" --output "D:\PrivateInstallation\synthetic-bronze-release"
 ```
 
 `python -m fabric_delivery_core` is equivalent. Paths are placeholders: supply
@@ -39,12 +40,20 @@ echoed, including invalid command arguments. Output includes
 | Any command, invalid/missing/unknown local input, import or self-test failure | 2 | Offline check failed; no permission follows |
 | `preflight`, all requested offline checks pass | 3 | Live readiness still blocked; **never use this as a deployment gate success** |
 | `self-test-dispatch`, inert local cycle passes | 0 | Synthetic temporary storage only, not a human/worker/readiness proof |
+| `compile-sql-bronze`, private release written | 0 | Exact metadata compiled to artifacts; no source access/deployment/load |
 
 `self-test-dispatch` accepts no installation inputs. Unlike the two read-only
 checks, it creates and removes fresh disposable SQLite stores and uses synthetic
 approval fixtures only there. It exercises enqueue, restart, one claim, inert
 completion, settlement and replay denial. See [the dispatch guide](durable-dispatch.md).
 It emits the same explicit live-blocked output; no live approval or worker starts.
+
+`compile-sql-bronze` is another offline command, but intentionally writes a new
+operator-selected **private artifact directory**, not an installation ledger.
+It accepts strict metadata-only input, never a secret/token, and preserves any
+existing destination. Real configuration and compiled artifacts contain private
+source/identity references and must stay private. See the
+[module contract and limitations](sql-bronze-module.md).
 
 Help exits 0 without checking readiness. The immutable manifest schema is
 described in [authorization-core.md](authorization-core.md). Validation does not

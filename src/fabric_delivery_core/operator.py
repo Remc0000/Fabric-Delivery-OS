@@ -18,10 +18,10 @@ class _Parser(argparse.ArgumentParser):
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Return 0 for local validity/self-test, 2 for failures, 3 for blocked preflight."""
+    """Return 0 for local checks/compilation, 2 for failures, 3 for blocked preflight."""
     parser = _Parser(
         prog="fabric-delivery",
-        description="Offline checks and inert self-test only. No live authority or workers.",
+        description="Offline checks, artifact compilation and inert self-test. No live authority or workers.",
     )
     subcommands = parser.add_subparsers(dest="command", required=True)
     validate = subcommands.add_parser("validate-manifest", help="check a private frozen manifest")
@@ -32,6 +32,11 @@ def main(argv: list[str] | None = None) -> int:
     subcommands.add_parser(
         "self-test-dispatch", help="exercise synthetic atomic dispatch in disposable local stores"
     )
+    bronze = subcommands.add_parser(
+        "compile-sql-bronze", help="compile reviewed SQL metadata into a new private release directory"
+    )
+    bronze.add_argument("contract", help="private metadata-only contract JSON file")
+    bronze.add_argument("--output", required=True, help="new directory under protected private storage")
     try:
         arguments = parser.parse_args(argv)
         if arguments.command == "validate-manifest":
@@ -40,11 +45,21 @@ def main(argv: list[str] | None = None) -> int:
         elif arguments.command == "preflight":
             report = preflight(arguments.manifest, arguments.spend_plan)
             code = 3 if report.offline_checks_passed else 2
-        else:
+        elif arguments.command == "self-test-dispatch":
             from .self_test import dispatch_self_test
 
             report = dispatch_self_test()
             code = 0 if report.offline_checks_passed else 2
+        else:
+            from .preflight import _read
+            from .sql_bronze import SqlBronzeContract, write_sql_bronze_release
+
+            contract = SqlBronzeContract.from_json(_read(arguments.contract))
+            write_sql_bronze_release(contract, arguments.output)
+            report = OfflineReport((
+                OfflineCheck("sql_bronze_artifacts", "ready", "compiled_not_deployed"),
+            ))
+            code = 0
     except _InputError:
         report = OfflineReport((OfflineCheck("arguments", "incompatible", "invalid_arguments"),))
         code = 2
