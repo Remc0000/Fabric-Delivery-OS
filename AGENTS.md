@@ -25,6 +25,15 @@ stores. There is no live worker dispatch, cloud provisioning, evidence-to-grant
 join or production storage/recovery proof. Microsoft Agent Framework/Foundry remains the intended model
 runtime, outside this library. Keep synthetic tests offline and public.
 
+The explicit 2026-11-18 continuation also permits a reusable SQL-to-Bronze
+artifact compiler and fixed create-only Spark worker source, tracked in issue #9
+and `openspec/changes/build-sql-bronze-module`. The compiler contacts no source or
+Fabric API and writes only a new private release directory. Its optional
+app/Key Vault reference contract is not an identity decision for the private
+solution. Real source discovery, credentials/rights, stage deployment, data
+loading and worker activation retain separate approvals. Do not copy real
+contracts or generated private artifacts into this public repository.
+
 Agents may file proposals from already authorized observations only in allowed
 repositories/visibility, sanitizing public framework content. Filing issues
 does not authorize new access, discovery, design, build or deployment. Agent

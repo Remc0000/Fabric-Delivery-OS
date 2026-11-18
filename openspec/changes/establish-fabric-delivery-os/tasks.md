@@ -80,6 +80,7 @@
 
 - [ ] 5.1 Implement inventory and impact contracts for new and existing solutions; verify unrelated existing items and detected drift are preserved or explicitly blocked.
 - [ ] 5.2 Implement only approved ingestion and Lakehouse medallion module behavior; verify repeat-run correctness and private reconciliation evidence.
+  - [x] 5.2.1 Build the separately requested metadata-only SQL-to-Bronze artifact compiler and fixed create-only worker source; real source/load/medallion scope remains unapproved and unverified.
 - [ ] 5.3 Implement approved semantic-model and report modules; verify actual API, format, identity, and measure/report acceptance support.
 - [ ] 5.4 Implement deterministic stage deployment with separate identities; verify exact artifact promotion and separate grants for each stage and data-changing operation.
 - [ ] 5.5 Implement partial-failure evidence and separately approved recovery; verify definition rollback is not misrepresented as data restoration.

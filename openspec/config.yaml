@@ -23,6 +23,11 @@ context: |
   Those two commands never contact APIs, open ledgers, consume grants or activate
   workers. A separate inert self-test exercises disposable synthetic stores only;
   success still reports live execution unsupported.
+  The separately requested 2026-11-18 first Fabric module compiles strict explicit
+  SQL metadata into stage-bound notebooks and private hashed release artifacts,
+  with fixed bounded create-only Bronze worker source. It reads no source records
+  or credentials during compilation. Actual identity, Fabric deployment/load,
+  business semantics and live acceptance are not proven by synthetic tests.
   Selected architecture: GitHub Free, a public framework repository, a separate
   public control repository per installation, and private solution repositories.
   Native human approval jobs run in the public control repository itself.

@@ -3,6 +3,14 @@
 Deliver reviewable Fabric changes for both new and existing solutions while
 preserving stage isolation, data correctness, and explicit operational authority.
 
+## Implementation status
+
+The separately authorized 2026-11-18 `build-sql-bronze-module` change supplies
+the first bounded offline artifact compiler and fixed create-only Bronze Spark
+worker source. It does not complete this broader capability: real metadata,
+identities, deployed/runtime verification, existing-table changes, Silver/Gold,
+semantic models/reports and live stage/load acceptance remain outstanding.
+
 ## ADDED Requirements
 
 ### Requirement: New and existing targets are both supported
