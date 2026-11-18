@@ -177,6 +177,152 @@ preflight/provisioning workflow. The offline tool below checks local inputs only
    effects, identities, and cleanup. Readiness or an authenticated session is not
    authorization.
 
+### Manual GitHub App setup
+
+These are preparation steps, **not an installer or permission to activate a
+runtime**. Use adopter-owned accounts and repositories throughout. The intended
+setup script must eventually collect installation-specific values, automate
+supported operations and stop with explicit instructions at human-only steps.
+That script and the protected credential uploader are not supplied yet.
+
+1. In GitHub **Settings > Developer settings > GitHub Apps**, register two
+   separate Apps. Organizations use their organization settings. Choose distinct
+   solution-broker and control-dispatcher names; names are labels, not authority.
+   The description's **Write / Preview** tabs are just a text editor.
+2. Set **Homepage URL** to your framework/documentation repository URL; a separate
+   website is unnecessary. Leave Redirect URI and Setup URL empty, wildcard
+   matching off, **Request user authorization (OAuth) during installation** off,
+   **Enable Device Flow** off and **Webhook > Active** off. No live webhook
+   receiver is provided; leave Webhook URL and Secret empty.
+   Keep **Only on this account** selected.
+3. Expand **Repository permissions** and set the exact permissions below.
+   Leave all other repository permissions, including **Workflows**, and all
+   organization, account and enterprise permissions at **No access**.
+   Inspect the actual fields: defaults or URL-prefilled forms can differ from
+   the intended configuration.
+
+| App | Repository permissions | Installation scope |
+| --- | --- | --- |
+| Solution broker | Contents, Issues, Pull requests: **Read and write**; Metadata: **Read-only** (automatic) | Only the intended private solution repository |
+| Control dispatcher | Actions: **Read and write**; Contents and Metadata: **Read-only** | Only the intended public control repository |
+
+4. Choose **Create GitHub App** and privately record each non-secret **App ID**.
+   Registration is separate from installation. GitHub's registration UI can
+   require a private key before installation; do not assume there is a key-free
+   installation path.
+5. **Pause before key-pair/private-key generation.** First establish the approved protected
+   local-file/upload/storage path and verify redacted diagnostics with synthetic
+   input. Never paste keys, client secrets or tokens into chat, Git, screenshots,
+   command-line literals, plaintext parameter files or public Actions. A proposed
+   upload path is not a shipped or verified uploader.
+   If GitHub shows **Credentials > Client secrets / Key pairs**, choose
+   **Key pairs** for the App private key. OAuth client secrets are not PEM
+   keys and cannot be converted into them. Save the actual private-key
+   download with a `.pem` filename; never manufacture a text-file substitute.
+   Revoke any exposed secret through its owner controls without recording its
+   value. Do not delete unrelated OAuth credentials.
+6. Only after that path is ready, complete protected key enrollment and choose
+   **Install App > Only select repositories**, selecting exactly the one
+   repository for that App. **Only on this account** does not restrict which of
+   that account's repositories can be selected. Never choose All repositories.
+   Privately record installation IDs and verify actual numeric identities,
+   effective permissions and selected repositories before use.
+   Find an installation ID through **Settings > Applications > Installed
+   GitHub Apps > Configure**: the plain URL ends in
+   `/settings/installations/<installation-id>`. This is not the App ID;
+   never share credential pages or OAuth callback/query parameters as evidence.
+   A normal CLI login is not automatically an App-authorized API token.
+   Report a rejected installation lookup without switching identities,
+   broadening scopes or treating the owner's report as authenticated API proof.
+   A separately reviewed owner-local verification flow may instead use the
+   documented App-JWT endpoints with explicit local confirmation. It must bind
+   the reviewed source/private registry and use only a temporary metadata-read
+   token covering the installation's full existing selected scope, not a
+   repository-narrowed token that hides extra access. Exact repository and
+   permission checks, complete enumeration and confirmed token revocation are
+   required before a safe receipt. Unknown issuance/cleanup must not retry or
+   become success. Such a helper is currently a private pilot, not a released
+   public installer; assistants never run its real-key step. No repeat Azure
+   enrollment/canary or runtime activation follows from this metadata check.
+
+App permissions are not the agent sandbox: the solution App's write rights can
+permit review/merge operations. A trusted broker must deny those operations,
+keep App credentials/tokens away from agents, and limit control dispatch to the
+reviewed workflow/ref. Registration, installation and a successful login do not
+prove native human-gate enforcement or start any worker.
+
+### Azure setup checkpoints
+
+Before provisioning, inspect the selected subscription's required resource
+providers and permissions. A missing provider registration is a separate
+subscription-scoped prerequisite, not something an RG-only setup plan may
+silently enable. Report the exact namespace and obtain the applicable approval;
+do not grant broader rights to make setup pass.
+
+For private Key Vault enrollment, Microsoft documents
+[ARM-template secret creation as a control-plane operation](https://learn.microsoft.com/azure/key-vault/general/network-security#firewall-settings).
+An approved operator-local helper can pass a protected file in memory as a
+secure parameter without opening public vault access or enabling SSH. This is
+the proposed ingress design, **not an implemented uploader**. Before real keys,
+prove synthetic redaction across parameter/history/provider/error paths; keep
+secrets out of outputs, names, tags and derived strings. Control-plane write
+success does not prove private data-plane access or authorize credential retrieval.
+
+Keep actual tenant/subscription IDs, repositories, App/installation IDs, endpoints,
+capacity choices, secret references and raw evidence in private installation
+configuration, never in the reusable public defaults. Reference and preserve
+existing resources; do not recreate or relax them to make onboarding easier.
+
+For Bicep-based setup, use **distinct explicit output filenames** for compiled
+templates and parameters, such as `infra\main.template.json` and
+`infra\main.parameters.json`. With matching source basenames, default output
+names can collide and the parameter document can overwrite `main.json`.
+Reject missing, swapped or colliding artifacts, changed private bindings and
+any unexpected, duplicate, incomplete or non-create effect in an additive
+preview. Compare existing ARM IDs case-insensitively; an Ignore/NoChange result
+is a preview observation, not post-deployment preservation proof. Bind approval
+to the reviewed immutable revision/blob, not platform-dependent CRLF worktree
+bytes. These are implementation requirements, not additional shipped commands.
+
+Show actual validation and security-review outcomes before requesting deployment.
+If a required scanner is unavailable, state that it **did not run** and disclose
+any policy-permitted manual-review exception; never claim an automated clean
+scan or silently weaken an enforced protection. Human resource-list approval or
+provider registration is not the later risk-acknowledged deployment decision.
+
+### Reproducible setup contract
+
+Every new setup operation must update its OpenSpec contract and this README in
+the same change: prerequisites, exact automation or manual UI actions, identity
+and permission scope, safe success evidence, failure/pause behavior and recovery
+or cleanup. Future parameterized setup scripts must distinguish completed,
+human-action-required, blocked and unknown states, resume only after verifying
+actual state, and never turn a partial setup into a live-ready success.
+Scripted provisioning still requires the applicable reviewed plan and human
+authorization; scripts must not perform approvals for a human.
+
+Protected enrollment must be an **operator-local** operation, not a way to
+pass real key files through an agent. Reverify a fresh, unexpired synthetic
+proof for the exact bindings/code/templates/runtime before key input; use a
+separately authorized unique attempt ID for each probe. A private disabled
+canary expires but does not automatically delete itself. Check actual App and
+owner numeric identities, exact permissions and event subscriptions before
+storage. Disabling a vault secret does **not** revoke its GitHub App key.
+
+Use narrowly protected local storage outside Git and reject unsafe paths/ACLs;
+per-user Windows ACLs do not isolate against administrators or same-user
+processes. Preserve an exclusive pre-write checkpoint, report interrupted or
+unverifiable writes as unknown, and recover through read-only verification
+rather than automatic resubmission, rotation or journal deletion. Such local
+checkpoints are not distributed locks or atomic cloud create-only guarantees.
+Read-only recovery must preserve the original writer fingerprint: inspecting
+an older attempt with corrected software does not prove a changed writer;
+real-key input still requires a separately authorized matching-code probe.
+On shared multi-account devices, select the approved cached subscription
+identity without changing defaults and verify its authoritative tenant; never
+use another identity to evade a denial. These remain public implementation
+requirements, not a claim that an enrollment installer is supplied here.
+
 ### Use the bounded package locally
 
 Python 3.11 or newer is required. Install from a reviewed checkout using your
