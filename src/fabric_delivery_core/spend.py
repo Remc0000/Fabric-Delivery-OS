@@ -96,6 +96,16 @@ class SpendDenied(Exception):
         super().__init__(reason)
 
 
+def maximum_reservation_units(card: PriceCard, max_tokens: int, max_calls: int) -> int:
+    """Compute a bounded conservative maximum, not headroom or spending authority."""
+    _integer(max_tokens, "max_tokens")
+    _integer(max_calls, "max_calls", 1)
+    amount = max_tokens * card.token_units + max_calls * card.call_units
+    if not 0 < amount <= _MAX:
+        raise SpendDenied("unsupported_reservation")
+    return amount
+
+
 class SQLiteSpendStore:
     """Privileged API backed by a dedicated private local SQLite file.
 
@@ -259,9 +269,7 @@ class SQLiteSpendStore:
                 raise SpendDenied("currency_mismatch")
             if not card.valid_from <= now < card.valid_until:
                 raise SpendDenied("stale_price")
-            amount = max_tokens * card.token_units + max_calls * card.call_units
-            if not 0 < amount <= _MAX:
-                raise SpendDenied("unsupported_reservation")
+            amount = maximum_reservation_units(card, max_tokens, max_calls)
             outstanding, settled = self._totals(db, installation_id, period)
             if outstanding + settled + amount > budget.cap_units:
                 raise SpendDenied("budget_exhausted")

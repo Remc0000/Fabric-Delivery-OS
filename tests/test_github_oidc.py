@@ -49,14 +49,14 @@ def public_jwk(key, kid):
     return dict(value, kid=kid, use="sig", alg="RS256")
 
 
-class OidcTests(unittest.TestCase):
+class OidcFixture(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.key1 = rsa.generate_private_key(public_exponent=65537, key_size=2048)
         cls.key2 = rsa.generate_private_key(public_exponent=65537, key_size=2048)
 
     def setUp(self):
-        self.manifest, self.native, control_run, _ = fixture()
+        self.manifest, self.native, control_run, self.native_responses = fixture()
         self.policy = GitHubOidcPolicy(
             issuer=GITHUB_ISSUER,
             audience="urn:synthetic:dispatcher",
@@ -158,6 +158,8 @@ class OidcTests(unittest.TestCase):
             self.verify(token)
         self.assertEqual(error.exception.reason, reason)
 
+
+class OidcTests(OidcFixture):
     def test_real_rsa_signature_and_exact_signed_context_are_verified(self):
         token = self.token()
         evidence = self.verify(token)

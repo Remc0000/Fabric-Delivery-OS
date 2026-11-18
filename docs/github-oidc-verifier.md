@@ -1,12 +1,14 @@
 # GitHub OIDC cryptographic verifier
 
-This software-only continuation is stacked on the read-only native evidence
-observer in [Remc0000/Fabric-Delivery-OS#6](https://github.com/Remc0000/Fabric-Delivery-OS/pull/6),
-which depends on [Remc0000/Fabric-Delivery-OS#3](https://github.com/Remc0000/Fabric-Delivery-OS/pull/3).
+This software-only verifier is co-packaged with the read-only native observer,
+authorization core and spend accounting. Its original dependent review history
+is [Remc0000/Fabric-Delivery-OS#6](https://github.com/Remc0000/Fabric-Delivery-OS/pull/6)
+and [Remc0000/Fabric-Delivery-OS#3](https://github.com/Remc0000/Fabric-Delivery-OS/pull/3).
 It implements JWT signature and signed workload-context verification, not
 human approval, an executable grant, Azure federation provisioning, or a worker.
 The human-authorized build does not waive any missing authorization prerequisite.
-README and other worktrees are deliberately unchanged.
+See the [integrated offline operator](offline-operator.md); co-packaging does
+not implement a native-review/OIDC grant join.
 
 ## Trust and policy
 

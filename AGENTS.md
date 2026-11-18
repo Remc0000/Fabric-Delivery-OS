@@ -1,9 +1,10 @@
 # Working agreement
 
-This repository contains a bounded Python authorization-core library and broader
-OpenSpec proposals, not a complete working platform. Explicit human authorization
-on 2026-11-17 permits this core build; it does not approve later builds or any
-deployment. Draft OpenSpec artifacts, successful validation, repository creation,
+This repository contains a bounded Python core/evidence/spend package and offline
+operator, plus broader OpenSpec proposals, not a complete working platform.
+Explicit human authorization on 2026-11-17 permitted the core and separately
+scoped software continuations; it is not blanket future build/deployment
+permission. Draft OpenSpec artifacts, successful validation, repository creation,
 and an implementation checklist are not authorization.
 
 The core only validates/binds immutable requests and records/consumes externally
@@ -11,10 +12,23 @@ verified grants in a private local SQLite file. The separately authorized
 2026-11-17 spend slice adds local atomic cost reservation/settlement with private
 installation configuration; it does not authorize actual model calls or claim
 to cap infrastructure/cloud invoices. See `docs/spend-guardrails.md`.
-It does not authenticate humans,
-verify GitHub gates/federation, issue credentials, dispatch workers, or provision
-cloud resources. Microsoft Agent Framework/Foundry remains the intended model
+Optional read-only native GitHub observation and PyJWT/cryptography OIDC
+verification provide bound evidence, never grants. Private input/native-review
+integration, administrative bypass, human credential and exact runtime App
+provenance, and live installation federation remain unproven. The offline
+operator validates local inputs/imports without credentials, network calls,
+ledger writes or execution authority; preflight remains live-blocked. There is
+no worker dispatch, cloud provisioning, or atomic authorization/spend/dispatch
+integration. Microsoft Agent Framework/Foundry remains the intended model
 runtime, outside this library. Keep synthetic tests offline and public.
+
+Agents may file proposals from already authorized observations only in allowed
+repositories/visibility, sanitizing public framework content. Filing issues
+does not authorize new access, discovery, design, build or deployment. Agent
+requests await an authorized human's exact first substantive scope/revision;
+labels, assignment, mutable text and agent reviews are not approval. Later
+specification/build/stage gates still apply. The automatic issue adapter remains
+unsupported until this boundary is enforced outside the model.
 
 Keep implementation and related specifications consistent after approval.
 Do not approve or merge your own work. Do not execute deployment approvals using

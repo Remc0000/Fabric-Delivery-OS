@@ -16,6 +16,29 @@ unauthorized, unknown, and not applicable. Unknown MUST NOT mean permitted.
 - **THEN** preflight reports the uncertainty and blocks dependent operations
 - **AND** it does not infer permission from a successful login
 
+### Requirement: Offline input checks never assert live authorization
+The bounded offline operator SHALL validate strict local frozen manifest input,
+current validity, optional private spend-plan binding and conservative arithmetic,
+and supported Python dependency imports without credentials, API calls, ledger
+writes or worker effects. It SHALL expose only allowlisted diagnostic codes,
+without echoing private input identifiers, values, paths or raw exceptions.
+Missing or unknown local requirements SHALL NOT be reported as passed.
+Full installation readiness and execution authorization remain unsupported.
+
+#### Scenario: All supplied offline inputs are valid
+- **WHEN** a current manifest, compatible local spend plan and supported imports pass
+- **THEN** preflight reports offline checks passed but live execution unsupported
+- **AND** it exits with the live-blocked code rather than a successful deployment signal
+
+#### Scenario: The caller mistakes local bounds for available budget
+- **WHEN** a supplied prospective maximum fits its local policy cap
+- **THEN** offline checks do not claim ledger headroom, authentic pricing or operation authority
+- **AND** no reservation, approval or dispatch occurs
+
+#### Scenario: Invalid arguments or private files contain sensitive values
+- **WHEN** offline parsing or validation fails
+- **THEN** output contains generic failure codes without the supplied values or paths
+
 ### Requirement: Tooling checks are task specific
 Preflight SHALL assess Azure CLI, Fabric CLI, GitHub CLI/MCP, Microsoft Learn
 MCP, and task-specific tooling where required. Rayfin tooling SHALL be checked

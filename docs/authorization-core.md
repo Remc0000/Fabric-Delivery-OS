@@ -26,7 +26,8 @@ Before calling `authorize` or `consume`, an external adapter must verify the
 native GitHub human decision, configured identities/roles, gate protections,
 trusted immutable control repository/workflow identity, environment, run and
 attempt, federation, current installation policy, and revocation/cancellation
-signals. The library does not call GitHub or verify tokens or signatures.
+signals. The authorization module does not call GitHub or verify signatures;
+the optional evidence modules do not remove this trusted-adapter requirement.
 `ApprovalBinding` records the resulting private evidence digest, not a
 self-authenticating assertion. Never accept its fields directly from an agent or
 an unauthenticated callback. A new run attempt needs fresh verified approval;
@@ -90,7 +91,10 @@ Invalid input schemas raise `ValueError`; storage failures propagate and must
 block execution. Do not copy storage exceptions or manifests into public logs.
 
 The SQLite backend uses a real file, separate connections, `BEGIN IMMEDIATE`,
-`synchronous=FULL`, and schema version checks. It is supported only on a trusted,
+`synchronous=FULL`, and database identity/schema checks. Authorization and spend
+files cannot be substituted; unrelated user tables are rejected before creating
+authorization state. Existing version-1 authorization files remain supported.
+It is supported only on a trusted,
 persistent **local filesystem with functioning locks and fsync**, not a network
 share, ephemeral container filesystem, or multi-host distributed store.
 Provision private directory/file ACLs, encryption, backup protection, reliable

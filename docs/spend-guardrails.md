@@ -2,11 +2,16 @@
 
 ## Scope and trust boundary
 
-This additive library slice is stacked on immutable authorization core commit
-`9248ac3` (`feat/immutable-authorization-core`); it does not change that core.
+This library is packaged alongside the immutable authorization core and optional
+native/OIDC observers; co-packaging is not atomic coordination or authorization.
 Explicit human authorization on 2026-11-17 permits this bounded implementation,
 not model calls, cloud provisioning, or deployment. Import its API from
 `fabric_delivery_core.spend`. It uses Python's standard library only.
+
+The [offline operator](offline-operator.md) reuses the same dataclass validation
+and `maximum_reservation_units(card, max_tokens, max_calls)` calculation without
+opening a ledger. That helper validates finite bounds and the integer maximum,
+not policy provenance, remaining monthly headroom, authorization or dispatch.
 
 This is **single-authority local SQLite accounting**, not a hard Azure invoice
 ceiling. It does not cover infrastructure, capacity, idle resources, taxes,

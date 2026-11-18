@@ -6,7 +6,8 @@ solutions. Native required reviewers are available on public control runs;
 this does not add native protection to private solution branches.
 
 The broader design remains proposed. Explicit human authorization on 2026-11-17
-permits only the bounded framework authorization-core build described below.
+permits the bounded core and later explicitly scoped software continuations below,
+not the complete proposed runtime.
 No executable workflow, model, identity, tenant change, or Fabric resource is
 authorized by these documents themselves.
 
@@ -68,6 +69,34 @@ credential provenance, and live installation federation proof remain separate
 blockers. No raw JWT/key is logged, no token is exchanged, and no worker starts.
 See [the cryptographic verifier guide](../../../docs/github-oidc-verifier.md).
 
+### Integrated offline package and operator
+
+The authorized main-based integration co-packages the core, native/OIDC
+observers and separate-file finite spend ledger without replacing the merged
+human-governed lifecycle/onboarding documentation. Cross-component tests verify
+matching evidence bindings, unsupported grant conversion, ledger replay/breach
+and wrong-file rejection; none proves a live identity or atomic coordination.
+Authorization rejects spend/unrelated schemas while preserving existing
+version-1 authorization databases.
+
+The standard-library offline operator validates bounded local manifest JSON,
+current validity, optional exact-schema spend-plan binding/arithmetic, and
+supported optional imports. Its maximum-cost calculation is shared with the
+ledger, but no ledger is opened or changed. It emits allowlisted values and
+explicit live blockers without identifiers, paths or private input values.
+Manifest-check exit 0 means only local validity. Preflight exit 3 means offline
+checks passed but live execution is unsupported; missing/invalid/unknown local
+checks exit 2. No API, credentials, grant, reservation or worker is used.
+See [the operator guide](../../../docs/offline-operator.md).
+
+The next boundary remains an authenticated authoritative private request/policy
+adapter joining revalidated inputs, actual App provenance, native human evidence,
+OIDC and independently inspected bypass/credential policy. Standard GitHub
+claims do not sign private workflow inputs. Even after that join, durable
+authorization/reservation/dispatch recovery, the isolated Agent Framework/Foundry
+harness, independently approved stage workers and Fabric modules remain
+unimplemented. Offline checks are only a partial onboarding implementation.
+
 ## Goals / Non-Goals
 
 **Goals**
@@ -109,6 +138,20 @@ GitHub remains the human interface. A GitHub App-backed request adapter accepts
 private issues/events, validates installation membership, freezes a private
 execution manifest, and publishes a private review summary linking to the
 public control run. Only a random opaque request ID goes to the public run.
+
+Agents may file proposal issues using already authorized observations, only
+where repository/visibility policy permits; public framework proposals must be
+sanitized while solution details stay private. Filing is not an implicit new
+discovery/design task or permission to access more sources. An agent-filed issue
+starts proposed/awaiting authorized human approval of the exact first substantive
+scope/revision and enumerated effects. The trusted adapter must freeze that
+decision through the existing private manifest/native human boundary; author
+identity, labels, assignments, validation, agent reviews or mutable text alone
+are not authority. Bounded discovery/design approval cannot authorize builds or
+deployments; later specification/build/stage gates remain separate, and scope
+changes invalidate affected approval. This automatic issue adapter is not
+implemented and must remain disabled until these checks are enforced outside
+the model. No automatic ingestion service is claimed by this package.
 
 The public control repository owns native environments for build and individual
 stage deployments. Required reviewers contain the authorized humans. Trusted

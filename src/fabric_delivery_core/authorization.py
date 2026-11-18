@@ -215,6 +215,22 @@ class SQLiteAuthorizationStore:
             version = db.execute("PRAGMA user_version").fetchone()[0]
             if version not in (0, 1):
                 raise ValueError("unsupported authorization database version")
+            application = db.execute("PRAGMA application_id").fetchone()[0]
+            tables = {
+                row[0] for row in db.execute(
+                    "SELECT name FROM sqlite_master WHERE type='table' "
+                    "AND name NOT LIKE 'sqlite_%'"
+                )
+            }
+            if application != 0 or tables != (set() if version == 0 else {"requests"}):
+                raise ValueError("unsupported authorization database")
+            if version == 1 and {
+                row[1] for row in db.execute("PRAGMA table_info(requests)")
+            } != {
+                "request_id", "manifest", "digest", "state", "approval",
+                "approval_key", "execution_id", "consumed_at", "denial_reason",
+            }:
+                raise ValueError("unsupported authorization database")
             if version == 0:
                 db.execute(
                     """CREATE TABLE requests (

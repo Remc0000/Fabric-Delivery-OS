@@ -5,10 +5,13 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "fabric-delivery-core"
 version = "0.1.0"
-description = "Immutable request binding and durable single-use authorization primitives"
+description = "Offline delivery preflight, immutable authorization, identity evidence and spend guards"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = []
+
+[project.scripts]
+fabric-delivery = "fabric_delivery_core.operator:main"
 
 [project.optional-dependencies]
 github = ["requests>=2.32.5,<3"]

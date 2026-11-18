@@ -1,11 +1,12 @@
 # Read-only GitHub native approval verifier
 
-This bounded continuation depends on the immutable-request core in
+This bounded observer is co-packaged with the immutable-request core, spend
+accounting and OIDC verifier. Original core review history:
 [Remc0000/Fabric-Delivery-OS#3](https://github.com/Remc0000/Fabric-Delivery-OS/pull/3).
 It observes actual native environment-review history through authenticated
 GitHub REST reads. It neither makes human decisions nor enables execution.
 Human authorization on 2026-11-17 permits this implementation and tests, not
-deployment, self-approval, or merging either pull request.
+deployment, self-approval, or merging implementation pull requests.
 
 ## What works
 

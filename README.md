@@ -13,10 +13,10 @@ repository does not start agents, configure approvals, or provision resources.
 
 | Area | Actual status |
 | --- | --- |
-| Framework on `main` | Primarily specifications. The [OpenSpec proposal](openspec/changes/establish-fabric-delivery-os/proposal.md), contracts, and checklist are committed, but are not blanket implementation authorization. |
-| Authorization core | [Open PR #3](https://github.com/Remc0000/Fabric-Delivery-OS/pull/3), not merged: a bounded local SQLite, single-authority library for immutable manifests and externally verified, single-use grants. It does not authenticate human reviews, verify federation, provide a distributed backend, or run the platform. |
+| Framework in this revision | One usable Python package: immutable manifests, local single-use authorization, local spend reservations, read-only native approval evidence, cryptographic GitHub OIDC verification, and an [offline operator entry point](docs/offline-operator.md). Human review and installation acceptance remain separate requirements. |
+| Authorization and identity boundary | Native/OIDC observations cannot become execution grants. Private request/input binding, actual App provenance, bypass policy, human credential provenance, and live installation proof are unresolved. The local authorization store accepts only externally verified bindings from a trusted adapter, not agent assertions. |
 | Native GitHub gate proof | Separate public control smoke tests demonstrated human approval, human rejection, and refusal of a representative Actions-bot token. These are bounded gate tests, not production authorization or worker/cloud integration. |
-| Azure runtime and onboarding | Initial private context/planning work, not a released cloud installer or completed integration. |
+| Azure runtime and onboarding | Not wired by this package. No released installer, complete cloud preflight, active worker, model call, or Fabric integration is supplied. |
 
 The [bot-refusal proof run](https://github.com/Remc0000/Fabric-Delivery-OS-Control/actions/runs/44172361707)
 used workflow revision `3c8ab11dfb2660dd451d701e11458527c67bc868`.
@@ -27,13 +27,13 @@ without approval, the workflow disabled, and the temporary environment removed.
 This tests that Actions token only, not every future GitHub App identity. The
 author's control repository is proof evidence, not a shared service for adopters.
 The [control evidence/removal PR #7](https://github.com/Remc0000/Fabric-Delivery-OS-Control/pull/7)
-is open for human review; it has not been merged.
+records the scope and cleanup; it is not framework integration acceptance.
 
 ## Repository and execution boundaries
 
 | Repository | Visibility | Responsibility |
 | --- | --- | --- |
-| Framework (this repository) | Public | Reusable specifications and proposed runtime/module contracts; future versioned framework releases |
+| Framework (this repository) | Public | Reusable Python primitives, offline checks, specifications and proposed runtime/module contracts; future versioned framework releases |
 | Installation control (adopter-owned) | Public | Trusted native GitHub approval gates for that installation |
 | Solution (adopter-owned) | Private | Issues, solution specifications, implementation, configuration, and detailed delivery evidence |
 
@@ -67,6 +67,8 @@ This is the **target lifecycle**, not an already wired end-to-end workflow.
 ```mermaid
 flowchart TD
     I["Human: describe intent in a private solution issue"]
+    AI["Agent: file a proposal using already authorized observations"]
+    Q{"Human: authorize exact initial discovery/design scope and revision"}
     S["Agent: discover allowed metadata and draft OpenSpec"]
     R{"Human: review specification revision"}
     B{"Human: explicitly authorize immutable build request"}
@@ -81,25 +83,40 @@ flowchart TD
     PW["Isolated worker: deploy approved package to production"]
     F["Private evidence and delivery feedback"]
     H["Blocked: record rejection; revise request before fresh approval"]
-    I --> S --> R
-    R -->|Changes requested| S
+    I --> Q
+    AI --> Q
+    Q -->|Not authorized| H
+    Q -->|Bounded scope authorized| S --> R
+    R -->|Changes requiring renewed scope| Q
     R -->|Accepted| B
     B -->|Not authorized| H
     B -->|Authorized| W --> C
     C -->|Rework within approved scope| W
-    C -->|Behavior or scope changed| S
+    C -->|Behavior or scope changed| Q
     C -->|Approved and merged| D
     D -->|Approved| DW --> T
     T -->|Approved| TW --> A
-    A -->|Rejected: revise behavior| S
+    A -->|Rejected: revise behavior| Q
     A -->|Accepted| P
     P -->|Approved| PW --> F
     D -->|Rejected| H
     T -->|Rejected| H
     P -->|Rejected| H
-    H -->|Rework and renewed review| S
+    H -->|Request renewed scope and review| Q
 ```
 
+- **Agents may propose issues, not authorize their execution.** A permitted
+  proposal may use already authorized observations without build approval,
+  only in allowed repositories/visibility, with sanitized public framework
+  content and private solution details kept private. Filing grants no new
+  source access, discovery, design, build or deployment authority. New
+  agent-filed requests remain proposed/awaiting authorized human approval of
+  the exact first substantive scope and frozen revision. Bounded discovery
+  approval is not build/deployment permission. Author identity, assignment,
+  labels, validation, another agent's review or mutable issue text cannot
+  approve anything; changed scope requires renewed approval. The automated
+  issue adapter is not implemented and must remain disabled until this is
+  enforced outside the model.
 - **Specification review/merge is not build permission.** A human decision must
   explicitly authorize the corresponding build request; acceptance or structural
   validation alone cannot start implementation.
@@ -122,7 +139,8 @@ flowchart TD
 
 Today you can prepare an installation and authorize bounded proofs; you cannot
 install a complete runtime from this repository. There is no one-command setup,
-supported sample configuration, or completed preflight/provisioning workflow.
+complete installation configuration schema, or completed cloud
+preflight/provisioning workflow. The offline tool below checks local inputs only.
 
 ### Prerequisites to decide and verify
 
@@ -159,14 +177,52 @@ supported sample configuration, or completed preflight/provisioning workflow.
    effects, identities, and cleanup. Readiness or an authenticated session is not
    authorization.
 
+### Use the bounded package locally
+
+Python 3.11 or newer is required. Install from a reviewed checkout using your
+organization's approved Python package source:
+
+```powershell
+python -m pip install ".[oidc]"
+fabric-delivery validate-manifest "D:\PrivateInstallation\manifest.json"
+fabric-delivery preflight --manifest "D:\PrivateInstallation\manifest.json" --spend-plan "D:\PrivateInstallation\offline-spend.json"
+```
+
+These are placeholder local paths, not files included in this repository.
+`python -m fabric_delivery_core` exposes the same commands. Manifest validation
+returns 0 only for local schema/current-validity checks. **Preflight never exits
+successfully as live readiness:** exit 3 means the requested offline checks
+passed but live execution remains unsupported; exit 2 means invalid, missing, or
+unknown offline inputs/dependencies. Both commands emit allowlisted JSON with
+`execution_enabled: false`, without private identifiers, paths, or input values.
+They create no registry/ledger, contact no API, and accept no credentials.
+
+Read the [operator/schema guide](docs/offline-operator.md) and the component guides:
+[authorization](docs/authorization-core.md),
+[spend](docs/spend-guardrails.md),
+[native evidence](docs/native-approval-verifier.md), and
+[OIDC](docs/github-oidc-verifier.md). The base authorization/spend package has no
+runtime dependencies; optional `github` and `oidc` extras add maintained libraries.
+No CLI command approves, consumes, reserves, launches, or deploys anything.
+
 ### What still needs implementation and verification
 
 The [implementation checklist](openspec/changes/establish-fabric-delivery-os/tasks.md)
 tracks the intended work, not an installer. Remaining integration includes
-installation configuration/preflight, approved provisioning, GitHub App
-permissions and mediated repository writes, native human-review verification,
-trusted workload federation, a private manifest/grant registry, isolated agent
-and deployment workers, and Fabric delivery modules.
+complete installation configuration/cloud preflight and approved provisioning.
+The next trusted-adapter boundary is an authoritative private issue/request/policy
+registry plus proven App separation, private input revalidation, and a
+fail-closed join of native human-review and signed OIDC observations. Neither
+observer currently issues grants; a signed GitHub token does not sign private
+workflow inputs. Actual installation federation still needs a separately
+authorized live-token proof.
+
+After that, authorization, cost reservation, and dispatch need safe durable
+coordination/recovery before any effects. Separate local ledgers and passing
+cross-component tests do not supply that coordination. The isolated Microsoft
+Agent Framework/Foundry harness, mediated tools and trusted usage reporting,
+independently approved stage deployment workers, and Fabric ingestion,
+Lakehouse, semantic-model and report modules still need implementation.
 
 These need separately authorized builds/bootstrap work and end-to-end negative
 tests before activation. A local core or passing native gate does not close
@@ -187,6 +243,7 @@ document structure; it does not prove security or authorize implementation.
 - [Agent isolation and deterministic deployment](openspec/changes/establish-fabric-delivery-os/specs/agent-execution/spec.md)
 - [Privacy and model-input boundaries](openspec/changes/establish-fabric-delivery-os/specs/information-boundaries/spec.md)
 - [Approved skill sources and reproducible snapshots](openspec/changes/establish-fabric-delivery-os/specs/skills-and-tools/spec.md)
+- [Finite execution spend and trusted accounting](openspec/changes/establish-fabric-delivery-os/specs/spend-guardrails/spec.md)
 
 The proposed automatic skill refresh does not upgrade framework code, control
 workflows, authorization policy, or permissions. Framework/control upgrades

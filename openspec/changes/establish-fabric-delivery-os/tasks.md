@@ -14,6 +14,11 @@
 - [x] 0.12 Test actual RSA signature verification, wrong key/algorithm/context, lifetime/skew/expiry, ambiguous signed JSON, registry/policy drift, and JWKS rotation/staleness/network denial using ephemeral in-memory signing keys.
 - [x] 0.13 Keep private input assertions, native-review/grant integration, App provenance, and live installation federation visibly unsupported; verify no observation can issue an execution grant.
 - [ ] 0.14 Obtain human implementation review and later live-token bootstrap proof only after the separate control test is human-merged/enabled; do not activate workers from these synthetic checks.
+- [x] 0.15 Consolidate core, spend, native and OIDC source slices on the human-merged main documentation, preserving original branches without self-merging.
+- [x] 0.16 Add a real credential-free offline manifest/preflight operator with bounded strict inputs, shared spend arithmetic, supported import checks and explicit live-blocked output/exit behavior.
+- [x] 0.17 Verify cross-component evidence bindings cannot grant execution; test durable separate-ledger replay/breach and wrong-store identity denial, plus safe operator failures.
+- [ ] 0.18 Obtain human review of the coherent integrated revision; leave live native/input/OIDC joining, App provenance and dispatch disabled.
+- [x] 0.19 Record the explicit agent-proposal requirement and denial scenarios: permitted proposals from existing authorized observations confer no new substantive work authority; later human gates remain intact.
 
 ## 1. Human review and bounded proof
 
@@ -23,7 +28,7 @@
 - [x] S.2 Reserve maximum operation cost atomically before effects; aggregate outstanding and settled spend in one private authoritative local SQLite file.
 - [x] S.3 Verify competing threads/processes, replay, invalid/stale pricing, currency/month mismatch, finite limits, durable settlement and visible excess-cost freeze.
 - [x] S.4 Document no real adapter integration/model calls, no distributed or infrastructure invoice guarantee, no automatic release, and private recovery assumptions.
-- [ ] S.5 Obtain human review of this slice stacked against the immutable authorization core; do not self-approve or merge.
+- [ ] S.5 Obtain human review of spend accounting in the integrated package; do not self-approve or merge.
 - [ ] S.6 Separately review actual adapter enforcement, authorization/reservation/dispatch crash handling, trusted final usage and recovery before enabling any model calls.
 
 - [ ] 1.1 Obtain explicit human approval of the applicable framework and control-test revisions; verify the approval identifies scope and revision rather than merely a completed checklist.
@@ -34,8 +39,13 @@
 
 - [ ] 2.1 Define installation schemas and role-separation validation; verify both the allowed solo profile and a disallowed conflicting assignment.
 - [ ] 2.2 Implement a read-only prerequisite report; verify unsupported GitHub, model, tool, capacity, and identity capabilities block dependent setup.
+  - [x] 2.2.1 Implement only offline manifest/spend-plan/import checks with explicit unknown live capabilities; this does not complete cloud/installation preflight.
+  - [ ] 2.2.2 Verify actual installation configuration, CLI/tool capabilities, identities, models, GitHub protection/federation and Fabric capacity before setup activation.
 - [ ] 2.3 Present an exact bootstrap plan before creating identities or rights; verify approved grants are minimal and ordinary workers cannot change them.
 - [ ] 2.4 Implement the private issue adapter and immutable request/evidence storage; verify public events contain only opaque request references.
+  - [ ] 2.4.1 Enforce allowed issue repository/visibility and sanitized agent proposals without new observation/source authority; newly agent-filed requests remain proposed/awaiting approval.
+  - [ ] 2.4.2 Freeze an authorized human's exact initial scope/revision/effects before discovery/design; deny labels, author identity, assignments, mutable text, validation and agent reviews as approval.
+  - [ ] 2.4.3 Test proposal-without-execution, discovery-only approval without build/deploy, self-approved labels denied, changed-scope invalidation and later independent lifecycle gates before enabling ingestion.
 - [ ] 2.5 Integrate version-bound requests and atomic single-use consumption with private production request storage and safe worker scheduling; local core completion alone does not complete this dispatcher integration.
   - [x] 2.5.1 Implement and test immutable binding and durable local atomic consumption in the bounded core (section 0).
   - [ ] 2.5.2 Verify authenticated adapter inputs, authoritative policy/target freshness, cloud durability, and consumption/scheduling failure handling before enabling dispatch.

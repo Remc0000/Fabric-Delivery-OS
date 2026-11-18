@@ -1,6 +1,6 @@
 ## Purpose
 
-Make human authorization an enforced boundary for building and deployment,
+Make human authorization an enforced boundary for first substantive work, building and deployment,
 independent of agent instructions and private repository plan limitations.
 
 ## Implementation status
@@ -18,6 +18,8 @@ Complete native protection verification
 (including administrative bypass), reviewer credential provenance, identity
 separation, federation, cloud state, worker scheduling, and per-deployment
 integration remain required and are not proven by these tests.
+Agent-proposal ingestion/authorization is not implemented; no automated issue
+adapter may be enabled until the first-substantive-scope boundary below is enforced.
 
 ## ADDED Requirements
 
@@ -47,11 +49,33 @@ Agent runtimes MUST NOT receive human approval credentials.
 - **THEN** release still waits for the required human decision
 
 ### Requirement: Authorization binds an immutable execution request
-Every build or deployment request SHALL identify the installation, private
+Every substantive request, including initial discovery/design on an agent-filed
+proposal and later build/deployment requests, SHALL identify the installation, private
 solution, unique request ID, action, input/specification or artifact digests,
 target baseline, environment where applicable, policy revision, execution
 profile, and applicable framework/tool/skill snapshot. Authorization MUST NOT
 follow a mutable branch name or replaceable artifact reference.
+An authorized human's initial decision SHALL identify the exact requested scope,
+revision and enumerated effects, frozen through the same trusted private request
+boundary. Issue author identity, labels, assignment, structural validation,
+agent reviews and mutable issue text alone MUST NOT provide that decision.
+Approval of bounded discovery/design MUST NOT imply build or deployment
+authority, and changed scope or revision SHALL invalidate affected prior grants.
+
+#### Scenario: Proposed issue has no human decision
+- **WHEN** an agent-created issue requests investigation or implementation without an authorized human decision
+- **THEN** new source access, discovery, design, build and deployment are denied
+- **AND** permitted proposal creation alone does not move the request into an executable state
+
+#### Scenario: Initial approval covers discovery but not building
+- **WHEN** an authorized human approves one exact bounded discovery revision
+- **THEN** the grant applies only to its frozen scope and permitted effects
+- **AND** specification acceptance, building and each deployment still require their applicable decisions
+
+#### Scenario: An approved proposal is edited to widen access
+- **WHEN** requested sources, scope, revision or effects differ from the approved immutable request
+- **THEN** affected execution is denied and renewed applicable human approval is required
+- **AND** the original issue approval cannot authorize the edited request
 
 #### Scenario: Artifact content changes behind the same label
 - **WHEN** an artifact label resolves to different bytes after approval
