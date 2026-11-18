@@ -210,11 +210,17 @@ That script and the protected credential uploader are not supplied yet.
    Registration is separate from installation. GitHub's registration UI can
    require a private key before installation; do not assume there is a key-free
    installation path.
-5. **Pause before Generate private key.** First establish the approved protected
+5. **Pause before key-pair/private-key generation.** First establish the approved protected
    local-file/upload/storage path and verify redacted diagnostics with synthetic
    input. Never paste keys, client secrets or tokens into chat, Git, screenshots,
    command-line literals, plaintext parameter files or public Actions. A proposed
    upload path is not a shipped or verified uploader.
+   If GitHub shows **Credentials > Client secrets / Key pairs**, choose
+   **Key pairs** for the App private key. OAuth client secrets are not PEM
+   keys and cannot be converted into them. Save the actual private-key
+   download with a `.pem` filename; never manufacture a text-file substitute.
+   Revoke any exposed secret through its owner controls without recording its
+   value. Do not delete unrelated OAuth credentials.
 6. Only after that path is ready, complete protected key enrollment and choose
    **Install App > Only select repositories**, selecting exactly the one
    repository for that App. **Only on this account** does not restrict which of
