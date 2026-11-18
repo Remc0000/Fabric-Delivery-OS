@@ -3,7 +3,9 @@
 ## Scope and trust boundary
 
 This library is packaged alongside the immutable authorization core and optional
-native/OIDC observers; co-packaging is not atomic coordination or authorization.
+native/OIDC observers; co-packaging alone is not coordination or authorization.
+The separate [local dispatch coordinator](durable-dispatch.md) now reuses the
+same checks within an atomic attached-file grant/reservation/outbox transaction.
 Explicit human authorization on 2026-11-17 permits this bounded implementation,
 not model calls, cloud provisioning, or deployment. Import its API from
 `fabric_delivery_core.spend`. It uses Python's standard library only.
@@ -80,10 +82,11 @@ reservation; it cannot be bypassed by specifying an arbitrary reserve amount.
 4. A successful response contains the reservation and exclusive `deadline`,
    the earlier of card expiry and UTC month end. The adapter must independently
    enforce aggregate token/call limits and stop work before that deadline,
-   revalidate authorization, and prevent duplicate dispatch. This library does
+   revalidate authorization, and prevent duplicate dispatch. The standalone spend API does
    not schedule work, enforce provider limits, or atomically consume an
    authorization grant with reservation/dispatch. Its receipt is NOT reusable
-   execution authority.
+   execution authority. The separate local coordinator supplies one atomic
+   outbox/claim protocol, not provider enforcement or a live worker.
 5. After final, trusted, complete usage is known, call `settle` with the original
    ID/installation/period/currency/execution digest and integer `actual_units`,
    `actual_tokens`, `actual_calls`. An exact duplicate settlement is denied, not

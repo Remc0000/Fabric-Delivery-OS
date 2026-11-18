@@ -20,6 +20,15 @@
 - [ ] 0.18 Obtain human review of the coherent integrated revision; leave live native/input/OIDC joining, App provenance and dispatch disabled.
 - [x] 0.19 Record the explicit agent-proposal requirement and denial scenarios: permitted proposals from existing authorized observations confer no new substantive work authority; later human gates remain intact.
 
+### Authorized bounded local dispatch continuation (2026-11-18)
+
+- [x] D.1 Reuse authorization/spend checks in a single attached-file SQLite grant/reservation/ready transaction, retaining permanent authorization invalidation and existing standalone APIs.
+- [x] D.2 Bind the complete reviewed worker/cost/limit profile and implement one claim, pre-claim cancellation, permanent drift/expiry blocking and visible ambiguous outcomes without retry/refund.
+- [x] D.3 Coordinate terminal evidence, complete trusted usage and breach freeze; surface late completion without success.
+- [x] D.4 Add a disposable, input-free synthetic operator cycle with real local state and explicit live-disabled output; do not activate any worker or model.
+- [x] D.5 Verify targeted/full existing suites, package/operator entry points, abrupt-process/rollback/race cases and strict OpenSpec before publishing.
+- [ ] D.6 Obtain human review of this exact integrated revision and separately prove real adapter, private storage, identity and isolated-worker boundaries before activation.
+
 ## 1. Human review and bounded proof
 
 ### Separately authorized bounded local spend slice (2026-11-17)
@@ -48,6 +57,7 @@
   - [ ] 2.4.3 Test proposal-without-execution, discovery-only approval without build/deploy, self-approved labels denied, changed-scope invalidation and later independent lifecycle gates before enabling ingestion.
 - [ ] 2.5 Integrate version-bound requests and atomic single-use consumption with private production request storage and safe worker scheduling; local core completion alone does not complete this dispatcher integration.
   - [x] 2.5.1 Implement and test immutable binding and durable local atomic consumption in the bounded core (section 0).
+  - [x] 2.5.3 Implement the bounded local atomic grant/reservation/outbox, one worker claim and conservative unknown-state protocol without claiming cloud dispatch.
   - [ ] 2.5.2 Verify authenticated adapter inputs, authoritative policy/target freshness, cloud durability, and consumption/scheduling failure handling before enabling dispatch.
 - [ ] 2.6 Configure approved public control federation and policy verification; verify tokens from solution repos, other refs, and wrong environments cannot launch workers.
 

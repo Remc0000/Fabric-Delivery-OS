@@ -39,6 +39,17 @@ Full installation readiness and execution authorization remain unsupported.
 - **WHEN** offline parsing or validation fails
 - **THEN** output contains generic failure codes without the supplied values or paths
 
+### Requirement: A synthetic dispatch exercise is isolated from installations
+The operator MAY provide a disposable local dispatch self-test, accepting no
+installation files, credentials, worker inputs or approval assertions. It SHALL
+use only fresh temporary synthetic state and remove its files. Success SHALL
+mean only the inert local cycle passed, with live execution still unsupported.
+
+#### Scenario: An operator runs the inert cycle
+- **WHEN** synthetic grant, reservation, queue claim, completion and replay checks pass
+- **THEN** local exercise success is reported without private values or live-readiness authority
+- **AND** no existing installation ledger, human credential, external worker or API is used
+
 ### Requirement: Tooling checks are task specific
 Preflight SHALL assess Azure CLI, Fabric CLI, GitHub CLI/MCP, Microsoft Learn
 MCP, and task-specific tooling where required. Rayfin tooling SHALL be checked

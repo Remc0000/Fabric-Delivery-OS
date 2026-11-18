@@ -105,12 +105,16 @@ recovery must revoke/reconcile outstanding grants before enabling consumption.
 The digest consistency check detects accidental stored-manifest changes, not a
 host/database administrator rewriting both bytes and hashes.
 
-There is deliberately **no atomic worker scheduling/outbox integration**.
-A crash after commit burns the grant even if no worker starts; issue a fresh,
+The standalone `consume` API has no atomic worker scheduling/outbox integration.
+A crash after that standalone commit burns the grant even if no worker starts; issue a fresh,
 separately approved request after private reconciliation. A receipt is not a
 credential and must never be treated as permission to relaunch an execution.
 Target-conflict locking, partial-effect records, ongoing cancellation,
-distributed storage, and approval/dispatch adapters remain future work.
+distributed storage, and live approval/dispatch adapters remain future work.
+The separate [local dispatch coordinator](durable-dispatch.md) now offers an
+atomic grant/reservation/ready transaction and one non-reclaimable worker claim.
+Use that API, not sequential standalone calls, for the supported local outbox
+protocol. It still authenticates no human and launches no worker.
 
 ## Minimal trusted-service usage
 

@@ -37,6 +37,14 @@ manifests, optional spend-plan arithmetic/bindings and supported imports without
 credentials, API calls or ledger writes. Preflight always reports live execution
 unsupported; no joined authorization or dispatch is inferred from co-packaging.
 
+The explicit 2026-11-18 software continuation adds a
+[single-host transactional outbox](../../../docs/durable-dispatch.md), reusing
+authorization/spend checks for atomic consumption/reservation/ready state,
+one non-reclaimable worker claim and coordinated trusted final usage. Its
+input-free synthetic self-test is executable locally but grants no installation
+authority. Live evidence/identity adapters, isolated workers, cloud recovery
+proof and Fabric delivery remain unsupported.
+
 ## What Changes
 
 - Define three repository responsibilities: a public framework, a public

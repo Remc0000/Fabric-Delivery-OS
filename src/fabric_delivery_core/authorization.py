@@ -354,42 +354,48 @@ class SQLiteAuthorizationStore:
         permanently invalidates the old request. Expiry is checked after locking.
         No worker launch occurs here; a crash after commit burns the grant.
         """
-        denial = None
         with self._transaction() as db:
-            row = self._request(db, current_manifest.request_id)
-            self._require_state(row, "authorized")
-            frozen = ExecutionManifest.from_json(row["manifest"])
-            now = self._now()
-            if now < frozen.created_at or now < approval.approved_at:
-                denial = "not_yet_valid"
-            elif now >= min(frozen.expires_at, json.loads(row["approval"])["expires_at"]):
-                denial = "expired"
-            elif frozen.policy_digest != current_manifest.policy_digest:
-                denial = "policy_changed"
-            elif frozen.target_baseline_digest != current_manifest.target_baseline_digest:
-                denial = "target_changed"
-            elif frozen.execution_profile_digest != current_manifest.execution_profile_digest:
-                denial = "execution_profile_changed"
-            elif row["digest"] != current_manifest.digest:
-                denial = "request_mismatch"
-            elif row["approval"] != approval.to_json():
-                denial = "approval_mismatch"
-            if denial:
-                db.execute(
-                    "UPDATE requests SET state='invalidated',denial_reason=? "
-                    "WHERE request_id=?", (denial, frozen.request_id)
-                )
-            else:
-                receipt = ExecutionReceipt(
-                    frozen.request_id, frozen.digest, str(uuid4()), now
-                )
-                db.execute(
-                    "UPDATE requests SET state='consumed',execution_id=?,consumed_at=? "
-                    "WHERE request_id=?",
-                    (receipt.execution_id, receipt.consumed_at, receipt.request_id),
-                )
+            result = self._consume_in_transaction(db, current_manifest, approval)
+        if isinstance(result, str):
+            raise AuthorizationDenied(result)
+        return result
+
+    def _consume_in_transaction(
+        self, db: sqlite3.Connection,
+        current_manifest: ExecutionManifest, approval: ApprovalBinding,
+    ) -> ExecutionReceipt | str:
+        """Caller owns the write transaction and must commit permanent denials."""
+        row = self._request(db, current_manifest.request_id)
+        self._require_state(row, "authorized")
+        frozen = ExecutionManifest.from_json(row["manifest"])
+        now = self._now()
+        denial = None
+        if now < frozen.created_at or now < approval.approved_at:
+            denial = "not_yet_valid"
+        elif now >= min(frozen.expires_at, json.loads(row["approval"])["expires_at"]):
+            denial = "expired"
+        elif frozen.policy_digest != current_manifest.policy_digest:
+            denial = "policy_changed"
+        elif frozen.target_baseline_digest != current_manifest.target_baseline_digest:
+            denial = "target_changed"
+        elif frozen.execution_profile_digest != current_manifest.execution_profile_digest:
+            denial = "execution_profile_changed"
+        elif row["digest"] != current_manifest.digest:
+            denial = "request_mismatch"
+        elif row["approval"] != approval.to_json():
+            denial = "approval_mismatch"
         if denial:
-            raise AuthorizationDenied(denial)
+            db.execute(
+                "UPDATE requests SET state='invalidated',denial_reason=? "
+                "WHERE request_id=?", (denial, frozen.request_id)
+            )
+            return denial
+        receipt = ExecutionReceipt(frozen.request_id, frozen.digest, str(uuid4()), now)
+        db.execute(
+            "UPDATE requests SET state='consumed',execution_id=?,consumed_at=? "
+            "WHERE request_id=?",
+            (receipt.execution_id, receipt.consumed_at, receipt.request_id),
+        )
         return receipt
 
     def receipt(self, request_id: str) -> ExecutionReceipt | None:

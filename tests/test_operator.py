@@ -84,7 +84,7 @@ class OperatorTests(unittest.TestCase):
         self.assertTrue(result["offline_checks_passed"])
         self.assertIs(result["execution_enabled"], False)
         self.assertIn(
-            "atomic_grant_reservation_dispatch_and_recovery_unsupported", result["live_blockers"]
+            "live_dispatch_and_recovery_unverified", result["live_blockers"]
         )
         self.assertEqual(len(list(self.directory.iterdir())), 2)
 
@@ -178,6 +178,32 @@ class OperatorTests(unittest.TestCase):
         self.assertEqual(result.stderr, "")
         self.assertIs(json.loads(result.stdout)["execution_enabled"], False)
         self.assertNotIn("PRIVATE_MISSING_FILE", result.stdout)
+
+    def test_self_test_exercises_disposable_state_without_network_or_live_authority(self):
+        with patch("socket.socket.connect", side_effect=AssertionError("network forbidden")):
+            code, result = self.invoke("self-test-dispatch")
+        self.assertEqual(code, 0)
+        self.assertTrue(result["offline_checks_passed"])
+        self.assertIs(result["execution_enabled"], False)
+        self.assertEqual(result["live_execution"], "unsupported")
+        self.assertEqual(
+            [check["reason"] for check in result["checks"]],
+            ["local_atomic_cycle_verified", "grant_and_claim_replay_denied"],
+        )
+        self.assertNotIn("synthetic-installation", json.dumps(result))
+        self.assertEqual(len(list(self.directory.iterdir())), 2)
+
+    def test_self_test_accepts_no_existing_store_or_approval_inputs_and_surfaces_failure(self):
+        code, result = self.invoke("self-test-dispatch", "--store", "PRIVATE_STORE_PATH")
+        self.assertEqual(code, 2)
+        self.assertNotIn("PRIVATE_STORE_PATH", json.dumps(result))
+        with patch(
+            "fabric_delivery_core.self_test.dispatch_self_test", side_effect=OSError("PRIVATE_ERROR")
+        ):
+            code, result = self.invoke("self-test-dispatch")
+        self.assertEqual(code, 2)
+        self.assertEqual(result["checks"][0]["reason"], "offline_check_failed")
+        self.assertNotIn("PRIVATE_ERROR", json.dumps(result))
 
 
 if __name__ == "__main__":

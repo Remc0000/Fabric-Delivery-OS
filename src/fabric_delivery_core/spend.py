@@ -61,6 +61,11 @@ class SpendBudget:
         _integer(self.max_tokens, "max_tokens", 1)
         _integer(self.max_calls, "max_calls", 1)
 
+    @property
+    def digest(self) -> str:
+        """Return the canonical immutable policy binding used by reservations."""
+        return _binding(self)
+
 
 @dataclass(frozen=True)
 class PriceCard:
@@ -86,6 +91,11 @@ class PriceCard:
         _integer(self.call_units, "call_units")
         if self.token_units == self.call_units == 0:
             raise ValueError("zero-cost cards are not supported")
+
+    @property
+    def digest(self) -> str:
+        """Return the canonical immutable price binding used by reservations."""
+        return _binding(self)
 
 
 class SpendDenied(Exception):
@@ -222,6 +232,20 @@ class SQLiteSpendStore:
         A receipt is inspection data, not a reusable worker-launch credential.
         All retries of an ID or execution digest are denied, even after settlement.
         """
+        with self._transaction() as db:
+            return self._reserve_in_transaction(
+                db, reservation_id=reservation_id, installation_id=installation_id,
+                period=period, currency=currency, execution_digest=execution_digest,
+                operation=operation, price_version=price_version,
+                max_tokens=max_tokens, max_calls=max_calls,
+            )
+
+    def _reserve_in_transaction(
+        self, db: sqlite3.Connection, *, reservation_id: str, installation_id: str,
+        period: str, currency: str, execution_digest: str, operation: str,
+        price_version: str, max_tokens: int, max_calls: int,
+    ) -> dict[str, object]:
+        """Use an already locked transaction shared with a trusted coordinator."""
         for value, name in (
             (reservation_id, "reservation_id"), (installation_id, "installation_id"),
             (operation, "operation"), (price_version, "price_version"),
@@ -232,64 +256,63 @@ class SQLiteSpendStore:
         _digest(execution_digest, "execution_digest")
         _integer(max_tokens, "max_tokens")
         _integer(max_calls, "max_calls", 1)
-        with self._transaction() as db:
-            now = self._clock()
-            _timestamp(now, "clock result")
-            current = datetime.fromtimestamp(now, timezone.utc)
-            if period != current.strftime("%Y-%m"):
-                raise SpendDenied("period_mismatch")
-            if db.execute("SELECT 1 FROM freezes WHERE installation=?", (installation_id,)).fetchone():
-                raise SpendDenied("installation_frozen")
-            if db.execute(
-                "SELECT 1 FROM reservations WHERE id=? OR execution_digest=?",
-                (reservation_id, execution_digest),
-            ).fetchone():
-                raise SpendDenied("reservation_replay")
-            record = db.execute(
-                "SELECT * FROM budgets WHERE installation=? AND period=?", (installation_id, period)
-            ).fetchone()
-            if record is None:
-                raise SpendDenied("missing_budget")
-            budget = SpendBudget(**json.loads(record["config"]))
-            if _binding(budget) != record["digest"]:
-                raise SpendDenied("budget_corrupt")
-            if budget.currency != currency:
-                raise SpendDenied("currency_mismatch")
-            if max_tokens > budget.max_tokens or max_calls > budget.max_calls:
-                raise SpendDenied("execution_limit")
-            price = db.execute(
-                "SELECT * FROM prices WHERE operation=? AND version=?", (operation, price_version)
-            ).fetchone()
-            if price is None:
-                raise SpendDenied("unknown_price")
-            card = PriceCard(**json.loads(price["card"]))
-            if _binding(card) != price["digest"]:
-                raise SpendDenied("price_corrupt")
-            if card.currency != currency:
-                raise SpendDenied("currency_mismatch")
-            if not card.valid_from <= now < card.valid_until:
-                raise SpendDenied("stale_price")
-            amount = maximum_reservation_units(card, max_tokens, max_calls)
-            outstanding, settled = self._totals(db, installation_id, period)
-            if outstanding + settled + amount > budget.cap_units:
-                raise SpendDenied("budget_exhausted")
-            next_month = (
-                datetime(current.year + 1, 1, 1, tzinfo=timezone.utc)
-                if current.month == 12 else
-                datetime(current.year, current.month + 1, 1, tzinfo=timezone.utc)
-            )
-            deadline = min(int(next_month.timestamp()), card.valid_until)
-            db.execute(
-                """INSERT INTO reservations (
-                    id,installation,period,currency,execution_digest,budget_digest,
-                    price_digest,operation,price_version,max_tokens,max_calls,
-                    reserved,deadline,created_at,state)
-                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,'reserved')""",
-                (reservation_id, installation_id, period, currency, execution_digest,
-                 record["digest"], price["digest"], operation, price_version,
-                 max_tokens, max_calls, amount, deadline, now),
-            )
-            return dict(db.execute("SELECT * FROM reservations WHERE id=?", (reservation_id,)).fetchone())
+        now = self._clock()
+        _timestamp(now, "clock result")
+        current = datetime.fromtimestamp(now, timezone.utc)
+        if period != current.strftime("%Y-%m"):
+            raise SpendDenied("period_mismatch")
+        if db.execute("SELECT 1 FROM freezes WHERE installation=?", (installation_id,)).fetchone():
+            raise SpendDenied("installation_frozen")
+        if db.execute(
+            "SELECT 1 FROM reservations WHERE id=? OR execution_digest=?",
+            (reservation_id, execution_digest),
+        ).fetchone():
+            raise SpendDenied("reservation_replay")
+        record = db.execute(
+            "SELECT * FROM budgets WHERE installation=? AND period=?", (installation_id, period)
+        ).fetchone()
+        if record is None:
+            raise SpendDenied("missing_budget")
+        budget = SpendBudget(**json.loads(record["config"]))
+        if _binding(budget) != record["digest"]:
+            raise SpendDenied("budget_corrupt")
+        if budget.currency != currency:
+            raise SpendDenied("currency_mismatch")
+        if max_tokens > budget.max_tokens or max_calls > budget.max_calls:
+            raise SpendDenied("execution_limit")
+        price = db.execute(
+            "SELECT * FROM prices WHERE operation=? AND version=?", (operation, price_version)
+        ).fetchone()
+        if price is None:
+            raise SpendDenied("unknown_price")
+        card = PriceCard(**json.loads(price["card"]))
+        if _binding(card) != price["digest"]:
+            raise SpendDenied("price_corrupt")
+        if card.currency != currency:
+            raise SpendDenied("currency_mismatch")
+        if not card.valid_from <= now < card.valid_until:
+            raise SpendDenied("stale_price")
+        amount = maximum_reservation_units(card, max_tokens, max_calls)
+        outstanding, settled = self._totals(db, installation_id, period)
+        if outstanding + settled + amount > budget.cap_units:
+            raise SpendDenied("budget_exhausted")
+        next_month = (
+            datetime(current.year + 1, 1, 1, tzinfo=timezone.utc)
+            if current.month == 12 else
+            datetime(current.year, current.month + 1, 1, tzinfo=timezone.utc)
+        )
+        deadline = min(int(next_month.timestamp()), card.valid_until)
+        db.execute(
+            """INSERT INTO reservations (
+                id,installation,period,currency,execution_digest,budget_digest,
+                price_digest,operation,price_version,max_tokens,max_calls,
+                reserved,deadline,created_at,state)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,'reserved')""",
+            (reservation_id, installation_id, period, currency, execution_digest,
+             record["digest"], price["digest"], operation, price_version,
+             max_tokens, max_calls, amount, deadline, now),
+        )
+        return dict(db.execute("SELECT * FROM reservations WHERE id=?", (reservation_id,)).fetchone())
 
     def settle(
         self, *, reservation_id: str, installation_id: str, period: str,
@@ -302,50 +325,64 @@ class SQLiteSpendStore:
         remain outstanding; never use zero to release an uncertain reservation.
         A breach is committed BEFORE raising settlement_breach.
         """
+        with self._transaction() as db:
+            breach = self._settle_in_transaction(
+                db, reservation_id=reservation_id, installation_id=installation_id,
+                period=period, currency=currency, execution_digest=execution_digest,
+                actual_units=actual_units, actual_tokens=actual_tokens,
+                actual_calls=actual_calls,
+            )
+        if breach:
+            raise SpendDenied("settlement_breach")
+
+    def _settle_in_transaction(
+        self, db: sqlite3.Connection, *, reservation_id: str, installation_id: str,
+        period: str, currency: str, execution_digest: str, actual_units: int,
+        actual_tokens: int, actual_calls: int,
+    ) -> bool:
+        """Return a breach for the caller to commit before reporting denial."""
         _integer(actual_units, "actual_units")
         _integer(actual_tokens, "actual_tokens")
         _integer(actual_calls, "actual_calls")
         _digest(execution_digest, "execution_digest")
         _period(period)
         _currency(currency)
-        with self._transaction() as db:
-            row = db.execute("SELECT * FROM reservations WHERE id=?", (reservation_id,)).fetchone()
-            if row is None:
-                raise SpendDenied("unknown_reservation")
-            if (row["installation"], row["period"], row["currency"], row["execution_digest"]) != (
-                installation_id, period, currency, execution_digest
-            ):
-                raise SpendDenied("settlement_mismatch")
-            if row["state"] != "reserved":
-                raise SpendDenied("settlement_replay")
-            record = db.execute(
-                "SELECT * FROM prices WHERE operation=? AND version=?",
-                (row["operation"], row["price_version"]),
-            ).fetchone()
-            if record is None:
-                raise SpendDenied("unknown_price")
-            card = PriceCard(**json.loads(record["card"]))
-            if _binding(card) != row["price_digest"] or record["digest"] != row["price_digest"]:
-                raise SpendDenied("price_corrupt")
-            breach = (
-                actual_units > row["reserved"] or actual_tokens > row["max_tokens"]
-                or actual_calls > row["max_calls"]
-            )
-            now = self._clock()
-            _timestamp(now, "clock result")
-            db.execute(
-                """UPDATE reservations SET state=?,actual=?,actual_tokens=?,
-                    actual_calls=?,settled_at=? WHERE id=?""",
-                ("breach" if breach else "settled", actual_units, actual_tokens,
-                 actual_calls, now, reservation_id),
-            )
-            if breach:
-                db.execute(
-                    "INSERT OR IGNORE INTO freezes VALUES (?,?)",
-                    (installation_id, reservation_id),
-                )
+        row = db.execute("SELECT * FROM reservations WHERE id=?", (reservation_id,)).fetchone()
+        if row is None:
+            raise SpendDenied("unknown_reservation")
+        if (row["installation"], row["period"], row["currency"], row["execution_digest"]) != (
+            installation_id, period, currency, execution_digest
+        ):
+            raise SpendDenied("settlement_mismatch")
+        if row["state"] != "reserved":
+            raise SpendDenied("settlement_replay")
+        record = db.execute(
+            "SELECT * FROM prices WHERE operation=? AND version=?",
+            (row["operation"], row["price_version"]),
+        ).fetchone()
+        if record is None:
+            raise SpendDenied("unknown_price")
+        card = PriceCard(**json.loads(record["card"]))
+        if _binding(card) != row["price_digest"] or record["digest"] != row["price_digest"]:
+            raise SpendDenied("price_corrupt")
+        breach = (
+            actual_units > row["reserved"] or actual_tokens > row["max_tokens"]
+            or actual_calls > row["max_calls"]
+        )
+        now = self._clock()
+        _timestamp(now, "clock result")
+        db.execute(
+            """UPDATE reservations SET state=?,actual=?,actual_tokens=?,
+                actual_calls=?,settled_at=? WHERE id=?""",
+            ("breach" if breach else "settled", actual_units, actual_tokens,
+             actual_calls, now, reservation_id),
+        )
         if breach:
-            raise SpendDenied("settlement_breach")
+            db.execute(
+                "INSERT OR IGNORE INTO freezes VALUES (?,?)",
+                (installation_id, reservation_id),
+            )
+        return breach
 
     def receipt(self, reservation_id: str) -> dict[str, object] | None:
         """Inspect durable state; never authorizes another execution."""

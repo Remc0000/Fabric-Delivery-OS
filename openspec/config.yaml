@@ -13,10 +13,16 @@ context: |
   context; private-input binding, native-review integration, exact runtime App
   provenance, and live installation federation remain unproven and issue no grants.
   Local finite spend reservations/settlements use a separate authoritative SQLite
-  file, not an infrastructure invoice cap or atomic authorization/dispatch join.
+  file, not an infrastructure invoice cap. The explicitly authorized 2026-11-18
+  software continuation adds a single-host atomic attached-file outbox joining
+  grant consumption, maximum reservation and ready work, with one non-reclaimable
+  worker claim and coordinated terminal usage. DELETE journals and supported
+  private local storage are mandatory. No live adapter or worker is supplied.
   Offline preflight checks manifest validity, optional supplied spend bounds and
   supported Python imports only; unknown remote capabilities remain blockers.
-  It never contacts APIs, opens ledgers, consumes grants, or activates workers.
+  Those two commands never contact APIs, open ledgers, consume grants or activate
+  workers. A separate inert self-test exercises disposable synthetic stores only;
+  success still reports live execution unsupported.
   Selected architecture: GitHub Free, a public framework repository, a separate
   public control repository per installation, and private solution repositories.
   Native human approval jobs run in the public control repository itself.

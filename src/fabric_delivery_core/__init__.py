@@ -8,6 +8,7 @@ from .authorization import (
     SQLiteAuthorizationStore,
     sha256_digest,
 )
+from .dispatch import DispatchClaim, DispatchDenied, DispatchProfile, SQLiteDispatchStore
 
 __all__ = [
     "ApprovalBinding",
@@ -16,4 +17,8 @@ __all__ = [
     "ExecutionReceipt",
     "SQLiteAuthorizationStore",
     "sha256_digest",
+    "DispatchClaim",
+    "DispatchDenied",
+    "DispatchProfile",
+    "SQLiteDispatchStore",
 ]

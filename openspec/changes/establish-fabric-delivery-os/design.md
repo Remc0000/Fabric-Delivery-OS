@@ -29,9 +29,9 @@ One protected repository/run/attempt/gate tuple may bind only one request.
 The lifecycle is pending -> authorized -> consumed, with permanent revocation
 or consume-time invalidation before consumption. Time is checked after obtaining
 the write lock. Drift cannot be reverted to resurrect a grant. A crash after a
-claim commits burns the grant; no atomic worker launch/outbox is claimed.
-The existing requirement for atomic consumption plus safe scheduling still
-requires integration work before any worker dispatch is enabled.
+standalone claim commits burns the grant; that standalone API schedules no work.
+The later local outbox below coordinates preparation and one worker claim
+without implying atomic external launch or live dispatch readiness.
 
 ### Read-only native approval observation
 
@@ -93,9 +93,45 @@ The next boundary remains an authenticated authoritative private request/policy
 adapter joining revalidated inputs, actual App provenance, native human evidence,
 OIDC and independently inspected bypass/credential policy. Standard GitHub
 claims do not sign private workflow inputs. Even after that join, durable
-authorization/reservation/dispatch recovery, the isolated Agent Framework/Foundry
-harness, independently approved stage workers and Fabric modules remain
-unimplemented. Offline checks are only a partial onboarding implementation.
+live authorization/reservation/dispatch integration/recovery, the isolated
+Agent Framework/Foundry harness, independently approved stage workers and Fabric
+modules remain unimplemented. Offline checks are only a partial onboarding implementation.
+
+### Authorized durable local outbox (2026-11-18)
+
+The explicit continuation reuses the authorization and spend checks in one
+SQLite attached-file transaction: consume a grant, reserve the exact approved
+maximum and persist ready work together. Existing standalone methods retain
+their behavior. Permanent authorization invalidation commits before denial;
+budget/configuration/storage failures instead roll back all preparation writes.
+The profile digest binds the reviewed worker/runtime configuration, immutable
+budget/price digests, operation, period/currency and finite token/call/time bounds.
+
+The outbox uses a third distinct private local database with its own identity.
+All files require a common reliable local filesystem, DELETE rollback journals,
+full synchronous transactions and trusted-service access controls. Unsupported
+journal modes and missing/unrelated attached stores fail closed without
+conversion or recreation. This uses SQLite super-journal semantics, not an
+Azure distributed-storage guarantee; process-crash tests do not certify
+power-loss behavior or backups.
+
+Fresh trusted bindings, valid reservation/freeze state and expiry are checked
+again before one worker claim. A durable ready job may receive its first claim
+after restart. A committed worker claim is never reclaimed, including when
+launch is ambiguous. Pre-claim cancellation, permanent ready-state blocking and
+unknown outcomes never refund cost or restore grants. Final complete trusted
+usage and terminal result commit together; breach/freeze are durable before
+error, and late completion cannot report success. No reset/requeue/unfreeze or
+unknown-usage reconciliation endpoint is introduced.
+
+The input-free operator self-test exercises this protocol in fresh disposable
+synthetic stores, with no external worker or human identity assertion. It
+reports live execution unsupported even on local success. The coordinator
+exposes no callback, shell command, network endpoint, credentials or scheduler.
+Native/OIDC-to-grant joining, actual private-input/App/federation proof,
+ongoing cancellation, target-conflict controls, isolated workers and real
+storage/recovery acceptance remain separate activation prerequisites.
+See [the local dispatch guide](../../../docs/durable-dispatch.md).
 
 ## Goals / Non-Goals
 
@@ -164,8 +200,10 @@ repository identity and approved environment/context; no wildcard acceptance of
 solution repositories or arbitrary workflow refs is allowed.
 
 The dispatcher validates the request, environment, state, policy, workflow
-revision, and artifact binding, then atomically consumes the grant and starts
-the proper worker. It is not a custom replacement for GitHub's human reviewer
+revision, and artifact binding, then atomically consumes the grant, reserves
+bounded cost and records ready work. A separate one-time claim precedes the
+proper worker launch; an ambiguous claimed attempt is never automatically
+relaunched. It is not a custom replacement for GitHub's human reviewer
 decision. It does supply private state, anti-replay, and safe worker scheduling,
 which native approval alone does not provide.
 
@@ -263,8 +301,10 @@ month. Deny missing/stale/unknown prices, incompatible bindings and replay.
 Settlement is final and single-use. Excess actual cost or usage is committed as
 a visible breach and freezes new reservations across the installation, including
 future months; it cannot undo an external bill. Unknown outcomes stay reserved.
-There is no automatic refund, expiry release, unfreeze, model call, or atomic
-authorization/dispatch integration. The adapter must enforce usage and the
+There is no automatic refund, expiry release, unfreeze or model call. The
+standalone spend API supplies no atomic authorization/dispatch integration;
+the later local outbox reuses its checks without supplying a live adapter.
+The adapter must enforce usage and the
 exclusive deadline (card expiry or UTC month end), authenticate complete final
 usage and avoid duplicate dispatch. Delayed reporting uses the original month.
 Excess usage freezes even when its reported cost is low. Conservative price

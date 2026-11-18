@@ -20,6 +20,9 @@ separation, federation, cloud state, worker scheduling, and per-deployment
 integration remain required and are not proven by these tests.
 Agent-proposal ingestion/authorization is not implemented; no automated issue
 adapter may be enabled until the first-substantive-scope boundary below is enforced.
+The authorized 2026-11-18 local dispatch continuation adds an atomic
+grant/reservation/ready transaction and one non-reclaimable worker claim.
+It authenticates no caller and supplies no live worker or evidence-to-grant join.
 
 ## ADDED Requirements
 
@@ -167,9 +170,14 @@ require a new request and approval.
 - **AND** renewed authorization requires a new request
 
 #### Scenario: A service stops after consuming a grant
-- **WHEN** a claim commits but execution does not start
+- **WHEN** standalone consumption without the coordinated outbox commits, or a worker claim commits but execution does not start
 - **THEN** restarting the service cannot consume the old request again
 - **AND** recovery requires reconciliation and a separately authorized request
+
+#### Scenario: Atomic ready work survives before its first worker claim
+- **WHEN** grant, reservation and one ready entry committed together but no worker claim exists
+- **THEN** the coordinator may perform its first claim only after fresh trusted revalidation before expiry
+- **AND** this cannot consume the grant twice, duplicate the reserve or reclaim an existing worker attempt
 
 ### Requirement: Grants define operational side effects
 Requests SHALL distinguish deploying definitions, loading data, scheduling

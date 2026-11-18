@@ -16,10 +16,13 @@ Optional read-only native GitHub observation and PyJWT/cryptography OIDC
 verification provide bound evidence, never grants. Private input/native-review
 integration, administrative bypass, human credential and exact runtime App
 provenance, and live installation federation remain unproven. The offline
-operator validates local inputs/imports without credentials, network calls,
-ledger writes or execution authority; preflight remains live-blocked. There is
-no worker dispatch, cloud provisioning, or atomic authorization/spend/dispatch
-integration. Microsoft Agent Framework/Foundry remains the intended model
+operator validates local inputs/imports without credentials, network calls or
+installation-ledger writes; preflight remains live-blocked. The explicit
+2026-11-18 software continuation adds a single-host atomic local outbox joining
+grant consumption, maximum spend reservation and one worker claim, with terminal
+usage coordination. Its inert self-test uses only fresh disposable synthetic
+stores. There is no live worker dispatch, cloud provisioning, evidence-to-grant
+join or production storage/recovery proof. Microsoft Agent Framework/Foundry remains the intended model
 runtime, outside this library. Keep synthetic tests offline and public.
 
 Agents may file proposals from already authorized observations only in allowed

@@ -22,7 +22,7 @@ LIVE_BLOCKERS = (
     "runtime_app_provenance_and_identity_separation_unverified",
     "live_installation_federation_unproven",
     "spend_headroom_pricing_provenance_and_adapter_limits_unverified",
-    "atomic_grant_reservation_dispatch_and_recovery_unsupported",
+    "live_dispatch_and_recovery_unverified",
     "isolated_agent_and_stage_deployment_workers_unimplemented",
     "fabric_delivery_modules_and_acceptance_unimplemented",
 )

@@ -16,16 +16,18 @@ Installations are operator actions, not actions performed by the CLI.
 ```powershell
 fabric-delivery validate-manifest "D:\PrivateInstallation\manifest.json"
 fabric-delivery preflight --manifest "D:\PrivateInstallation\manifest.json" --spend-plan "D:\PrivateInstallation\offline-spend.json"
+fabric-delivery self-test-dispatch
 ```
 
 `python -m fabric_delivery_core` is equivalent. Paths are placeholders: supply
 ordinary local files in private storage, not real configuration committed here.
 UNC paths are rejected; do not use mapped network drives. Inputs are bounded to
-1 MiB UTF-8 JSON. No credential flags, environment credentials, API clients,
-ledger access, state writes, approvals, reservations, workers or network calls
-are used. Installed Python packages and filesystem/runtime integrity are trusted.
+1 MiB UTF-8 JSON. Manifest validation and preflight use no credential flags,
+environment credentials, API clients, ledger access, state writes, approvals,
+reservations, workers or network calls. Installed Python packages and
+filesystem/runtime integrity are trusted.
 
-Both commands emit one JSON object with generic closed check/reason codes.
+All commands emit one JSON object with generic closed check/reason codes.
 No input identifiers, values, digests, paths, exceptions or raw credentials are
 echoed, including invalid command arguments. Output includes
 `scope: "offline_only"`, `execution_enabled: false`, `live_execution:
@@ -34,8 +36,15 @@ echoed, including invalid command arguments. Output includes
 | Command/result | Exit | Meaning |
 | --- | --- | --- |
 | `validate-manifest`, valid and current | 0 | Local frozen schema and `[created_at, expires_at)` validity only |
-| Either command, invalid/missing/unknown local input or required import | 2 | Offline check failed; no permission follows |
+| Any command, invalid/missing/unknown local input, import or self-test failure | 2 | Offline check failed; no permission follows |
 | `preflight`, all requested offline checks pass | 3 | Live readiness still blocked; **never use this as a deployment gate success** |
+| `self-test-dispatch`, inert local cycle passes | 0 | Synthetic temporary storage only, not a human/worker/readiness proof |
+
+`self-test-dispatch` accepts no installation inputs. Unlike the two read-only
+checks, it creates and removes fresh disposable SQLite stores and uses synthetic
+approval fixtures only there. It exercises enqueue, restart, one claim, inert
+completion, settlement and replay denial. See [the dispatch guide](durable-dispatch.md).
+It emits the same explicit live-blocked output; no live approval or worker starts.
 
 Help exits 0 without checking readiness. The immutable manifest schema is
 described in [authorization-core.md](authorization-core.md). Validation does not
@@ -86,8 +95,10 @@ Cross-component tests verify durable separate-ledger replay/breach behavior,
 wrong-database rejection, shared native/OIDC bindings and the fact that neither
 successful observation can become an approval binding. Synthetic signing keys,
 HTTP evidence and externally attested approval fixtures are not live human
-approvals or installation acceptance. No atomic cross-ledger transaction is
-claimed; a crash between claim and reservation can still strand state.
+approvals or installation acceptance. Sequential standalone ledger calls still
+can strand state. The separate [local outbox](durable-dispatch.md) now coordinates
+grant consumption, reservation and ready state atomically under its documented
+single-host rollback-journal constraints; it does not supply a live adapter.
 
 ## Next trusted-adapter boundary
 
@@ -103,9 +114,10 @@ Before effects can be enabled, separately reviewed integration must:
    request; independently verify disabled administrative bypass and human
    credential isolation. Unknown evidence remains denied; signed reruns do not
    overcome native history's missing attempt attribution.
-4. Coordinate claim, authenticated finite spend reservation and worker dispatch
-   durably, including ambiguous responses, cancellation and partial failure.
-   Never relaunch from either receipt or silently release unknown cost.
+4. Integrate and independently verify the local outbox or a separately reviewed
+   production equivalent, including real storage durability, authenticated
+   claims, cancellation and ambiguous effects. The local coordinator does not
+   prove this live integration. Never relaunch from a receipt or release unknown cost.
 5. Add isolated Microsoft Agent Framework/Foundry execution and mediated tools,
    trusted complete usage, fixed separately authorized Dev/Test/Prod workers,
    and approved Fabric ingestion/Lakehouse/semantic-model/report modules.

@@ -13,7 +13,7 @@ repository does not start agents, configure approvals, or provision resources.
 
 | Area | Actual status |
 | --- | --- |
-| Framework in this revision | One usable Python package: immutable manifests, local single-use authorization, local spend reservations, read-only native approval evidence, cryptographic GitHub OIDC verification, and an [offline operator entry point](docs/offline-operator.md). Human review and installation acceptance remain separate requirements. |
+| Framework in this revision | One usable Python package: immutable manifests, local single-use authorization, local spend reservations, a [transactional local outbox](docs/durable-dispatch.md), read-only native approval evidence, cryptographic GitHub OIDC verification, and an [offline operator entry point](docs/offline-operator.md). Human review and installation acceptance remain separate requirements. |
 | Authorization and identity boundary | Native/OIDC observations cannot become execution grants. Private request/input binding, actual App provenance, bypass policy, human credential provenance, and live installation proof are unresolved. The local authorization store accepts only externally verified bindings from a trusted adapter, not agent assertions. |
 | Native GitHub gate proof | Separate public control smoke tests demonstrated human approval, human rejection, and refusal of a representative Actions-bot token. These are bounded gate tests, not production authorization or worker/cloud integration. |
 | Azure runtime and onboarding | Not wired by this package. No released installer, complete cloud preflight, active worker, model call, or Fabric integration is supplied. |
@@ -186,6 +186,7 @@ organization's approved Python package source:
 python -m pip install ".[oidc]"
 fabric-delivery validate-manifest "D:\PrivateInstallation\manifest.json"
 fabric-delivery preflight --manifest "D:\PrivateInstallation\manifest.json" --spend-plan "D:\PrivateInstallation\offline-spend.json"
+fabric-delivery self-test-dispatch
 ```
 
 These are placeholder local paths, not files included in this repository.
@@ -195,15 +196,21 @@ successfully as live readiness:** exit 3 means the requested offline checks
 passed but live execution remains unsupported; exit 2 means invalid, missing, or
 unknown offline inputs/dependencies. Both commands emit allowlisted JSON with
 `execution_enabled: false`, without private identifiers, paths, or input values.
-They create no registry/ledger, contact no API, and accept no credentials.
+Manifest validation and preflight create no registry/ledger, contact no API, and
+accept no credentials. `self-test-dispatch` exercises a real atomic local
+grant/reservation/outbox cycle with synthetic fixtures in disposable storage
+only. Its exit 0 means that inert exercise passed, not live readiness; it also
+reports `execution_enabled: false` and accepts no existing installation files.
 
 Read the [operator/schema guide](docs/offline-operator.md) and the component guides:
 [authorization](docs/authorization-core.md),
 [spend](docs/spend-guardrails.md),
+[durable local dispatch](docs/durable-dispatch.md),
 [native evidence](docs/native-approval-verifier.md), and
 [OIDC](docs/github-oidc-verifier.md). The base authorization/spend package has no
 runtime dependencies; optional `github` and `oidc` extras add maintained libraries.
-No CLI command approves, consumes, reserves, launches, or deploys anything.
+No CLI command approves real work, uses an installation ledger, launches an
+agent, contacts a model or deploys anything.
 
 ### What still needs implementation and verification
 
@@ -217,9 +224,11 @@ observer currently issues grants; a signed GitHub token does not sign private
 workflow inputs. Actual installation federation still needs a separately
 authorized live-token proof.
 
-After that, authorization, cost reservation, and dispatch need safe durable
-coordination/recovery before any effects. Separate local ledgers and passing
-cross-component tests do not supply that coordination. The isolated Microsoft
+The local outbox now commits grant consumption, maximum cost reservation and
+ready work together, with one worker claim and conservative crash/unknown
+handling. This does not supply a live dispatcher: trusted adapter/worker
+integration, actual storage/recovery proof, ongoing cancellation and
+target-conflict control remain required before external effects. The isolated Microsoft
 Agent Framework/Foundry harness, mediated tools and trusted usage reporting,
 independently approved stage deployment workers, and Fabric ingestion,
 Lakehouse, semantic-model and report modules still need implementation.
