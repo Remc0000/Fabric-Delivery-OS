@@ -489,6 +489,41 @@ class ReadClientTests(unittest.TestCase):
             client.get("/installation/repositories")
         session.get.assert_not_called()
 
+    def test_stateless_installation_tokens_are_forwarded_unchanged(self):
+        value = (
+            "ghs_12345_eyJhbGciOiJSUzI1NiJ9."
+            "eyJzeW50aGV0aWMiOnRydWV9.synthetic_signature-_"
+        )
+        client, session = self.make_client(
+            b'{"total_count":0,"repositories":[]}',
+            provider=lambda: GitHubInstallationToken(value, NOW + 10),
+        )
+        self.assertEqual(
+            client.get("/installation/repositories"),
+            {"total_count": 0, "repositories": []},
+        )
+        session.get.assert_called_once()
+        self.assertEqual(
+            session.get.call_args.kwargs["headers"]["Authorization"],
+            "Bearer " + value,
+        )
+        self.assertNotIn(value, repr(GitHubInstallationToken(value, NOW + 10)))
+
+    def test_malformed_installation_token_input_is_rejected_before_http(self):
+        for value in (
+            "ghs_", "ghs_valid\n", "ghs_valid\r\nX-Injected: value",
+            "ghs_contains space", "ghs_nonascii_\u00e9", "ghu_SYNTHETIC",
+        ):
+            with self.subTest(value=value):
+                client, session = self.make_client(
+                    provider=lambda value=value: GitHubInstallationToken(value, NOW + 10)
+                )
+                with self.assertRaisesRegex(
+                    AuthorizationDenied, "^github_auth_unavailable$"
+                ):
+                    client.get("/installation/repositories")
+                session.get.assert_not_called()
+
     def test_api_errors_redirects_and_transport_details_never_leak(self):
         for status in (301, 302, 401, 403, 404, 429, 500):
             with self.subTest(status=status):

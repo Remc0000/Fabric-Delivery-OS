@@ -17,6 +17,12 @@ The optional `fabric_delivery_core.github_approval` module provides:
   capped at 1 MiB. No netrc, ambient proxy/authentication discovery, shell, `gh`
   credentials, request/response logging, or write endpoints are used.
 - `GitHubInstallationToken`: a short-lived secret value excluded from `repr`.
+  Legacy and newer stateless `ghs_` tokens are opaque values: JWT separators
+  and base64url `-`/`_` characters are retained without locally interpreting
+  claims or assuming a fixed length. Whitespace/header injection and personal,
+  OAuth or user-token prefixes remain unsupported.
+  GitHub documents the rollout in
+  [installation access-token creation](https://docs.github.com/en/rest/apps/apps?apiVersion=2026-03-10#create-an-installation-access-token-for-an-app).
   The trusted caller supplies an App installation-token provider; common
   personal/OAuth/user-token formats are rejected. Prefix validation is **not**
   cryptographic identity verification. Successful authenticated access to
