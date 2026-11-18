@@ -1,23 +1,40 @@
+## Progress interpretation
+
+Reconciled on 2026-11-18 against human-merged
+[framework #8](https://github.com/Remc0000/Fabric-Delivery-OS/pull/8),
+the linked implementation guides, public control proof and private bootstrap
+evidence. Read this checklist from the current revision, not an old merged
+documentation branch.
+
+Checked items mean only the stated bounded implementation or proof exists.
+Unchecked parent milestones retain their full integration scope; completed
+substeps expose partial progress. The raw checkbox percentage is an unweighted
+task count, not platform readiness, execution authority or release acceptance.
+Open PR work is labeled explicitly. Private identifiers/configuration and
+detailed installation evidence remain in the private solution.
+
 ## 0. Authorized bounded framework core (2026-11-17)
 
 - [x] 0.1 Record the human-authorized scope: implement only immutable-request and durable one-attempt authorization primitives; no platform or deployment authorization is inferred.
 - [x] 0.2 Package a reusable offline Python core with frozen manifest/schema/digest validation and real local-file SQLite state.
 - [x] 0.3 Verify binding drift, expired/revoked grants, run/attempt mismatch, durable replay denial, and competing process claims using synthetic tests.
 - [x] 0.4 Document the trusted-adapter boundary, local-filesystem limits, and burned-grant behavior after a crash; do not claim approval verification or worker scheduling.
-- [ ] 0.5 Obtain human implementation review; do not self-approve or merge the core.
+- [x] 0.5 Record human acceptance of the bounded core through the owner's merge of framework #8; no agent approval or merge was used.
 - [x] 0.6 Implement the separately authorized read-only GitHub native-history observer with a tested HTTP client and explicit nonhuman installation-token provider boundary.
 - [x] 0.7 Verify private registry/manifest, numeric repository/workflow/run/attempt/environment, exact ref/revision, workflow bytes, reviewer IDs, and current branch/protection policy bindings using synthetic API evidence.
 - [x] 0.8 Test missing, pending, rejected, bot, wrong-ref/environment, stale, malformed, truncated, and changed evidence denials; preserve core replay/race tests.
 - [x] 0.9 Document unsupported bypass verification, reviewer credential provenance, federation, rerun attribution, and execution-grant conversion; leave execution disabled.
-- [ ] 0.10 Obtain human review of the dependent verifier; no approval/merge/deployment authority follows from successful tests.
+- [x] 0.10 Record human acceptance of the dependent native verifier through framework #8; synthetic verification still does not authorize deployment.
 - [x] 0.11 Implement the separately authorized PyJWT/cryptography OIDC verifier with fixed official public JWKS, exact explicitly configured subject/audience, and pinned immutable signed context.
 - [x] 0.12 Test actual RSA signature verification, wrong key/algorithm/context, lifetime/skew/expiry, ambiguous signed JSON, registry/policy drift, and JWKS rotation/staleness/network denial using ephemeral in-memory signing keys.
 - [x] 0.13 Keep private input assertions, native-review/grant integration, App provenance, and live installation federation visibly unsupported; verify no observation can issue an execution grant.
 - [ ] 0.14 Obtain human implementation review and later live-token bootstrap proof only after the separate control test is human-merged/enabled; do not activate workers from these synthetic checks.
+- [x] 0.14.1 Record human acceptance of the OIDC implementation through framework #8.
+- [ ] 0.14.2 Complete the separately gated live-token/bootstrap proof; source review does not clear this activation boundary.
 - [x] 0.15 Consolidate core, spend, native and OIDC source slices on the human-merged main documentation, preserving original branches without self-merging.
 - [x] 0.16 Add a real credential-free offline manifest/preflight operator with bounded strict inputs, shared spend arithmetic, supported import checks and explicit live-blocked output/exit behavior.
 - [x] 0.17 Verify cross-component evidence bindings cannot grant execution; test durable separate-ledger replay/breach and wrong-store identity denial, plus safe operator failures.
-- [ ] 0.18 Obtain human review of the coherent integrated revision; leave live native/input/OIDC joining, App provenance and dispatch disabled.
+- [x] 0.18 Record human acceptance of the coherent integrated revision at merge commit `2816502c090ce0317b821fa987910052cde0f4fb` in framework #8; leave live native/input/OIDC joining, App provenance and dispatch disabled.
 - [x] 0.19 Record the explicit agent-proposal requirement and denial scenarios: permitted proposals from existing authorized observations confer no new substantive work authority; later human gates remain intact.
 
 ### Authorized bounded local dispatch continuation (2026-11-18)
@@ -28,6 +45,8 @@
 - [x] D.4 Add a disposable, input-free synthetic operator cycle with real local state and explicit live-disabled output; do not activate any worker or model.
 - [x] D.5 Verify targeted/full existing suites, package/operator entry points, abrupt-process/rollback/race cases and strict OpenSpec before publishing.
 - [ ] D.6 Obtain human review of this exact integrated revision and separately prove real adapter, private storage, identity and isolated-worker boundaries before activation.
+- [x] D.6.1 Record human acceptance of the bounded local dispatch implementation through framework #8.
+- [ ] D.6.2 Prove real adapter/private-storage/identity/isolated-worker boundaries before any live dispatch.
 
 ## 1. Human review and bounded proof
 
@@ -37,12 +56,12 @@
 - [x] S.2 Reserve maximum operation cost atomically before effects; aggregate outstanding and settled spend in one private authoritative local SQLite file.
 - [x] S.3 Verify competing threads/processes, replay, invalid/stale pricing, currency/month mismatch, finite limits, durable settlement and visible excess-cost freeze.
 - [x] S.4 Document no real adapter integration/model calls, no distributed or infrastructure invoice guarantee, no automatic release, and private recovery assumptions.
-- [ ] S.5 Obtain human review of spend accounting in the integrated package; do not self-approve or merge.
+- [x] S.5 Record human acceptance of the bounded spend implementation through framework #8; no self-approval or merge was used.
 - [ ] S.6 Separately review actual adapter enforcement, authorization/reservation/dispatch crash handling, trusted final usage and recovery before enabling any model calls.
 
-- [ ] 1.1 Obtain explicit human approval of the applicable framework and control-test revisions; verify the approval identifies scope and revision rather than merely a completed checklist.
-- [ ] 1.2 Implement only the separately approved synthetic control smoke test; verify its job remains blocked before approval and has no model, source, Fabric, or Azure-resource side effects.
-- [ ] 1.3 Exercise human approval, rejection, and an unauthorized agent actor; verify the human gate cannot be satisfied by the agent.
+- [x] 1.1 Record the separately authorized bounded framework/control-test scopes and human-accepted core revision; this is not approval of the complete proposed runtime.
+- [x] 1.2 Implement and exercise the separately approved synthetic control smoke test, observing its protected job blocked before approval without model, source, Fabric or Azure-resource effects.
+- [x] 1.3 Exercise human approval/rejection and refusal of the representative Actions-bot token; retain the [bounded public evidence](../../../README.md#what-exists-today), without claiming future App identities or production authorization are proven.
 
 ## 2. Approved bootstrap and private request boundary
 
@@ -51,6 +70,8 @@
   - [x] 2.2.1 Implement only offline manifest/spend-plan/import checks with explicit unknown live capabilities; this does not complete cloud/installation preflight.
   - [ ] 2.2.2 Verify actual installation configuration, CLI/tool capabilities, identities, models, GitHub protection/federation and Fabric capacity before setup activation.
 - [ ] 2.3 Present an exact bootstrap plan before creating identities or rights; verify approved grants are minimal and ordinary workers cannot change them.
+  - [x] 2.3.1 Record separately authorized private bootstrap plans and verify deployed credential storage preserves existing resources; this does not prove worker IAM or private retrieval.
+  - [x] 2.3.2 Implement protected human-local App-key enrollment, authenticate registered App/owner permissions, and verify disabled version-bound storage; actual installation scopes and broker/runtime activation remain pending.
 - [ ] 2.4 Implement the private issue adapter and immutable request/evidence storage; verify public events contain only opaque request references.
   - [ ] 2.4.1 Enforce allowed issue repository/visibility and sanitized agent proposals without new observation/source authority; newly agent-filed requests remain proposed/awaiting approval.
   - [ ] 2.4.2 Freeze an authorized human's exact initial scope/revision/effects before discovery/design; deny labels, author identity, assignments, mutable text, validation and agent reviews as approval.
@@ -60,10 +81,12 @@
   - [x] 2.5.3 Implement the bounded local atomic grant/reservation/outbox, one worker claim and conservative unknown-state protocol without claiming cloud dispatch.
   - [ ] 2.5.2 Verify authenticated adapter inputs, authoritative policy/target freshness, cloud durability, and consumption/scheduling failure handling before enabling dispatch.
 - [ ] 2.6 Configure approved public control federation and policy verification; verify tokens from solution repos, other refs, and wrong environments cannot launch workers.
+  - [ ] 2.6.1 Authenticate actual App installation identities/effective scopes and bind private inputs, native review, OIDC, bypass policy and runtime identity in an authoritative live adapter.
 
 ## 3. Isolated agent runtime
 
 - [ ] 3.1 Confirm the Python/Agent Framework and Foundry integration with pinned dependencies; verify configured model authentication without human session reuse or provider fallback.
+  - [x] 3.1.1 Provision the separately authorized private Azure foundation with private preservation evidence; no deployed/called model or active Agent Framework runtime is implied.
 - [ ] 3.2 Implement trusted harness and separate untrusted code execution; verify generated code cannot access harness credentials, host identity endpoints, deployment identity, or shared privileged state.
 - [ ] 3.3 Implement bounded role-based GitHub/Fabric tools; verify out-of-scope targets, control repository writes, and permission changes are refused outside the model.
 - [ ] 3.4 Implement cancellation, finite execution bounds, and private error reporting; verify an exhausted or interrupted task never reports success.
@@ -80,6 +103,7 @@
 
 - [ ] 5.1 Implement inventory and impact contracts for new and existing solutions; verify unrelated existing items and detected drift are preserved or explicitly blocked.
 - [ ] 5.2 Implement only approved ingestion and Lakehouse medallion module behavior; verify repeat-run correctness and private reconciliation evidence.
+  - [x] 5.2.1 Implement and synthetically test the offline SQL-to-Bronze compiler and bounded create-only snapshot worker in [framework #10](https://github.com/Remc0000/Fabric-Delivery-OS/pull/10), still awaiting human review/merge; no live deployment/load or broader medallion completion is claimed.
 - [ ] 5.3 Implement approved semantic-model and report modules; verify actual API, format, identity, and measure/report acceptance support.
 - [ ] 5.4 Implement deterministic stage deployment with separate identities; verify exact artifact promotion and separate grants for each stage and data-changing operation.
 - [ ] 5.5 Implement partial-failure evidence and separately approved recovery; verify definition rollback is not misrepresented as data restoration.
@@ -89,4 +113,6 @@
 - [ ] 6.1 Execute the separately approved private reference scenario through all human checkpoints; verify the accepted test release is the one promoted to production.
 - [ ] 6.2 Test rejection, concurrent development during acceptance, modified artifacts, duplicate dispatch, and recovery; verify each case stops or resumes at the correct checkpoint.
 - [ ] 6.3 Produce a reusable installation guide and versioned release; verify a second isolated installation has no dependency on the author's credentials or private mappings.
+  - [x] 6.3.1 Draft the generic setup/manual-checkpoint guide in [framework #11](https://github.com/Remc0000/Fabric-Delivery-OS/pull/11), still awaiting human review/merge; private pilot helpers are not a released public installer.
+  - [ ] 6.3.2 Release reviewed parameterized setup tooling and verify a second isolated installation before declaring reusable installation acceptance.
 - [ ] 6.4 Obtain human acceptance of evidence before declaring the first release complete; verify deferred reference ideas were not silently added to scope.
