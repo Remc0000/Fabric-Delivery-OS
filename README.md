@@ -193,7 +193,8 @@ That script and the protected credential uploader are not supplied yet.
    website is unnecessary. Leave Redirect URI and Setup URL empty, wildcard
    matching off, **Request user authorization (OAuth) during installation** off,
    **Enable Device Flow** off and **Webhook > Active** off. No live webhook
-   receiver is provided. Keep **Only on this account** selected.
+   receiver is provided; leave Webhook URL and Secret empty.
+   Keep **Only on this account** selected.
 3. Expand **Repository permissions** and set the exact permissions below.
    Leave all other repository permissions, including **Workflows**, and all
    organization, account and enterprise permissions at **No access**.
@@ -234,6 +235,15 @@ providers and permissions. A missing provider registration is a separate
 subscription-scoped prerequisite, not something an RG-only setup plan may
 silently enable. Report the exact namespace and obtain the applicable approval;
 do not grant broader rights to make setup pass.
+
+For private Key Vault enrollment, Microsoft documents
+[ARM-template secret creation as a control-plane operation](https://learn.microsoft.com/azure/key-vault/general/network-security#firewall-settings).
+An approved operator-local helper can pass a protected file in memory as a
+secure parameter without opening public vault access or enabling SSH. This is
+the proposed ingress design, **not an implemented uploader**. Before real keys,
+prove synthetic redaction across parameter/history/provider/error paths; keep
+secrets out of outputs, names, tags and derived strings. Control-plane write
+success does not prove private data-plane access or authorize credential retrieval.
 
 Keep actual tenant/subscription IDs, repositories, App/installation IDs, endpoints,
 capacity choices, secret references and raw evidence in private installation

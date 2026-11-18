@@ -77,6 +77,12 @@ broaden grants or perform a human approval to complete setup.
 - **THEN** setup reports the exact prerequisite and waits for applicable authorization
 - **AND** an RG-only plan does not silently register providers or expand permissions
 
+#### Scenario: An approved credential uploader uses a secure ARM parameter
+- **WHEN** the operator-local protected-file ingress writes an intended Key Vault secret
+- **THEN** synthetic evidence first verifies redacted history, outputs and failure paths
+- **AND** public vault access and VM policies remain unchanged
+- **AND** control-plane write success is not private data-plane or runtime proof
+
 ### Requirement: Tooling checks are task specific
 Preflight SHALL assess Azure CLI, Fabric CLI, GitHub CLI/MCP, Microsoft Learn
 MCP, and task-specific tooling where required. Rayfin tooling SHALL be checked
