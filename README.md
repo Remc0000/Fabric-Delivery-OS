@@ -227,6 +227,13 @@ That script and the protected credential uploader are not supplied yet.
    that account's repositories can be selected. Never choose All repositories.
    Privately record installation IDs and verify actual numeric identities,
    effective permissions and selected repositories before use.
+   Find an installation ID through **Settings > Applications > Installed
+   GitHub Apps > Configure**: the plain URL ends in
+   `/settings/installations/<installation-id>`. This is not the App ID;
+   never share credential pages or OAuth callback/query parameters as evidence.
+   A normal CLI login is not automatically an App-authorized API token.
+   Report a rejected installation lookup without switching identities,
+   broadening scopes or treating the owner's report as authenticated API proof.
 
 App permissions are not the agent sandbox: the solution App's write rights can
 permit review/merge operations. A trusted broker must deny those operations,

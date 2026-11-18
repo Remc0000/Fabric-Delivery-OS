@@ -77,6 +77,11 @@ broaden grants or perform a human approval to complete setup.
 - **THEN** README directs them to Key pairs, not Client secrets, and preserves the actual key download rather than converting a secret string or text file
 - **AND** an exposed secret is revoked by its owner without publishing its value or deleting unrelated OAuth credentials
 
+#### Scenario: An owner supplies an installation binding
+- **WHEN** onboarding records the installation ID from the installed App's Configure page
+- **THEN** it distinguishes that ID from the App ID and excludes credential URLs, OAuth callbacks and query parameters
+- **AND** a human report or ordinary CLI repository access is not substituted for authenticated installation and effective-scope evidence
+
 #### Scenario: An operator-local enrollment is interrupted or its proof expires
 - **WHEN** a possible credential write lacks a verified receipt or the code/bindings/runtime/proof lifetime no longer match
 - **THEN** setup reports unknown or blocks before key input, preserves the original checkpoint and permits only read-only verification of that attempt
