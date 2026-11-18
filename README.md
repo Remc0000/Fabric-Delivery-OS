@@ -292,6 +292,9 @@ processes. Preserve an exclusive pre-write checkpoint, report interrupted or
 unverifiable writes as unknown, and recover through read-only verification
 rather than automatic resubmission, rotation or journal deletion. Such local
 checkpoints are not distributed locks or atomic cloud create-only guarantees.
+Read-only recovery must preserve the original writer fingerprint: inspecting
+an older attempt with corrected software does not prove a changed writer;
+real-key input still requires a separately authorized matching-code probe.
 On shared multi-account devices, select the approved cached subscription
 identity without changing defaults and verify its authoritative tenant; never
 use another identity to evade a denial. These remain public implementation
