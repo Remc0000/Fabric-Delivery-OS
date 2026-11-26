@@ -69,11 +69,13 @@ Revalidation commits denial before raising it, so restart cannot resurrect the
 proposal. Policy version/current-pointer/proposal-invalidation writes share one
 transaction; a storage failure rolls them back together.
 
-Policy administration is not native human authorization. A previously admitted
-proposal is not atomically linked to another store's grant/dispatch transaction.
-Real policy administration, request revalidation at execution time, cancellation
-and cross-component transaction/recovery semantics still require an independently
-reviewed trusted live adapter.
+Policy administration is not native human authorization. This registry alone
+does not link a proposal atomically to another store's grant/dispatch transaction.
+The separately authorized [offline four-file coordinator](offline-registry-dispatch.md)
+adds local proposal checks at preparation/claim using already recorded grants.
+It does not turn issue content into a human-approved binding. Real policy
+administration, authenticated inputs, ongoing cancellation and production
+transaction/recovery still require an independently reviewed trusted live adapter.
 
 ## Storage boundary
 

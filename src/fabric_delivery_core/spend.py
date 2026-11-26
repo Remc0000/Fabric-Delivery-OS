@@ -17,6 +17,31 @@ from .authorization import _canonical, _digest, _text, _timestamp, sha256_digest
 
 _MAX = 2**63 - 1
 _APPLICATION_ID = 0x46445347
+_SCHEMA = {
+    "budgets": """CREATE TABLE budgets (
+                        installation TEXT NOT NULL, period TEXT NOT NULL,
+                        config TEXT NOT NULL, digest TEXT NOT NULL,
+                        PRIMARY KEY (installation, period))""",
+    "prices": """CREATE TABLE prices (
+                        operation TEXT NOT NULL, version TEXT NOT NULL,
+                        card TEXT NOT NULL, digest TEXT NOT NULL,
+                        PRIMARY KEY (operation, version))""",
+    "freezes": """CREATE TABLE freezes (
+                        installation TEXT PRIMARY KEY, reservation TEXT NOT NULL)""",
+    "reservations": """CREATE TABLE reservations (
+                        id TEXT PRIMARY KEY, installation TEXT NOT NULL,
+                        period TEXT NOT NULL, currency TEXT NOT NULL,
+                        execution_digest TEXT NOT NULL UNIQUE,
+                        budget_digest TEXT NOT NULL, price_digest TEXT NOT NULL,
+                        operation TEXT NOT NULL, price_version TEXT NOT NULL,
+                        max_tokens INTEGER NOT NULL, max_calls INTEGER NOT NULL,
+                        reserved INTEGER NOT NULL, deadline INTEGER NOT NULL,
+                        created_at INTEGER NOT NULL, state TEXT NOT NULL
+                            CHECK (state IN ('reserved','settled','breach')),
+                        actual INTEGER, actual_tokens INTEGER, actual_calls INTEGER,
+                        settled_at INTEGER)""",
+    "monthly_spend": "CREATE INDEX monthly_spend ON reservations (installation, period)",
+}
 
 
 def _integer(value: object, name: str, minimum: int = 0) -> None:
@@ -137,31 +162,7 @@ class SQLiteSpendStore:
             version = db.execute("PRAGMA user_version").fetchone()[0]
             tables = db.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()
             if app == 0 and version == 0 and not tables:
-                for statement in (
-                    """CREATE TABLE budgets (
-                        installation TEXT NOT NULL, period TEXT NOT NULL,
-                        config TEXT NOT NULL, digest TEXT NOT NULL,
-                        PRIMARY KEY (installation, period))""",
-                    """CREATE TABLE prices (
-                        operation TEXT NOT NULL, version TEXT NOT NULL,
-                        card TEXT NOT NULL, digest TEXT NOT NULL,
-                        PRIMARY KEY (operation, version))""",
-                    """CREATE TABLE freezes (
-                        installation TEXT PRIMARY KEY, reservation TEXT NOT NULL)""",
-                    """CREATE TABLE reservations (
-                        id TEXT PRIMARY KEY, installation TEXT NOT NULL,
-                        period TEXT NOT NULL, currency TEXT NOT NULL,
-                        execution_digest TEXT NOT NULL UNIQUE,
-                        budget_digest TEXT NOT NULL, price_digest TEXT NOT NULL,
-                        operation TEXT NOT NULL, price_version TEXT NOT NULL,
-                        max_tokens INTEGER NOT NULL, max_calls INTEGER NOT NULL,
-                        reserved INTEGER NOT NULL, deadline INTEGER NOT NULL,
-                        created_at INTEGER NOT NULL, state TEXT NOT NULL
-                            CHECK (state IN ('reserved','settled','breach')),
-                        actual INTEGER, actual_tokens INTEGER, actual_calls INTEGER,
-                        settled_at INTEGER)""",
-                    "CREATE INDEX monthly_spend ON reservations (installation, period)",
-                ):
+                for statement in _SCHEMA.values():
                     db.execute(statement)
                 db.execute(f"PRAGMA application_id = {_APPLICATION_ID}")
                 db.execute("PRAGMA user_version = 1")
@@ -243,7 +244,7 @@ class SQLiteSpendStore:
     def _reserve_in_transaction(
         self, db: sqlite3.Connection, *, reservation_id: str, installation_id: str,
         period: str, currency: str, execution_digest: str, operation: str,
-        price_version: str, max_tokens: int, max_calls: int,
+        price_version: str, max_tokens: int, max_calls: int, now: int | None = None,
     ) -> dict[str, object]:
         """Use an already locked transaction shared with a trusted coordinator."""
         for value, name in (
@@ -256,7 +257,7 @@ class SQLiteSpendStore:
         _digest(execution_digest, "execution_digest")
         _integer(max_tokens, "max_tokens")
         _integer(max_calls, "max_calls", 1)
-        now = self._clock()
+        now = self._clock() if now is None else now
         _timestamp(now, "clock result")
         current = datetime.fromtimestamp(now, timezone.utc)
         if period != current.strftime("%Y-%m"):

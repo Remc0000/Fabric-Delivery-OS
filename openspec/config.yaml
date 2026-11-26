@@ -55,6 +55,14 @@ context: |
   authenticates no metadata or humans, grants no discovery authority, fetches
   no issues and does not join ledgers. Teams intake contracts are a separate
   specification-only extension, not an implemented or activated connector.
+  The next separately authorized offline continuation joins complete registry
+  proposal revalidation and existing authorization/spend/outbox writes under a
+  four-file transaction, rechecking again at claim. A dedicated version-2 outbox
+  refuses legacy access without migration. Grants remain externally verified
+  inputs; proposal digests do not establish human-approved issue provenance.
+  Skill/tool snapshot digests stay bound, not loaded/authenticated by this slice.
+  No real skills/runtime/evidence-to-grant service, worker or cloud activation is
+  supplied; existing preflight remains live-blocked.
   The separate add-teams-experience-layer proposal is specification-only.
   Teams is an optional conversational intake/feedback/review-navigation layer;
   GitHub remains the governance backbone with private immutable requests/evidence.
