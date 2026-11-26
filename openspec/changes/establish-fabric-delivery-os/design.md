@@ -1,5 +1,10 @@
 ## Context
 
+The optional [Teams experience-layer proposal](../add-teams-experience-layer/design.md)
+extends intake, feedback and human-review navigation without replacing this
+architecture or its independent human gates. It remains specification-only and
+does not authorize integration setup, a different runtime or live execution.
+
 See `proposal.md` for scope and `specs/` for the behavior contract. The selected
 deployment model uses GitHub Free with two public repositories and private
 solutions. Native required reviewers are available on public control runs;

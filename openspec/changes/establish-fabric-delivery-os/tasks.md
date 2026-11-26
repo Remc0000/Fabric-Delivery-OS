@@ -1,5 +1,10 @@
 ## Progress interpretation
 
+The separate [Teams experience checklist](../add-teams-experience-layer/tasks.md)
+tracks the specification-only 2026-11-26 extension and its unapproved future
+integration work. It does not mark any existing runtime/dispatcher milestone
+complete or authorize setup, builds or deployment.
+
 Reconciled on 2026-11-18 against human-merged
 [framework #8](https://github.com/Remc0000/Fabric-Delivery-OS/pull/8),
 the linked implementation guides, public control proof and private bootstrap

@@ -45,6 +45,15 @@ context: |
   Source-record access by AI is denied by default and governed per solution.
   Public artifacts must not contain private installation mappings or source data.
   Reference repositories under .agent_cache are read-only and are not project scope.
+  The separate add-teams-experience-layer proposal is specification-only.
+  Teams is an optional conversational intake/feedback/review-navigation layer;
+  GitHub remains the governance backbone with private immutable requests/evidence.
+  Solution incidents target allowed private solution repositories, not public
+  framework/control. Standard GitHub Teams app and Channel Agent/MCP capabilities,
+  licenses, OAuth scopes, audiences and model-input policy require separate proof.
+  Chat/card actions cannot grant execution or replace native human gates.
+  No Teams setup, subscription, consent, new agent runtime or live build/deployment
+  is authorized by this proposal; exact Channel Agent issue-write support is unknown.
 rules:
   proposal:
     - Clearly distinguish agreed scope, proposed design, and deferred ideas.
