@@ -4,7 +4,8 @@
 - [x] 1.2 Verify existing active trial, obtain explicit region/capacity selection and correct the invalid Lakehouse name with human approval.
 - [x] 1.3 Recheck selected capacity/name absence and create only the workspace and schema-enabled Lakehouse.
 - [x] 1.4 Verify persisted assignment/schema metadata and retain private item IDs/receipt.
-- [ ] 1.5 Publish sanitized specification/evidence for human review without claiming an installer or live data delivery.
+- [x] 1.5 Publish sanitized specification/evidence in [framework #21](https://github.com/Remc0000/Fabric-Delivery-OS/pull/21) without claiming an installer or live data delivery.
+- [ ] 1.6 Obtain human documentation review/merge; publication is not acceptance.
 
 ## 2. SQL-to-Bronze remains separate
 
@@ -20,10 +21,11 @@
   capacity and `capacityAssignmentProgress: Completed`.
 - Explicit schema-enabled Lakehouse creation succeeded; direct readback verified
   its name and `properties.defaultSchema: dbo`.
-- The automatically provisioned SQL endpoint was observed as `InProgress`;
-  SQL readiness and any source/runtime/job behavior remain unproven.
+- The automatically provisioned SQL endpoint was initially `InProgress` and
+  subsequently reported provisioning `Success`. Actual SQL queries and any
+  source/runtime/job behavior remain unproven.
 - Actual mapping and receipt were retained privately, outside public Git.
   No capacity/rights/identity changes, source reads, notebook jobs or loads occurred.
 - All 9 current OpenSpec changes passed strict validation; 41 relative links in
   changed Markdown resolved and whitespace checks passed. Public source contains
-  no live item/account mapping. Publication remains pending human documentation review.
+  no live item/account mapping. Human documentation review/merge remains pending.

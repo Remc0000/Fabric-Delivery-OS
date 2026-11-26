@@ -14,9 +14,10 @@ The Lakehouse was created through the type-specific API with
 `creationPayload.enableSchemas: true`; direct readback confirmed its name and
 default `dbo` schema.
 
-The SQL analytics endpoint was still `InProgress` at the immediate readback.
-This is not evidence that a SQL query, notebook job or source load is ready or
-has succeeded. No notebook, Spark session, Bronze table, source records, role/
+The SQL analytics endpoint was `InProgress` at the immediate readback and
+subsequently reported provisioning `Success`. This is service metadata, not
+proof that a SQL query, notebook job or source load has succeeded.
+No notebook, Spark session, Bronze table, source records, role/
 identity grant, schedule, paid capacity start or new trial was requested.
 
 Actual item IDs, capacity/account mapping and receipt remain private installation
