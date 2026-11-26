@@ -17,6 +17,7 @@ Installations are operator actions, not actions performed by the CLI.
 fabric-delivery validate-manifest "D:\PrivateInstallation\manifest.json"
 fabric-delivery preflight --manifest "D:\PrivateInstallation\manifest.json" --spend-plan "D:\PrivateInstallation\offline-spend.json"
 fabric-delivery self-test-dispatch
+fabric-delivery demo-delivery
 fabric-delivery compile-sql-bronze ".\examples\sql-bronze.synthetic.json" --output "D:\PrivateInstallation\synthetic-bronze-release"
 ```
 
@@ -40,6 +41,7 @@ echoed, including invalid command arguments. Output includes
 | Any command, invalid/missing/unknown local input, import or self-test failure | 2 | Offline check failed; no permission follows |
 | `preflight`, all requested offline checks pass | 3 | Live readiness still blocked; **never use this as a deployment gate success** |
 | `self-test-dispatch`, inert local cycle passes | 0 | Synthetic temporary storage only, not a human/worker/readiness proof |
+| `demo-delivery`, complete local rehearsal passes | 0 | Synthetic issue/skills/proposal/test-grant/claim/result and permanent drift refusal, never live delivery |
 | `compile-sql-bronze`, private release written | 0 | Exact metadata compiled to artifacts; no source access/deployment/load |
 
 `self-test-dispatch` accepts no installation inputs. Unlike the two read-only
@@ -47,6 +49,13 @@ checks, it creates and removes fresh disposable SQLite stores and uses synthetic
 approval fixtures only there. It exercises enqueue, restart, one claim, inert
 completion, settlement and replay denial. See [the dispatch guide](durable-dispatch.md).
 It emits the same explicit live-blocked output; no live approval or worker starts.
+
+`demo-delivery` accepts no inputs either. It composes supplied synthetic issue
+captures and skills with the four-file registry-bound cycle, verifies pre-grant
+and replay refusal, and reopens blocked skill/capture-drift scenarios. It uses
+separate disposable stores, fixed inert results and explicit test-only approvals.
+See [the complete rehearsal](offline-delivery-demo.md); a missing required check
+or component failure never returns a successful report.
 
 `compile-sql-bronze` is another offline command, but intentionally writes a new
 operator-selected **private artifact directory**, not an installation ledger.

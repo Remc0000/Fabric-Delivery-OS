@@ -112,7 +112,7 @@ detailed installation evidence remain in the private solution.
 ## 4. Skills and configuration
 
 - [ ] 4.1 Verify supported skill formats and approved upstream sources; verify a Fabric profile loads the required expertise without installing irrelevant app tools.
-  - [x] 4.1.1 Implement separately authorized supplied-data role policy/profile selection and local source/format/interface checks; actual upstream authentication, expertise and loading remain unfinished. See [the offline skill checklist](../build-offline-role-skills/tasks.md); human implementation review is pending.
+  - [x] 4.1.1 Implement separately authorized supplied-data role policy/profile selection and local source/format/interface checks; actual upstream authentication, expertise and loading remain unfinished. See [the offline skill checklist](../build-offline-role-skills/tasks.md); human acceptance is recorded through [framework #19](https://github.com/Remc0000/Fabric-Delivery-OS/pull/19).
 - [ ] 4.2 Implement automatic compatible skill refresh and immutable task snapshots; verify an update cannot change an approved run.
   - [x] 4.2.1 Implement pure supplied-catalog resolution, exact pins and immutable digest-bound snapshots; automatic acquisition and actual runtime snapshots remain unfinished.
 - [ ] 4.3 Implement visible quarantine and last-known-good selection; verify new package feeds, sources, tools, or rights require the applicable separate approval.
@@ -129,6 +129,10 @@ detailed installation evidence remain in the private solution.
 - [ ] 5.5 Implement partial-failure evidence and separately approved recovery; verify definition rollback is not misrepresented as data restoration.
 
 ## 6. End-to-end acceptance and distribution
+
+The separately selected [offline delivery rehearsal](../build-offline-delivery-demo/tasks.md)
+exercises synthetic local consistency only. Its implementation/review does not
+complete any live acceptance milestone below.
 
 - [ ] 6.1 Execute the separately approved private reference scenario through all human checkpoints; verify the accepted test release is the one promoted to production.
 - [ ] 6.2 Test rejection, concurrent development during acceptance, modified artifacts, duplicate dispatch, and recovery; verify each case stops or resumes at the correct checkpoint.

@@ -32,6 +32,9 @@ def main(argv: list[str] | None = None) -> int:
     subcommands.add_parser(
         "self-test-dispatch", help="exercise synthetic atomic dispatch in disposable local stores"
     )
+    subcommands.add_parser(
+        "demo-delivery", help="rehearse synthetic issue/skills/grant/claim in disposable local stores"
+    )
     bronze = subcommands.add_parser(
         "compile-sql-bronze", help="compile reviewed SQL metadata into a new private release directory"
     )
@@ -49,6 +52,11 @@ def main(argv: list[str] | None = None) -> int:
             from .self_test import dispatch_self_test
 
             report = dispatch_self_test()
+            code = 0 if report.offline_checks_passed else 2
+        elif arguments.command == "demo-delivery":
+            from .delivery_demo import delivery_demo
+
+            report = delivery_demo()
             code = 0 if report.offline_checks_passed else 2
         else:
             from .preflight import _read

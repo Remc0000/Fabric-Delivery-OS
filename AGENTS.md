@@ -79,6 +79,15 @@ agent host, identity, model/tool access, ledger writes or deployment is authoriz
 Role/interface labels are guidance selection, not IAM; actual required expertise,
 authenticated updates, loaders and persistent management remain separate.
 
+After human acceptance of that bounded skill slice through #19 at
+`e791152e29897f104c9c0bbbf000eb1633b04a85`, the human explicitly selected a
+complete synthetic offline rehearsal on 2026-11-26. Only fresh disposable stores,
+supplied synthetic issue/skill metadata, explicit test grants, one local claim,
+inert result/accounting and permanent drift refusal are authorized. The command
+must accept no installation paths, credentials, grants or callbacks and retain
+execution-disabled output. No live identity, model/tool/source/Fabric access or
+deployment is authorized by that selection or the prior merge.
+
 Keep implementation and related specifications consistent after approval.
 Make setup reusable across adopter-owned projects: use private installation
 parameters rather than embedding this installation's values. Prefer reviewed
