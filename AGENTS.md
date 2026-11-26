@@ -69,6 +69,16 @@ private inputs are not authenticated. This does not authorize a skill manager,
 live worker, credential, source/model/API call or deployment. Human acceptance
 of the prior offline intake through #17 is not authority for those live effects.
 
+The subsequent explicit 2026-11-26 continuation permits only a pure offline
+role/skill resolver, manually managed typed profile/policy/catalog JSON, exact
+pins, quarantine and immutable supplied snapshots, with synthetic unit and
+existing-store integration tests. Human merge of offline coordinator #18 at
+`f8e50fe6a24f7a6f4716040e0ec1ec931b7c1d08` accepts that prior bounded slice,
+not live activation. No source acquisition, skill execution/installation,
+agent host, identity, model/tool access, ledger writes or deployment is authorized.
+Role/interface labels are guidance selection, not IAM; actual required expertise,
+authenticated updates, loaders and persistent management remain separate.
+
 Keep implementation and related specifications consistent after approval.
 Make setup reusable across adopter-owned projects: use private installation
 parameters rather than embedding this installation's values. Prefer reviewed

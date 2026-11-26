@@ -6,7 +6,7 @@
 - [x] 1.4 Verify focused admission/claim/terminal/schema/denial cases with real synthetic stores.
 - [x] 1.5 Independently verify competing processes, lock-time expiry, rollback and abrupt-process recovery.
 - [x] 1.6 Resolve contract review, integrate docs/exports and validate affected/full tests, strict OpenSpec and the installed wheel.
-- [ ] 1.7 Obtain human review/merge of the exact offline implementation.
+- [x] 1.7 Record human review/merge through [framework #18](https://github.com/Remc0000/Fabric-Delivery-OS/pull/18), merge commit `f8e50fe6a24f7a6f4716040e0ec1ec931b7c1d08`; no live activation is inferred.
 
 ## 2. Not authorized by this slice
 
@@ -35,4 +35,5 @@
   authentic live input/human/skill-content proof is inferred.
 - Synthetic process failures establish local SQLite recovery evidence, not
   power-loss certification, distributed durability or a real worker lifecycle.
-  Human implementation review/merge and every live gate remain separate.
+  Human implementation acceptance is recorded above; every live gate remains
+  separate from the offline merge.

@@ -63,6 +63,13 @@ context: |
   Skill/tool snapshot digests stay bound, not loaded/authenticated by this slice.
   No real skills/runtime/evidence-to-grant service, worker or cloud activation is
   supplied; existing preflight remains live-blocked.
+  A subsequent explicitly authorized offline role/skill resolver consumes only
+  supplied policy/profile/catalog data, exact pins and immutable snapshots.
+  It checks local source/hash/format/interface eligibility, visible quarantine
+  and explicit per-reference LKG without downloads, execution or ledger writes.
+  Manual JSON edits are supported; version/source/interface assertions do not
+  authenticate history, expertise or rights. Real required skills, acquisition,
+  loaders, hosted identities and runtime management remain unimplemented.
   The separate add-teams-experience-layer proposal is specification-only.
   Teams is an optional conversational intake/feedback/review-navigation layer;
   GitHub remains the governance backbone with private immutable requests/evidence.
