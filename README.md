@@ -24,6 +24,7 @@ readiness score; only separately recorded human acceptance completes a release.
 | Offline issue intake continuation | The [bounded GitHub capture adapter](docs/offline-github-intake.md) normalizes explicitly supplied private snapshots into proposed discover requests. It does not fetch issues or authorize discovery. [Teams intake contracts](openspec/changes/specify-offline-teams-intake/proposal.md) remain specification-only; no Teams connector is supplied. |
 | Offline registry-bound coordination | A [separate four-file coordinator](docs/offline-registry-dispatch.md) joins proposal revalidation with existing grant consumption/reservation and rechecks before one claim. Its version-2 outbox rejects legacy access; proposal consistency is not human-approved issue provenance or live activation. |
 | Offline role/skill selection | A [pure local resolver and runnable synthetic example](docs/offline-role-skills.md) support manually edited role policy/profile JSON, compatible supplied candidates, exact pins, visible quarantine and explicit LKG snapshots. It downloads/executes nothing; real role expertise, loaders and hosted agents remain unfinished. |
+| Complete offline rehearsal | [`demo-delivery`](docs/offline-delivery-demo.md) exercises synthetic issue/skills/proposal/test-grant/one-claim/result plus durable drift refusal in fresh temporary stores. It is not live agent implementation, authenticated human approval or Fabric deployment. |
 | Native GitHub gate proof | Separate public control smoke tests demonstrated human approval, human rejection, and refusal of a representative Actions-bot token. These are bounded gate tests, not production authorization or worker/cloud integration. |
 | Azure runtime and onboarding | Not wired by this package. No released installer, complete cloud preflight, active worker, model call, or verified live Fabric integration is supplied. |
 | First Fabric module | [SQL-to-Bronze compiler](docs/sql-bronze-module.md): explicit metadata to three stage-bound notebook payloads and a hashed release, with a fixed bounded create-only Spark worker. Compilation is usable offline; actual identity/deployment/load behavior is not live-verified. |
@@ -349,6 +350,7 @@ python -m pip install ".[oidc]"
 fabric-delivery validate-manifest "D:\PrivateInstallation\manifest.json"
 fabric-delivery preflight --manifest "D:\PrivateInstallation\manifest.json" --spend-plan "D:\PrivateInstallation\offline-spend.json"
 fabric-delivery self-test-dispatch
+fabric-delivery demo-delivery
 fabric-delivery compile-sql-bronze ".\examples\sql-bronze.synthetic.json" --output "D:\PrivateInstallation\synthetic-bronze-release"
 ```
 
@@ -368,6 +370,9 @@ reports `execution_enabled: false` and accepts no existing installation files.
 metadata, without contacting Fabric or reading source records. Exit 0 means
 compiled-not-deployed, never permission to load data. Its checked-in example is
 synthetic; real contracts and generated artifacts must remain private.
+`demo-delivery` takes no inputs and joins supplied synthetic intake/skills to the
+registry-bound local cycle, including pre-grant refusal and permanent skill/issue
+drift. See [the runnable rehearsal and separate Dev pilot boundary](docs/offline-delivery-demo.md).
 
 Read the [operator/schema guide](docs/offline-operator.md) and the component guides:
 [authorization](docs/authorization-core.md),

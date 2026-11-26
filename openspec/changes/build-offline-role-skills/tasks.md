@@ -6,7 +6,7 @@
 - [x] 1.4 Verify source/hash/role/required/pin/format/interface/bounds/fallback and immutable content behavior with 16 focused tests.
 - [x] 1.5 Independently verify old-run drift denial and no resolver-to-grant/ledger effects using existing synthetic stores; all 5 integration tests passed with the resolver.
 - [x] 1.6 Resolve contract review, integrate guides/exports and validate affected/full tests, strict OpenSpec and the installed wheel.
-- [ ] 1.7 Obtain human review/merge of the exact offline implementation.
+- [x] 1.7 Record human review/merge through [framework #19](https://github.com/Remc0000/Fabric-Delivery-OS/pull/19), merge commit `e791152e29897f104c9c0bbbf000eb1633b04a85`; no live activation is inferred.
 
 ## 2. Still outside this scope
 
@@ -32,5 +32,5 @@
   ordering, explicit per-reference fallback, private diagnostics, pretty JSON,
   self-consistency versus authenticated history, and no role-to-IAM/revocation
   inference. Required sets may explicitly be empty; profiles remain nonempty.
-- Human implementation review/merge remains pending. No real skill acquisition,
+- Human implementation acceptance is recorded above. No real skill acquisition,
   SDK compatibility, required expertise, hosted agent or live effect is proven.

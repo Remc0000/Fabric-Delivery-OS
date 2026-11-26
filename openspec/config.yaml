@@ -70,6 +70,12 @@ context: |
   Manual JSON edits are supported; version/source/interface assertions do not
   authenticate history, expertise or rights. Real required skills, acquisition,
   loaders, hosted identities and runtime management remain unimplemented.
+  After human merge #19, a separately selected input-free offline delivery demo
+  joins synthetic issue/skills/proposal/test-grant/one-claim/result in disposable
+  stores and proves durable pre-claim skill/capture drift refusal. It accepts no
+  installation state, credentials or callbacks and preserves all live blockers.
+  A Dev Fabric pilot requires distinct exact source/target/identity verification
+  and deployment/load scope; the demo and its merge authorize no live effects.
   The separate add-teams-experience-layer proposal is specification-only.
   Teams is an optional conversational intake/feedback/review-navigation layer;
   GitHub remains the governance backbone with private immutable requests/evidence.
