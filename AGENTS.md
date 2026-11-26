@@ -59,6 +59,16 @@ verification, approval conversion or registry/grant/spend/outbox joining is
 authorized. Independent worker worktrees have disjoint owned files; local
 integration and worker commits do not constitute human review or acceptance.
 
+The next explicit 2026-11-26 continuation permits offline four-file registry,
+authorization, spend and outbox coordination, with synthetic externally supplied
+grants and independent race/crash tests. The dedicated version-2 outbox rechecks
+proposal consistency at enqueue and claim; it creates no human decision or grant.
+Version-1 APIs remain separate and cannot open coordinated outboxes. Full skill/
+tool snapshot digests remain immutable, but actual skills, identities and current
+private inputs are not authenticated. This does not authorize a skill manager,
+live worker, credential, source/model/API call or deployment. Human acceptance
+of the prior offline intake through #17 is not authority for those live effects.
+
 Keep implementation and related specifications consistent after approval.
 Make setup reusable across adopter-owned projects: use private installation
 parameters rather than embedding this installation's values. Prefer reviewed

@@ -6,6 +6,12 @@ It coordinates the existing authorization and spend stores without weakening
 their trusted-caller boundary. No network, provider call, subprocess, generated
 code, credentials or Azure resource is used by this module.
 
+This guide describes the legacy version-1 three-file API. The separately
+authorized [registry-bound coordinator](offline-registry-dispatch.md) uses a
+different version-2 outbox and adds atomic proposal checks at preparation/claim.
+The two outbox versions cannot open each other and are not automatically migrated.
+Neither API authenticates human-approved private input or launches a worker.
+
 ## Try the inert cycle
 
 From an installed, reviewed checkout:

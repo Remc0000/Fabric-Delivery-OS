@@ -16,6 +16,7 @@ from .request_registry import (
     IssueRevision, RegistryDenied, RegistryRequest, RegistrySnapshot,
     RequestPolicy, RequestRule, SQLiteRequestRegistry,
 )
+from .registry_dispatch import SQLiteRegistryDispatchStore
 
 __all__ = [
     "ApprovalBinding",
@@ -39,4 +40,5 @@ __all__ = [
     "RequestPolicy",
     "RequestRule",
     "SQLiteRequestRegistry",
+    "SQLiteRegistryDispatchStore",
 ]

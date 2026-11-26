@@ -5,7 +5,7 @@
 - [x] 1.3 Implement discover-only admission, typed drift revalidation and allowlisted receipts, retaining existing registry denials without authority.
 - [x] 1.4 Verify malformed/ambiguous input, private routing, policy/effects, inert text/attribution, replay and durable drift/restoration with synthetic tests.
 - [x] 1.5 Integrate exports and guides; validate affected/full tests, strict OpenSpec and the actual installed package.
-- [ ] 1.6 Obtain human review/merge of the exact published implementation revision.
+- [x] 1.6 Record human acceptance of this bounded offline implementation through [framework #17](https://github.com/Remc0000/Fabric-Delivery-OS/pull/17), merged on 2026-11-26 at `cf708ff`; live activation and further builds remain separately gated.
 
 ## 2. Explicitly deferred
 
