@@ -43,6 +43,11 @@ specification/build/stage gates still apply. The automatic issue adapter remains
 unsupported until this boundary is enforced outside the model.
 
 Keep implementation and related specifications consistent after approval.
+Make setup reusable across adopter-owned projects: use private installation
+parameters rather than embedding this installation's values. Prefer reviewed
+scripts for supported setup and document every unavoidable manual step, scope,
+verification and pause/recovery condition in README.md in the same change.
+Do not describe a proposed script or incomplete bootstrap as a shipped installer.
 Do not approve or merge your own work. Do not execute deployment approvals using
 a human's credentials. Report blockers rather than weakening a protection.
 

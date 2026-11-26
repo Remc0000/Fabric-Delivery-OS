@@ -50,6 +50,79 @@ mean only the inert local cycle passed, with live execution still unsupported.
 - **THEN** local exercise success is reported without private values or live-readiness authority
 - **AND** no existing installation ledger, human credential, external worker or API is used
 
+### Requirement: Setup is reusable and its manual boundaries are documented
+The framework SHALL prefer reviewed, parameterized scripts for supported setup
+operations across adopter-owned projects, with private installation
+configuration rather than embedded installation values. Every setup change
+SHALL update the related OpenSpec and README instructions, including prerequisites,
+automation availability, exact manual UI steps, credential/permission scope,
+observable verification, failure/pause behavior and recovery or cleanup.
+Scripts SHALL report incomplete, human-action-required, blocked or unknown state
+without live-ready success. Proposed automation SHALL NOT be described as shipped.
+Resumption SHALL revalidate actual state and SHALL NOT weaken protections,
+broaden grants or perform a human approval to complete setup.
+
+#### Scenario: An App registration form ignores URL-prefilled values
+- **WHEN** the actual form lacks the intended fields or permissions
+- **THEN** the README supplies the exact manual configuration and requires inspection
+- **AND** onboarding never treats URL intent as verified App or installation state
+
+#### Scenario: Installation requires a private key
+- **WHEN** GitHub requires key generation before installing an App
+- **THEN** setup pauses until approved protected key enrollment and redacted synthetic checks are ready
+- **AND** keys and tokens never enter chat, Git, command-line literals or public Actions
+
+#### Scenario: GitHub offers OAuth client secrets and App key pairs separately
+- **WHEN** an adopter needs an App private-key PEM for protected enrollment
+- **THEN** README directs them to Key pairs, not Client secrets, and preserves the actual key download rather than converting a secret string or text file
+- **AND** an exposed secret is revoked by its owner without publishing its value or deleting unrelated OAuth credentials
+
+#### Scenario: An owner supplies an installation binding
+- **WHEN** onboarding records the installation ID from the installed App's Configure page
+- **THEN** it distinguishes that ID from the App ID and excludes credential URLs, OAuth callbacks and query parameters
+- **AND** a human report or ordinary CLI repository access is not substituted for authenticated installation and effective-scope evidence
+
+#### Scenario: An explicit owner-local flow verifies native installation scope
+- **WHEN** an adopter confirms a reviewed source/private-registry-bound native verification plan outside the agent
+- **THEN** a supported helper authenticates the App/owner/installation and exact selected-only permissions, uses at most one temporary metadata-read-only token per role to enumerate the full existing selected repository scope without repository narrowing, and confirms revocation before a safe receipt
+- **AND** unknown token issuance or cleanup never triggers retry or success, real keys/tokens remain outside agent context, and this separate metadata operation neither repeats Azure credential enrollment nor proves a live broker/runtime
+
+#### Scenario: An owner-local verification checkpoint completes
+- **WHEN** both protected safe receipts bind the reviewed source/plan, exact private role/installation/repository scope and confirmed token revocation
+- **THEN** onboarding records completion without repeating the consumed attempt, preserves original plan/registry inputs and records a separate private as-of snapshot
+- **AND** that snapshot does not confer continuous scope, credential enablement/retrieval, live broker authority or native stage approval
+
+#### Scenario: An operator-local enrollment is interrupted or its proof expires
+- **WHEN** a possible credential write lacks a verified receipt or the code/bindings/runtime/proof lifetime no longer match
+- **THEN** setup reports unknown or blocks before key input, preserves the original checkpoint and permits only read-only verification of that attempt
+- **AND** another probe requires a new explicitly authorized attempt identity rather than silent resubmission or journal deletion
+
+#### Scenario: A local ACL or disabled vault copy is mistaken for stronger isolation
+- **WHEN** an adopter prepares per-user protected storage or disables a stored credential
+- **THEN** README explains that administrators/same-user processes remain in the workstation trust boundary and vault disabling is not GitHub key revocation
+- **AND** real key operations remain human-local, not agent tools or distributed cloud-lock guarantees
+
+#### Scenario: An Azure provider is not registered
+- **WHEN** a required service namespace is unavailable in the selected subscription
+- **THEN** setup reports the exact prerequisite and waits for applicable authorization
+- **AND** an RG-only plan does not silently register providers or expand permissions
+
+#### Scenario: An approved credential uploader uses a secure ARM parameter
+- **WHEN** the operator-local protected-file ingress writes an intended Key Vault secret
+- **THEN** synthetic evidence first verifies redacted history, outputs and failure paths
+- **AND** public vault access and VM policies remain unchanged
+- **AND** control-plane write success is not private data-plane or runtime proof
+
+#### Scenario: An additive preview has drifted or incomplete inputs
+- **WHEN** compiler artifacts collide or are missing/swapped, private bindings drift, or native what-if has duplicate, missing, unexpected or non-create effects
+- **THEN** setup blocks rather than reporting an accepted preview
+- **AND** existing resource IDs compare case-insensitively while approval binds the reviewed immutable revision/blob, not platform-dependent worktree bytes
+
+#### Scenario: A required security scanner is unavailable
+- **WHEN** setup cannot run its required scanner
+- **THEN** it reports not-run and any policy-permitted review exception without claiming a clean scan or weakening enforced protections
+- **AND** resource-list/provider authorization does not replace the separate risk-acknowledged deployment decision
+
 ### Requirement: Tooling checks are task specific
 Preflight SHALL assess Azure CLI, Fabric CLI, GitHub CLI/MCP, Microsoft Learn
 MCP, and task-specific tooling where required. Rayfin tooling SHALL be checked

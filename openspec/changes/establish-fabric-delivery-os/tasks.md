@@ -65,6 +65,8 @@ detailed installation evidence remain in the private solution.
 
 ## 2. Approved bootstrap and private request boundary
 
+- [x] 2.0 Record the human-requested reusable setup contract and current manual App enrollment steps in the README; keep installation values private and distinguish proposed scripts from shipped functionality.
+  - [ ] 2.0.1 Implement and verify the separately approved parameterized setup scripts, protected credential enrollment, resumable manual checkpoints and actual installation acceptance; documentation alone does not complete onboarding.
 - [ ] 2.1 Define installation schemas and role-separation validation; verify both the allowed solo profile and a disallowed conflicting assignment.
 - [ ] 2.2 Implement a read-only prerequisite report; verify unsupported GitHub, model, tool, capacity, and identity capabilities block dependent setup.
   - [x] 2.2.1 Implement only offline manifest/spend-plan/import checks with explicit unknown live capabilities; this does not complete cloud/installation preflight.

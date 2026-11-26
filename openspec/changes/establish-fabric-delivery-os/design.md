@@ -252,6 +252,35 @@ mutable issue text. Changing accepted inputs produces a new request.
 
 ### 5. Separate bootstrap, human authority, and workloads
 
+Setup must work for another adopter, not just reproduce the author's machine.
+Prefer reviewed scripts with private installation parameters. Keep every manual
+GitHub/Azure action, prerequisite, exact scope, verification, pause condition and
+recovery step in README alongside its OpenSpec changes. Observed form defaults
+and URL prefill are not proof; a human must inspect the actual App permissions.
+Private-key enrollment is a sensitive manual checkpoint until its protected
+uploader and storage are verified. No shipped installer or completed onboarding
+is implied by these instructions. Provider registration is a separately scoped
+subscription operation, never an implicit side effect of an RG-only plan.
+
+Additive setup previews fail closed on missing/colliding compiler artifacts,
+binding drift and unexpected/duplicate/missing/non-create effects. Bicep template
+and parameter outputs use distinct explicit filenames. Compare ARM IDs
+case-insensitively without confusing preview Ignore/NoChange with actual
+post-deployment preservation. Approval identity binds the reviewed immutable
+revision/blob, not CRLF-dependent local bytes. Report actual validation and
+scanner outcomes, including unavailable tooling and any policy-permitted manual
+review exception, before the separate risk-acknowledged deployment checkpoint.
+Do not silently relax an enforced protection or present a missing scan as passed.
+
+Protected key enrollment is operator-local with a fresh matching synthetic
+proof, exact App/owner identity and permission checks and a pre-write local
+checkpoint. Read-only inspection resolves an interrupted attempt without
+repeating its write; fresh probes need distinct explicit authorization.
+Per-user ACLs do not protect from administrators/same-user processes, a
+disabled vault copy is not GitHub revocation, and local journals are not
+distributed locks. Shared CLI defaults remain unchanged; authoritative tenant
+checks bind the explicitly selected subscription identity.
+
 An approved bootstrap plan creates or reuses the GitHub App, Azure identities,
 Fabric grants, trusted workflows, and policy assignments. Bootstrap authority
 is not available to ordinary workers. Azure authentication does not imply
