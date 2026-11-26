@@ -224,6 +224,10 @@ class SkillProfilesIntegrationTests(unittest.TestCase):
         )
         self.assertTrue(fallback.used_last_known_good)
         self.assertEqual(fallback.snapshot.fallback_snapshot_digest, restored.digest)
+        self.assertEqual(
+            fallback.snapshot.fallback_refs,
+            tuple(selection.ref for selection in self.skill_profile.selections),
+        )
         self.assertNotEqual(fallback.snapshot.digest, restored.digest)
         self.assertEqual(self.initial.to_json().encode("utf-8"), sealed)
         self.assertEqual(restored.to_json().encode("utf-8"), sealed)
