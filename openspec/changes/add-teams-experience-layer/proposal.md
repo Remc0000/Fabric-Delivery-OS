@@ -61,3 +61,11 @@ implementation would depend on the private issue/request adapter, authenticated
 identity mapping, classified notification adapter, installation configuration,
 and existing trusted control gates. Teams credentials cannot be handed to the
 delivery runtime or used by agents to impersonate human approvers.
+
+The separately authorized continuation adds an
+[offline GitHub capture adapter](../build-offline-github-intake/proposal.md) and
+[more detailed Teams intake contracts](../specify-offline-teams-intake/proposal.md).
+The [Teams design](../specify-offline-teams-intake/design.md) and
+[observable scenarios](../specify-offline-teams-intake/specs/teams-intake-contract/spec.md)
+remain specification-only; they do not turn this proposal into connector,
+consent, feedback-delivery or execution authority.

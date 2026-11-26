@@ -39,7 +39,7 @@ repositories/visibility, sanitizing public framework content. Filing issues
 does not authorize new access, discovery, design, build or deployment. Agent
 requests await an authorized human's exact first substantive scope/revision;
 labels, assignment, mutable text and agent reviews are not approval. Later
-specification/build/stage gates still apply. The automatic issue adapter remains
+specification/build/stage gates still apply. The live automatic issue adapter remains
 unsupported until this boundary is enforced outside the model.
 
 The explicit 2026-11-26 selection permits specification, build and synthetic
@@ -48,6 +48,16 @@ proposed records and local policy/denial state, without authenticating metadata
 or humans, issuing grants, joining other ledgers, ingesting issues or activating
 workers. All policy/registry methods and files are privileged trusted-caller
 state, not agent tools. Live integrations and deployment retain separate gates.
+
+The subsequent explicit 2026-11-26 parallel continuation permits only a
+synthetic offline GitHub issue intake adapter and its tests, plus Teams intake
+specification work. Normalized issue captures and separately supplied discover
+manifests may become local proposed records, not authority to start discovery.
+Capture attribution is not authenticated human identity. No live issue fetching
+or creation, Teams connector/consent/subscription, model call, human scope
+verification, approval conversion or registry/grant/spend/outbox joining is
+authorized. Independent worker worktrees have disjoint owned files; local
+integration and worker commits do not constitute human review or acceptance.
 
 Keep implementation and related specifications consistent after approval.
 Make setup reusable across adopter-owned projects: use private installation

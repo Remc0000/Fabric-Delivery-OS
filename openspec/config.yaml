@@ -50,6 +50,11 @@ context: |
   state and permanent local drift/revocation denials. It authenticates no input
   or human, issues no grants and does not join other stores or ingest issues.
   Trusted live policy/input provenance and execution joining remain unimplemented.
+  The separately authorized parallel offline intake continuation normalizes
+  supplied private GitHub captures into proposed-only discover requests. It
+  authenticates no metadata or humans, grants no discovery authority, fetches
+  no issues and does not join ledgers. Teams intake contracts are a separate
+  specification-only extension, not an implemented or activated connector.
   The separate add-teams-experience-layer proposal is specification-only.
   Teams is an optional conversational intake/feedback/review-navigation layer;
   GitHub remains the governance backbone with private immutable requests/evidence.
