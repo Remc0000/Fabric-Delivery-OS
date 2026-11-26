@@ -11,6 +11,11 @@ humans decide what may be built, merged, and deployed.
 **There is no complete runnable platform or released installer.** Cloning this
 repository does not start agents, configure approvals, or provision resources.
 
+The [OpenSpec task checklist](openspec/changes/establish-fabric-delivery-os/tasks.md)
+separates completed bounded components from unfinished live integration and
+labels work still in review. Its raw checkbox percentage is not an end-to-end
+readiness score; only separately recorded human acceptance completes a release.
+
 | Area | Actual status |
 | --- | --- |
 | Framework in this revision | One usable Python package: immutable manifests, local single-use authorization, local spend reservations, a [transactional local outbox](docs/durable-dispatch.md), read-only native approval evidence, cryptographic GitHub OIDC verification, and an [offline operator entry point](docs/offline-operator.md). Human review and installation acceptance remain separate requirements. |

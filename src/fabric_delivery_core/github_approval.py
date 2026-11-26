@@ -97,7 +97,7 @@ class GitHubInstallationToken:
 
     def __post_init__(self) -> None:
         if not isinstance(self.value, str) or re.fullmatch(
-            r"ghs_[A-Za-z0-9_]+", self.value
+            r"ghs_[A-Za-z0-9_.-]+", self.value
         ) is None:
             raise ValueError("a GitHub App installation-token format is required")
         _timestamp(self.expires_at, "expires_at")

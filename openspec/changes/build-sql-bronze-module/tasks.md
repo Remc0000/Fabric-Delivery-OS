@@ -27,3 +27,10 @@
 - Built the wheel without dependency downloads and exercised its installed console outside the checkout: exact file hashes/Base64 payloads, schema validation, existing-directory refusal and live execution disabled.
 - Both OpenSpec changes passed strict noninteractive validation; changed-file whitespace checks passed.
 - No actual Fabric/source/Key Vault API, source records, deployment, load, model calls or live worker activation occurred. Synthetic/format checks do not prove platform runtime behavior or human approval.
+
+### Offline revalidation on 2026-11-26
+
+- Integrated human-merged main through `807e9a3` into the feature branch, preserving the #12 token-format fix and reconciled progress; resolved the duplicate 5.2.1 checklist entry without claiming module acceptance.
+- All 136 combined unittest cases passed, including the two token-format regressions from #12.
+- The real module CLI compiled the synthetic contract into three nbformat-v4-valid notebooks; exact file hashes/Base64, identical stage worker code, existing-directory refusal and live-disabled output were verified. Disposable synthetic artifacts were removed.
+- Strict OpenSpec validation passed for both changes. No live authentication, source access, load or deployment was performed; human PR review/merge and private activation remain pending.
