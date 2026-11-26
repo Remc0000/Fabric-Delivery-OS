@@ -28,6 +28,12 @@ context: |
   with fixed bounded create-only Bronze worker source. It reads no source records
   or credentials during compilation. Actual identity, Fabric deployment/load,
   business semantics and live acceptance are not proven by synthetic tests.
+  A subsequent explicitly authorized software continuation adds opt-in contract
+  version 2 for development-only SQL-to-Bronze compilation. Version 1 retains
+  three distinct targets and unchanged exported bytes. Dev-only releases have
+  no later-stage artifacts or promotion support. Private source-catalog discovery
+  and pilot planning confer no sensitive-column, identity, deployment or load
+  approval; no live worker or new environment is activated.
   Selected architecture: GitHub Free, a public framework repository, a separate
   public control repository per installation, and private solution repositories.
   Native human approval jobs run in the public control repository itself.

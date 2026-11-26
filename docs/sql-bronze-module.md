@@ -8,11 +8,13 @@ code and evidence. Chat history is not the specification store.
 
 ## What actually works
 
-`compile-sql-bronze` turns an explicit metadata-only contract into three
-stage-bound Fabric notebook payloads and a hashed release manifest, offline.
-The same fixed worker/configuration code is used for all stages; only the
+`compile-sql-bronze` turns an explicit metadata-only contract into stage-bound
+Fabric notebook payloads and a hashed release manifest, offline. Version 1
+freezes development, test and production; explicit version 2 is development-only.
+The same fixed worker/configuration code is used for all permitted stages; only the
 predeclared Lakehouse dependency metadata differs. All three are compiled once
-in the release, not regenerated during promotion.
+in a version-1 release, not regenerated during promotion. A version-2 release
+contains no later-stage mappings or artifacts and is not promotable.
 
 The worker implements one explicitly selected behavior:
 **bounded create-only source snapshots into new `bronze` Delta tables**.
@@ -25,7 +27,14 @@ Unknown choices are not inferred from a familiar sample schema.
 fabric-delivery compile-sql-bronze ".\examples\sql-bronze.synthetic.json" --output "D:\PrivateInstallation\synthetic-bronze-release"
 ```
 
-The example is intentionally synthetic and cannot locate a real source.
+For an offline Dev-only example, use the same command with a distinct new
+output directory:
+
+```powershell
+fabric-delivery compile-sql-bronze ".\examples\sql-bronze-dev-only.synthetic.json" --output "D:\PrivateInstallation\synthetic-dev-bronze-release"
+```
+
+Both examples are intentionally synthetic and cannot locate a real source.
 For actual configuration use a protected **private** file and existing private
 parent directory; never commit real contracts or generated artifacts to this
 public repository. The command accepts no credentials, contacts no API, reads
@@ -36,8 +45,12 @@ live execution unsupported. Exit 2 reports a generic failure without input
 values/paths. The output directory must not exist; existing files/directories
 are never overwritten. Mapped network drives and UNC paths are unsupported.
 
-Output contains `<stage>.notebook.ipynb`, `<stage>.create.json` for each of
-`development`, `test`, `production`, and final `release.json`. The manifest
+Version-1 output contains `<stage>.notebook.ipynb`, `<stage>.create.json` for
+each of `development`, `test`, `production`, and final `release.json`.
+Version 2 contains only `development.notebook.ipynb`,
+`development.create.json` and `release.json`. Its version-2 manifest marks
+`release_scope: "development_only"` and `promotion_supported: false`.
+The manifest
 hashes the exact exported bytes and identifies deployment versus load effects.
 The complete manifest is published exclusively through a local hard link after
 its staging file closes; the private filesystem must support hard links.
@@ -48,7 +61,9 @@ the module is not an immutable object store or artifact signature service.
 
 ## Exact input contract
 
-The version-1 JSON shape is demonstrated in the synthetic example. Duplicate,
+Both versions use the same exact JSON fields, demonstrated in the synthetic
+examples. Changing `schema_version` to 2 explicitly selects Dev-only semantics;
+missing targets never select that mode implicitly. Duplicate,
 missing/unknown fields and nonfinite numbers are rejected, including nested
 secret-value fields. CLI input is bounded to 1 MiB UTF-8.
 
@@ -60,19 +75,30 @@ secret-value fields. CLI input is bounded to 1 MiB UTF-8.
   **references**, never a secret value, token or user credential. No default
   credential chain, Azure CLI login, SQL authentication or human fallback exists.
 - `tables`: exact source schema/table, unique lowercase target table, ordered
-  explicit columns and positive finite `max_rows`. Columns specify approved
+  explicit columns and positive integer `max_rows` up to 1,000,000,000. Columns specify approved
   Spark type and nullability; complex types, ambiguous case-insensitive
   projections and reserved `_fdos_` names are rejected. This bounded Delta
   profile supports simple ASCII column names, not implicit column mapping.
-- `targets`: all three stage names, with distinct canonical workspace and
-  Lakehouse IDs and the exact existing Lakehouse name. Shared capacities are
-  allowed; capacity selection is not part of this compiler.
+- `targets`: version 1 requires all three stage names, with distinct canonical
+  workspace and Lakehouse IDs and the exact existing Lakehouse name. Version 2
+  requires exactly one `development` target; empty, mixed or later-stage
+  mappings are rejected. No placeholder Test/production IDs are needed or
+  invented. Shared capacities are allowed; capacity selection is not part of
+  this compiler.
 - `notebook_name`, mandatory `load_mode: "create_only_snapshot"`, positive
-  `query_timeout_seconds` (at most one day), integer `schema_version: 1`.
+  `query_timeout_seconds` (at most one day), explicit integer `schema_version`
+  of 1 (three stages) or 2 (development-only).
 
 The trusted deployment adapter must verify that each target exists, is
 schema-enabled, has the approved capacity/identity, and still matches its
 approved baseline. Supplying an ID in JSON does not verify any of those facts.
+Future trusted adapters must reject unsupported manifest versions and later
+stage requests for a Dev-only release. Three-stage delivery needs a separately
+reviewed version-1 contract with real approved mappings and a newly bound full
+release. Editing a manifest or reusing Dev payload bytes is not promotion
+authority. Version-1 contract digests and exported bytes remain unchanged for
+unchanged inputs/runtime; authority binds the complete release and scope, not
+the development payload hash alone.
 
 ## Fixed load behavior and limits
 

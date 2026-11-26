@@ -124,6 +124,7 @@ detailed installation evidence remain in the private solution.
 - [ ] 5.1 Implement inventory and impact contracts for new and existing solutions; verify unrelated existing items and detected drift are preserved or explicitly blocked.
 - [ ] 5.2 Implement only approved ingestion and Lakehouse medallion module behavior; verify repeat-run correctness and private reconciliation evidence.
   - [x] 5.2.1 Implement and synthetically test the offline SQL-to-Bronze compiler and bounded create-only snapshot worker in [framework #10](https://github.com/Remc0000/Fabric-Delivery-OS/pull/10), still awaiting human review/merge; no live deployment/load or broader medallion completion is claimed.
+  - [x] 5.2.2 Implement and verify [explicit Dev-only compiler support](../add-dev-only-sql-bronze/tasks.md), preserving version-1 bytes and independent live gates; human review/merge and private pilot acceptance remain separate.
 - [ ] 5.3 Implement approved semantic-model and report modules; verify actual API, format, identity, and measure/report acceptance support.
 - [ ] 5.4 Implement deterministic stage deployment with separate identities; verify exact artifact promotion and separate grants for each stage and data-changing operation.
 - [ ] 5.5 Implement partial-failure evidence and separately approved recovery; verify definition rollback is not misrepresented as data restoration.
