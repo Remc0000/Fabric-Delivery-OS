@@ -9,6 +9,9 @@ from .authorization import (
     sha256_digest,
 )
 from .dispatch import DispatchClaim, DispatchDenied, DispatchProfile, SQLiteDispatchStore
+from .github_intake import (
+    GitHubIntakeDenied, GitHubIntakeReceipt, GitHubIssueSnapshot, OfflineGitHubIntake,
+)
 from .request_registry import (
     IssueRevision, RegistryDenied, RegistryRequest, RegistrySnapshot,
     RequestPolicy, RequestRule, SQLiteRequestRegistry,
@@ -25,6 +28,10 @@ __all__ = [
     "DispatchDenied",
     "DispatchProfile",
     "SQLiteDispatchStore",
+    "GitHubIntakeDenied",
+    "GitHubIntakeReceipt",
+    "GitHubIssueSnapshot",
+    "OfflineGitHubIntake",
     "IssueRevision",
     "RegistryDenied",
     "RegistryRequest",

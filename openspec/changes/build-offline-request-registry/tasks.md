@@ -9,7 +9,7 @@
 - [x] 2.2 Implement fresh revalidation, durable permanent denials, private inspection and strict schema/content/missing-file checks without grants.
 - [x] 2.3 Verify focused synthetic denial, durability, competing-process and lock-time-expiry cases; preserve the full existing suite.
 - [x] 2.4 Synchronize public guides, broader partial-progress records and strict OpenSpec validation; prepare the exact implementation for human review.
-- [ ] 2.5 Obtain human review/merge of this bounded implementation, not inferred from tests or checklist completion.
+- [x] 2.5 Record human acceptance of the bounded implementation through [framework #16](https://github.com/Remc0000/Fabric-Delivery-OS/pull/16), merged on 2026-11-26 at `f987c67`; this does not authorize live activation or further builds.
 
 ## 3. Still outside this authorization
 

@@ -21,6 +21,7 @@ readiness score; only separately recorded human acceptance completes a release.
 | Framework in this revision | One usable Python package: immutable manifests, local single-use authorization, local spend reservations, a [transactional local outbox](docs/durable-dispatch.md), read-only native approval evidence, cryptographic GitHub OIDC verification, and an [offline operator entry point](docs/offline-operator.md). Human review and installation acceptance remain separate requirements. |
 | Authorization and identity boundary | Native/OIDC observations cannot become execution grants. Private request/input binding, actual App provenance, bypass policy, human credential provenance, and live installation proof are unresolved. The local authorization store accepts only externally verified bindings from a trusted adapter, not agent assertions. |
 | Offline request/policy admission | A [dedicated local registry](docs/offline-request-registry.md) binds immutable policies, private issue revisions and manifests, retaining proposed/revoked/invalidated state. It authenticates no inputs/humans and cannot issue grants; live adapter and cross-store integration remain missing. |
+| Offline issue intake continuation | The [bounded GitHub capture adapter](docs/offline-github-intake.md) normalizes explicitly supplied private snapshots into proposed discover requests. It does not fetch issues or authorize discovery. [Teams intake contracts](openspec/changes/specify-offline-teams-intake/proposal.md) remain specification-only; no Teams connector is supplied. |
 | Native GitHub gate proof | Separate public control smoke tests demonstrated human approval, human rejection, and refusal of a representative Actions-bot token. These are bounded gate tests, not production authorization or worker/cloud integration. |
 | Azure runtime and onboarding | Not wired by this package. No released installer, complete cloud preflight, active worker, model call, or verified live Fabric integration is supplied. |
 | First Fabric module | [SQL-to-Bronze compiler](docs/sql-bronze-module.md): explicit metadata to three stage-bound notebook payloads and a hashed release, with a fixed bounded create-only Spark worker. Compilation is usable offline; actual identity/deployment/load behavior is not live-verified. |
@@ -121,9 +122,10 @@ flowchart TD
   the exact first substantive scope and frozen revision. Bounded discovery
   approval is not build/deployment permission. Author identity, assignment,
   labels, validation, another agent's review or mutable issue text cannot
-  approve anything; changed scope requires renewed approval. The automated
-  issue adapter is not implemented and must remain disabled until this is
-  enforced outside the model.
+  approve anything; changed scope requires renewed approval. The live automated
+  issue adapter remains unsupported and disabled until this is enforced outside
+  the model. The separate offline capture adapter accepts only supplied private
+  snapshots and proposed requests; it is not that authenticated live boundary.
 - **Specification review/merge is not build permission.** A human decision must
   explicitly authorize the corresponding build request; acceptance or structural
   validation alone cannot start implementation.
