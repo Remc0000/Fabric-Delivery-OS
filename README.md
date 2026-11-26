@@ -411,6 +411,15 @@ Draft proposals live under `openspec/changes`. They remain unapproved until a
 human explicitly reviews the applicable revision. OpenSpec validation checks
 document structure; it does not prove security or authorize implementation.
 
+The separate [Teams experience proposal](openspec/changes/add-teams-experience-layer/proposal.md)
+adds optional conversational intake, private issue/PR feedback and navigation to
+human review. GitHub remains the governance backbone; Teams does not authorize
+execution. Standard GitHub app and Channel Agent/MCP support are verified
+separately. This is specification-only: no Teams integration is implemented or
+activated. See its [design and source verification](openspec/changes/add-teams-experience-layer/design.md),
+[behavior contract](openspec/changes/add-teams-experience-layer/specs/teams-experience/spec.md)
+and [separate review/build checklist](openspec/changes/add-teams-experience-layer/tasks.md).
+
 - [GitHub lifecycle and revision-linked feedback](openspec/changes/establish-fabric-delivery-os/specs/github-lifecycle/spec.md)
 - [Human authorization and single-use requests](openspec/changes/establish-fabric-delivery-os/specs/human-authorization/spec.md)
 - [Onboarding and workspace choices](openspec/changes/establish-fabric-delivery-os/specs/onboarding/spec.md)
