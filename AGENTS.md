@@ -42,6 +42,13 @@ labels, assignment, mutable text and agent reviews are not approval. Later
 specification/build/stage gates still apply. The automatic issue adapter remains
 unsupported until this boundary is enforced outside the model.
 
+The explicit 2026-11-26 selection permits specification, build and synthetic
+testing of an offline private request/policy registry only. It stores immutable
+proposed records and local policy/denial state, without authenticating metadata
+or humans, issuing grants, joining other ledgers, ingesting issues or activating
+workers. All policy/registry methods and files are privileged trusted-caller
+state, not agent tools. Live integrations and deployment retain separate gates.
+
 Keep implementation and related specifications consistent after approval.
 Make setup reusable across adopter-owned projects: use private installation
 parameters rather than embedding this installation's values. Prefer reviewed

@@ -20,6 +20,7 @@ readiness score; only separately recorded human acceptance completes a release.
 | --- | --- |
 | Framework in this revision | One usable Python package: immutable manifests, local single-use authorization, local spend reservations, a [transactional local outbox](docs/durable-dispatch.md), read-only native approval evidence, cryptographic GitHub OIDC verification, and an [offline operator entry point](docs/offline-operator.md). Human review and installation acceptance remain separate requirements. |
 | Authorization and identity boundary | Native/OIDC observations cannot become execution grants. Private request/input binding, actual App provenance, bypass policy, human credential provenance, and live installation proof are unresolved. The local authorization store accepts only externally verified bindings from a trusted adapter, not agent assertions. |
+| Offline request/policy admission | A [dedicated local registry](docs/offline-request-registry.md) binds immutable policies, private issue revisions and manifests, retaining proposed/revoked/invalidated state. It authenticates no inputs/humans and cannot issue grants; live adapter and cross-store integration remain missing. |
 | Native GitHub gate proof | Separate public control smoke tests demonstrated human approval, human rejection, and refusal of a representative Actions-bot token. These are bounded gate tests, not production authorization or worker/cloud integration. |
 | Azure runtime and onboarding | Not wired by this package. No released installer, complete cloud preflight, active worker, model call, or verified live Fabric integration is supplied. |
 | First Fabric module | [SQL-to-Bronze compiler](docs/sql-bronze-module.md): explicit metadata to three stage-bound notebook payloads and a hashed release, with a fixed bounded create-only Spark worker. Compilation is usable offline; actual identity/deployment/load behavior is not live-verified. |
@@ -385,6 +386,11 @@ fail-closed join of native human-review and signed OIDC observations. Neither
 observer currently issues grants; a signed GitHub token does not sign private
 workflow inputs. Actual installation federation still needs a separately
 authorized live-token proof.
+
+The separately authorized [offline request/policy registry](docs/offline-request-registry.md)
+now implements local immutable admission and permanent denial only. This is a
+partial storage foundation, not the authenticated live registry, policy
+administration or atomic registry/authorization/dispatch join above.
 
 The local outbox now commits grant consumption, maximum cost reservation and
 ready work together, with one worker claim and conservative crash/unknown
