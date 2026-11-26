@@ -31,6 +31,41 @@ _COLUMNS = {
     "profile_digest", "reservation_id", "execution_digest", "deadline", "state",
     "claim_id", "claimed_at", "finished_at", "result_digest", "reason",
 }
+_DISPATCH_DDL = """CREATE TABLE dispatches (
+                        request_id TEXT PRIMARY KEY, execution_id TEXT UNIQUE NOT NULL,
+                        manifest_digest TEXT NOT NULL, approval TEXT NOT NULL,
+                        profile TEXT NOT NULL, profile_digest TEXT NOT NULL,
+                        reservation_id TEXT UNIQUE NOT NULL,
+                        execution_digest TEXT UNIQUE NOT NULL, deadline INTEGER NOT NULL,
+                        state TEXT NOT NULL CHECK(state IN
+                            ('ready','claimed','succeeded','failed','breach',
+                             'blocked','cancelled','unknown')),
+                        claim_id TEXT UNIQUE, claimed_at INTEGER, finished_at INTEGER,
+                        result_digest TEXT, reason TEXT{registry_column}
+                    )"""
+
+
+def _dispatch_schema(*, registry_bound: bool = False) -> dict[str, str]:
+    return {"dispatches": _DISPATCH_DDL.format(
+        registry_column=", registry_digest TEXT NOT NULL" if registry_bound else "",
+    )}
+
+
+def _validate_schema(
+    db: sqlite3.Connection, schema: str, application: int, version: int,
+    expected: dict[str, str],
+) -> None:
+    """Validate fixed internal schemas, including constraints and explicit indexes."""
+    if (
+        db.execute(f"PRAGMA {schema}.application_id").fetchone()[0] != application
+        or db.execute(f"PRAGMA {schema}.user_version").fetchone()[0] != version
+        or {
+            row[0]: row[1] for row in db.execute(
+                f"SELECT name,sql FROM {schema}.sqlite_master WHERE sql IS NOT NULL"
+            )
+        } != expected
+    ):
+        raise DispatchDenied("unsupported_dispatch_database")
 
 
 @dataclass(frozen=True)
@@ -146,20 +181,7 @@ class SQLiteDispatchStore:
             version = db.execute("PRAGMA main.user_version").fetchone()[0]
             tables = db.execute("SELECT name FROM main.sqlite_master WHERE type='table'").fetchall()
             if initialize and app == version == 0 and not tables:
-                db.execute(
-                    """CREATE TABLE dispatches (
-                        request_id TEXT PRIMARY KEY, execution_id TEXT UNIQUE NOT NULL,
-                        manifest_digest TEXT NOT NULL, approval TEXT NOT NULL,
-                        profile TEXT NOT NULL, profile_digest TEXT NOT NULL,
-                        reservation_id TEXT UNIQUE NOT NULL,
-                        execution_digest TEXT UNIQUE NOT NULL, deadline INTEGER NOT NULL,
-                        state TEXT NOT NULL CHECK(state IN
-                            ('ready','claimed','succeeded','failed','breach',
-                             'blocked','cancelled','unknown')),
-                        claim_id TEXT UNIQUE, claimed_at INTEGER, finished_at INTEGER,
-                        result_digest TEXT, reason TEXT
-                    )"""
-                )
+                db.execute(_dispatch_schema()["dispatches"])
                 db.execute(f"PRAGMA main.application_id = {_APPLICATION_ID}")
                 db.execute("PRAGMA main.user_version = 1")
             self._schema(db, "main", _APPLICATION_ID, {"dispatches"})
@@ -204,42 +226,60 @@ class SQLiteDispatchStore:
         drift is instead permanently committed before its denial is raised.
         """
         with self._transaction() as db:
-            result = self.authorization._consume_in_transaction(db, current_manifest, approval)
-            if not isinstance(result, str):
-                if profile.digest != current_manifest.execution_profile_digest:
-                    raise DispatchDenied("profile_mismatch")
-                reservation_id = str(uuid4())
-                execution_digest = sha256_digest(_canonical(asdict(result)).encode("utf-8"))
-                reservation = self.spend._reserve_in_transaction(
-                    db, reservation_id=reservation_id,
-                    installation_id=current_manifest.installation_id,
-                    period=profile.period, currency=profile.currency,
-                    execution_digest=execution_digest, operation=profile.operation,
-                    price_version=profile.price_version, max_tokens=profile.max_tokens,
-                    max_calls=profile.max_calls,
-                )
-                if (
-                    reservation["budget_digest"] != profile.budget_digest
-                    or reservation["price_digest"] != profile.price_digest
-                ):
-                    raise DispatchDenied("spend_snapshot_mismatch")
-                deadline = min(
-                    current_manifest.expires_at, approval.expires_at,
-                    reservation["deadline"],
-                )
-                if not self._now() < deadline:
-                    raise DispatchDenied("dispatch_expired")
-                db.execute(
-                    """INSERT INTO dispatches
-                        (request_id,execution_id,manifest_digest,approval,profile,
-                         profile_digest,reservation_id,execution_digest,deadline,state)
-                        VALUES (?,?,?,?,?,?,?,?,?,'ready')""",
-                    (result.request_id, result.execution_id, result.manifest_digest,
-                     approval.to_json(), profile.to_json(), profile.digest,
-                     reservation_id, execution_digest, deadline),
-                )
+            result = self._enqueue_in_transaction(db, current_manifest, approval, profile)
         if isinstance(result, str):
             raise AuthorizationDenied(result)
+        return result
+
+    def _enqueue_in_transaction(
+        self, db: sqlite3.Connection, current_manifest: ExecutionManifest,
+        approval: ApprovalBinding, profile: DispatchProfile, *,
+        registry_digest: str | None = None, now: int | None = None,
+    ) -> ExecutionReceipt | str:
+        """Caller commits authorization denials; other failures roll back."""
+        result = self.authorization._consume_in_transaction(
+            db, current_manifest, approval, **({} if now is None else {"now": now}),
+        )
+        if isinstance(result, str):
+            return result
+        if profile.digest != current_manifest.execution_profile_digest:
+            raise DispatchDenied("profile_mismatch")
+        reservation_id = str(uuid4())
+        execution_digest = sha256_digest(_canonical(asdict(result)).encode("utf-8"))
+        reservation = self.spend._reserve_in_transaction(
+            db, reservation_id=reservation_id,
+            installation_id=current_manifest.installation_id,
+            period=profile.period, currency=profile.currency,
+            execution_digest=execution_digest, operation=profile.operation,
+            price_version=profile.price_version, max_tokens=profile.max_tokens,
+            max_calls=profile.max_calls,
+            **({} if now is None else {"now": now}),
+        )
+        if (
+            reservation["budget_digest"] != profile.budget_digest
+            or reservation["price_digest"] != profile.price_digest
+        ):
+            raise DispatchDenied("spend_snapshot_mismatch")
+        deadline = min(current_manifest.expires_at, approval.expires_at, reservation["deadline"])
+        if not (self._now() if now is None else now) < deadline:
+            raise DispatchDenied("dispatch_expired")
+        values = (
+            result.request_id, result.execution_id, result.manifest_digest,
+            approval.to_json(), profile.to_json(), profile.digest,
+            reservation_id, execution_digest, deadline,
+        )
+        extra_column = ",registry_digest" if registry_digest is not None else ""
+        extra_value = ",?" if registry_digest is not None else ""
+        if registry_digest is not None:
+            _digest(registry_digest, "registry_digest")
+            values += (registry_digest,)
+        db.execute(
+            "INSERT INTO dispatches "
+            "(request_id,execution_id,manifest_digest,approval,profile,"
+            "profile_digest,reservation_id,execution_digest,deadline" + extra_column + ",state) "
+            "VALUES (?,?,?,?,?,?,?,?,?" + extra_value + ",'ready')",
+            values,
+        )
         return result
 
     @staticmethod
@@ -258,63 +298,74 @@ class SQLiteDispatchStore:
         A crash after this commit is ambiguous, including before worker launch.
         Inspect/reconcile it; do not requeue, refund or launch from a receipt.
         """
-        denial = None
         with self._transaction() as db:
-            row = self._job(db, current_manifest.request_id)
-            if row["state"] != "ready":
-                raise DispatchDenied("dispatch_not_ready")
-            request = self.authorization._request(db, current_manifest.request_id)
-            reservation = db.execute(
-                "SELECT * FROM reservations WHERE id=?", (row["reservation_id"],)
-            ).fetchone()
-            now = self._now()
-            if (
-                request["state"] != "consumed"
-                or request["execution_id"] != row["execution_id"]
-                or request["digest"] != row["manifest_digest"]
-                or request["approval"] != row["approval"]
-                or row["manifest_digest"] != current_manifest.digest
-                or row["approval"] != approval.to_json()
-                or row["profile"] != profile.to_json()
-                or row["profile_digest"] != profile.digest
-                or profile.digest != current_manifest.execution_profile_digest
-            ):
-                denial = "dispatch_binding_changed"
-            elif now < request["consumed_at"] or now >= row["deadline"]:
-                denial = "dispatch_expired"
-            elif db.execute(
-                "SELECT 1 FROM freezes WHERE installation=?", (current_manifest.installation_id,)
-            ).fetchone():
-                denial = "installation_frozen"
-            elif (
-                reservation is None or reservation["state"] != "reserved"
-                or reservation["execution_digest"] != row["execution_digest"]
-                or reservation["installation"] != current_manifest.installation_id
-                or reservation["budget_digest"] != profile.budget_digest
-                or reservation["price_digest"] != profile.price_digest
-                or reservation["max_tokens"] != profile.max_tokens
-                or reservation["max_calls"] != profile.max_calls
-                or now >= reservation["deadline"]
-            ):
-                denial = "reservation_not_current"
-            if denial:
-                db.execute(
-                    "UPDATE dispatches SET state='blocked',reason=? WHERE request_id=?",
-                    (denial, current_manifest.request_id),
-                )
-            else:
-                claim = DispatchClaim(
-                    row["request_id"], row["execution_id"], str(uuid4()),
-                    row["manifest_digest"], row["profile_digest"],
-                    min(row["deadline"], now + profile.max_runtime_seconds),
-                )
-                db.execute(
-                    """UPDATE dispatches SET state='claimed',claim_id=?,claimed_at=?,
-                        deadline=? WHERE request_id=?""",
-                    (claim.claim_id, now, claim.deadline, claim.request_id),
-                )
+            result = self._claim_in_transaction(db, current_manifest, approval, profile)
+        if isinstance(result, str):
+            raise DispatchDenied(result)
+        return result
+
+    def _claim_in_transaction(
+        self, db: sqlite3.Connection, current_manifest: ExecutionManifest,
+        approval: ApprovalBinding, profile: DispatchProfile, *,
+        registry_digest: str | None = None, now: int | None = None,
+    ) -> DispatchClaim | str:
+        """Caller commits blocked denials before raising them."""
+        row = self._job(db, current_manifest.request_id)
+        if row["state"] != "ready":
+            raise DispatchDenied("dispatch_not_ready")
+        request = self.authorization._request(db, current_manifest.request_id)
+        reservation = db.execute(
+            "SELECT * FROM reservations WHERE id=?", (row["reservation_id"],)
+        ).fetchone()
+        now = self._now() if now is None else now
+        _timestamp(now, "clock result")
+        denial = None
+        if (
+            request["state"] != "consumed"
+            or request["execution_id"] != row["execution_id"]
+            or request["digest"] != row["manifest_digest"]
+            or request["approval"] != row["approval"]
+            or row["manifest_digest"] != current_manifest.digest
+            or row["approval"] != approval.to_json()
+            or row["profile"] != profile.to_json()
+            or row["profile_digest"] != profile.digest
+            or profile.digest != current_manifest.execution_profile_digest
+            or (registry_digest is not None and row["registry_digest"] != registry_digest)
+        ):
+            denial = "dispatch_binding_changed"
+        elif now < request["consumed_at"] or now >= row["deadline"]:
+            denial = "dispatch_expired"
+        elif db.execute(
+            "SELECT 1 FROM freezes WHERE installation=?", (current_manifest.installation_id,)
+        ).fetchone():
+            denial = "installation_frozen"
+        elif (
+            reservation is None or reservation["state"] != "reserved"
+            or reservation["execution_digest"] != row["execution_digest"]
+            or reservation["installation"] != current_manifest.installation_id
+            or reservation["budget_digest"] != profile.budget_digest
+            or reservation["price_digest"] != profile.price_digest
+            or reservation["max_tokens"] != profile.max_tokens
+            or reservation["max_calls"] != profile.max_calls
+            or now >= reservation["deadline"]
+        ):
+            denial = "reservation_not_current"
         if denial:
-            raise DispatchDenied(denial)
+            db.execute(
+                "UPDATE dispatches SET state='blocked',reason=? WHERE request_id=?",
+                (denial, current_manifest.request_id),
+            )
+            return denial
+        claim = DispatchClaim(
+            row["request_id"], row["execution_id"], str(uuid4()),
+            row["manifest_digest"], row["profile_digest"],
+            min(row["deadline"], now + profile.max_runtime_seconds),
+        )
+        db.execute(
+            """UPDATE dispatches SET state='claimed',claim_id=?,claimed_at=?,
+                deadline=? WHERE request_id=?""",
+            (claim.claim_id, now, claim.deadline, claim.request_id),
+        )
         return claim
 
     def cancel(self, request_id: str) -> None:

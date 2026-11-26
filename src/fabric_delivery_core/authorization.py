@@ -193,6 +193,23 @@ class AuthorizationDenied(Exception):
         super().__init__(reason)
 
 
+_SCHEMA = {
+    "requests": """CREATE TABLE requests (
+                        request_id TEXT PRIMARY KEY,
+                        manifest TEXT NOT NULL,
+                        digest TEXT NOT NULL,
+                        state TEXT NOT NULL CHECK (
+                            state IN ('pending','authorized','consumed','revoked','invalidated')
+                        ),
+                        approval TEXT,
+                        approval_key TEXT UNIQUE,
+                        execution_id TEXT UNIQUE,
+                        consumed_at INTEGER,
+                        denial_reason TEXT
+                    )""",
+}
+
+
 class SQLiteAuthorizationStore:
     """Durable local-file request/grant store for a trusted service.
 
@@ -232,21 +249,7 @@ class SQLiteAuthorizationStore:
             }:
                 raise ValueError("unsupported authorization database")
             if version == 0:
-                db.execute(
-                    """CREATE TABLE requests (
-                        request_id TEXT PRIMARY KEY,
-                        manifest TEXT NOT NULL,
-                        digest TEXT NOT NULL,
-                        state TEXT NOT NULL CHECK (
-                            state IN ('pending','authorized','consumed','revoked','invalidated')
-                        ),
-                        approval TEXT,
-                        approval_key TEXT UNIQUE,
-                        execution_id TEXT UNIQUE,
-                        consumed_at INTEGER,
-                        denial_reason TEXT
-                    )"""
-                )
+                db.execute(_SCHEMA["requests"])
                 db.execute("PRAGMA user_version = 1")
 
     @contextmanager
@@ -362,13 +365,15 @@ class SQLiteAuthorizationStore:
 
     def _consume_in_transaction(
         self, db: sqlite3.Connection,
-        current_manifest: ExecutionManifest, approval: ApprovalBinding,
+        current_manifest: ExecutionManifest, approval: ApprovalBinding, *,
+        now: int | None = None,
     ) -> ExecutionReceipt | str:
         """Caller owns the write transaction and must commit permanent denials."""
         row = self._request(db, current_manifest.request_id)
         self._require_state(row, "authorized")
         frozen = ExecutionManifest.from_json(row["manifest"])
-        now = self._now()
+        now = self._now() if now is None else now
+        _timestamp(now, "clock result")
         denial = None
         if now < frozen.created_at or now < approval.approved_at:
             denial = "not_yet_valid"

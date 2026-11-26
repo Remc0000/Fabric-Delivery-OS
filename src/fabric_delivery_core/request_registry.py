@@ -425,28 +425,39 @@ class SQLiteRequestRegistry:
         """Check fresh trusted observations, committing drift/expiry before denial."""
         if not isinstance(current, RegistryRequest):
             raise ValueError("a typed registry request is required")
-        request_id = current.manifest.request_id
         with self._transaction() as db:
-            snapshot = self._request(db, request_id)
-            self._require_proposed(snapshot)
-            frozen = snapshot.request
-            policy = self._current(db, frozen.manifest.installation_id, frozen.manifest.solution_id)
-            now = self._now()
-            denial = self._admission(frozen, policy, now)
-            if denial is None and frozen.digest != current.digest:
-                denial = (
-                    "registry_route_changed"
-                    if frozen.issue.repository_id != current.issue.repository_id
-                    or frozen.issue.repository_private != current.issue.repository_private
-                    else "registry_request_changed"
-                )
-            if denial:
-                db.execute(
-                    "UPDATE registry_requests SET state='invalidated',reason=? WHERE request_id=?",
-                    (denial, request_id),
-                )
+            result = self._revalidate_in_transaction(db, current)
+        if isinstance(result, str):
+            raise RegistryDenied(result)
+        return result
+
+    def _revalidate_in_transaction(
+        self, db: sqlite3.Connection, current: RegistryRequest, *, now: int | None = None,
+    ) -> RegistrySnapshot | str:
+        """Return durable denial to the owner; operational failures still raise."""
+        snapshot = self._request(db, current.manifest.request_id)
+        if snapshot.state != "proposed":
+            if snapshot.reason is None:
+                raise RegistryDenied("registry_request_corrupt")
+            return snapshot.reason
+        frozen = snapshot.request
+        policy = self._current(db, frozen.manifest.installation_id, frozen.manifest.solution_id)
+        now = self._now() if now is None else now
+        _timestamp(now, "clock result")
+        denial = self._admission(frozen, policy, now)
+        if denial is None and frozen.digest != current.digest:
+            denial = (
+                "registry_route_changed"
+                if frozen.issue.repository_id != current.issue.repository_id
+                or frozen.issue.repository_private != current.issue.repository_private
+                else "registry_request_changed"
+            )
         if denial:
-            raise RegistryDenied(denial)
+            db.execute(
+                "UPDATE registry_requests SET state='invalidated',reason=? WHERE request_id=?",
+                (denial, current.manifest.request_id),
+            )
+            return denial
         return snapshot
 
     def revoke(self, request_id: str) -> None:
