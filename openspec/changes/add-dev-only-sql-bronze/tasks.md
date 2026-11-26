@@ -13,7 +13,7 @@
 
 - [x] 3.1 Verify denial, CLI, export failure and exact version-1 compatibility cases.
 - [x] 3.2 Run regressions, installed-wheel checks and strict OpenSpec/document checks.
-- [ ] 3.3 Publish the sanitized implementation PR for independent human review.
+- [x] 3.3 Publish the sanitized [implementation PR #22](https://github.com/Remc0000/Fabric-Delivery-OS/pull/22) for independent human review.
 - [ ] 3.4 Obtain human implementation review and merge.
 
 ## 4. Deferred private pilot gates
