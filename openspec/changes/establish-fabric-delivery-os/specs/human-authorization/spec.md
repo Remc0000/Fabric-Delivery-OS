@@ -116,6 +116,11 @@ before enabling execution. Agents MUST NOT administer these protections.
 - **THEN** read-only observations do not become an execution grant
 - **AND** no caller-provided boolean clears that unsupported boundary
 
+#### Scenario: An App installation credential uses GitHub's stateless format
+- **WHEN** a trusted credential provider supplies a `ghs_` installation token containing JWT/base64url characters
+- **THEN** the GET-only client forwards the opaque credential unchanged without assuming a fixed length or a legacy alphanumeric-only suffix
+- **AND** personal/OAuth/user-token prefixes, malformed header input and expired credentials remain rejected; token syntax alone proves neither App provenance nor execution authority
+
 #### Scenario: A valid GitHub signature has the wrong installation context
 - **WHEN** a signed token has the wrong configured audience/subject, immutable repository/owner ID, workflow revision, ref, run/attempt, or environment context
 - **THEN** workload identity verification is denied rather than accepting a generic GitHub-signed JWT
