@@ -85,6 +85,11 @@ context: |
   Chat/card actions cannot grant execution or replace native human gates.
   No Teams setup, subscription, consent, new agent runtime or live build/deployment
   is authorized by this proposal; exact Channel Agent issue-write support is unknown.
+  A separately authorized owner-local Dev bootstrap created and read back one
+  new capacity-assigned workspace and one schema-enabled Lakehouse on a
+  human-selected existing active trial/region. Private mappings/receipt stay
+  out of public Git. SQL query readiness, source/runtime/identity behavior,
+  notebook deployment/load and later stages remain distinct unproven gates.
 rules:
   proposal:
     - Clearly distinguish agreed scope, proposed design, and deferred ideas.
