@@ -24,7 +24,7 @@ LIVE_BLOCKERS = (
     "spend_headroom_pricing_provenance_and_adapter_limits_unverified",
     "live_dispatch_and_recovery_unverified",
     "isolated_agent_and_stage_deployment_workers_unimplemented",
-    "fabric_delivery_modules_and_acceptance_unimplemented",
+    "live_fabric_delivery_and_acceptance_unverified",
 )
 
 
