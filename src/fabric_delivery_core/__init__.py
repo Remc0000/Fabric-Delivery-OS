@@ -9,6 +9,10 @@ from .authorization import (
     sha256_digest,
 )
 from .dispatch import DispatchClaim, DispatchDenied, DispatchProfile, SQLiteDispatchStore
+from .request_registry import (
+    IssueRevision, RegistryDenied, RegistryRequest, RegistrySnapshot,
+    RequestPolicy, RequestRule, SQLiteRequestRegistry,
+)
 
 __all__ = [
     "ApprovalBinding",
@@ -21,4 +25,11 @@ __all__ = [
     "DispatchDenied",
     "DispatchProfile",
     "SQLiteDispatchStore",
+    "IssueRevision",
+    "RegistryDenied",
+    "RegistryRequest",
+    "RegistrySnapshot",
+    "RequestPolicy",
+    "RequestRule",
+    "SQLiteRequestRegistry",
 ]

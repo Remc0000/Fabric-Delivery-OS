@@ -85,6 +85,7 @@ detailed installation evidence remain in the private solution.
   - [ ] 2.4.1 Enforce allowed issue repository/visibility and sanitized agent proposals without new observation/source authority; newly agent-filed requests remain proposed/awaiting approval.
   - [ ] 2.4.2 Freeze an authorized human's exact initial scope/revision/effects before discovery/design; deny labels, author identity, assignments, mutable text, validation and agent reviews as approval.
   - [ ] 2.4.3 Test proposal-without-execution, discovery-only approval without build/deploy, self-approved labels denied, changed-scope invalidation and later independent lifecycle gates before enabling ingestion.
+  - [x] 2.4.4 Implement and synthetically verify only the separately authorized offline private request/policy admission registry; retain proposed state and permanent denial without claiming authenticated issue ingestion or execution joining. The exact implementation still awaits human review/merge; see [the bounded checklist](../build-offline-request-registry/tasks.md).
 - [ ] 2.5 Integrate version-bound requests and atomic single-use consumption with private production request storage and safe worker scheduling; local core completion alone does not complete this dispatcher integration.
   - [x] 2.5.1 Implement and test immutable binding and durable local atomic consumption in the bounded core (section 0).
   - [x] 2.5.3 Implement the bounded local atomic grant/reservation/outbox, one worker claim and conservative unknown-state protocol without claiming cloud dispatch.

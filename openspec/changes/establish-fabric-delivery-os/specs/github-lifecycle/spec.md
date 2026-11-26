@@ -38,6 +38,11 @@ mutable issue text alone MUST NOT be interpreted as approval.
 - **THEN** the trusted boundary still denies substantive work without the authorized human decision
 - **AND** mutable issue status cannot create an execution grant
 
+#### Scenario: A trusted caller admits a proposal into the offline registry
+- **WHEN** immutable local policy, private issue revision and manifest checks pass
+- **THEN** the record remains proposed and no execution grant or new source access follows
+- **AND** local storage does not prove authenticated issue ingestion, current private inputs or a human decision
+
 #### Scenario: A private observation motivates a public proposal
 - **WHEN** an agent has permission to file a reusable framework improvement
 - **THEN** it includes only sanitized public information in the permitted repository

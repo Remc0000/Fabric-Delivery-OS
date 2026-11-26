@@ -24,6 +24,12 @@ The authorized 2026-11-18 local dispatch continuation adds an atomic
 grant/reservation/ready transaction and one non-reclaimable worker claim.
 It authenticates no caller and supplies no live worker or evidence-to-grant join.
 
+The separately authorized 2026-11-26 offline request/policy registry adds only
+immutable proposed admission records, local policy replacement/revocation and
+permanent input-drift denials. It authenticates no issue metadata, policy source
+or human, records no ApprovalBinding and does not join authorization/dispatch.
+The live issue adapter and all independent human gates remain unresolved.
+
 ## ADDED Requirements
 
 ### Requirement: Human roles are configurable from the first version
