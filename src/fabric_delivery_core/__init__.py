@@ -17,6 +17,11 @@ from .request_registry import (
     RequestPolicy, RequestRule, SQLiteRequestRegistry,
 )
 from .registry_dispatch import SQLiteRegistryDispatchStore
+from .skill_profiles import (
+    OfflineSkillResolver, RoleSkillPolicy, RoleSkillProfile, SkillArtifact,
+    SkillCatalog, SkillDenied, SkillQuarantine, SkillRef, SkillResolution,
+    SkillSelection, SkillSnapshot, SkillSource,
+)
 
 __all__ = [
     "ApprovalBinding",
@@ -41,4 +46,16 @@ __all__ = [
     "RequestRule",
     "SQLiteRequestRegistry",
     "SQLiteRegistryDispatchStore",
+    "OfflineSkillResolver",
+    "RoleSkillPolicy",
+    "RoleSkillProfile",
+    "SkillArtifact",
+    "SkillCatalog",
+    "SkillDenied",
+    "SkillQuarantine",
+    "SkillRef",
+    "SkillResolution",
+    "SkillSelection",
+    "SkillSnapshot",
+    "SkillSource",
 ]

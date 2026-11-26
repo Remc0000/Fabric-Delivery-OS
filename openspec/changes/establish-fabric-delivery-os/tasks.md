@@ -93,9 +93,9 @@ detailed installation evidence remain in the private solution.
   - [x] 2.5.1 Implement and test immutable binding and durable local atomic consumption in the bounded core (section 0).
   - [x] 2.5.3 Implement the bounded local atomic grant/reservation/outbox, one worker claim and conservative unknown-state protocol without claiming cloud dispatch.
   - [ ] 2.5.2 Verify authenticated adapter inputs, authoritative policy/target freshness, cloud durability, and consumption/scheduling failure handling before enabling dispatch.
-  - [ ] 2.5.4 Complete the separately authorized offline registry/grant/spend/outbox transaction and claim-time revalidation, synthetic race/crash proof and human review. See [the bounded coordinator checklist](../build-offline-registry-dispatch/tasks.md); this does not complete the live dispatcher.
+  - [x] 2.5.4 Complete the separately authorized offline registry/grant/spend/outbox transaction and claim-time revalidation, synthetic race/crash proof and human review through [framework #18](https://github.com/Remc0000/Fabric-Delivery-OS/pull/18). See [the bounded coordinator checklist](../build-offline-registry-dispatch/tasks.md); this does not complete the live dispatcher.
     - [x] 2.5.4.1 Implement four-file atomic preparation/claim checks with a separate version-2 outbox; verify 37 coordinator/fault cases, all 216 regressions and the actual installed wheel without clearing live blockers.
-    - [ ] 2.5.4.2 Obtain human review/merge of the exact offline coordinator implementation; publication is not acceptance.
+    - [x] 2.5.4.2 Record human merge of the exact offline coordinator implementation at `f8e50fe6a24f7a6f4716040e0ec1ec931b7c1d08`; no live activation is inferred.
 - [ ] 2.6 Configure approved public control federation and policy verification; verify tokens from solution repos, other refs, and wrong environments cannot launch workers.
   - [ ] 2.6.1 Authenticate actual App installation identities/effective scopes and bind private inputs, native review, OIDC, bypass policy and runtime identity in an authoritative live adapter.
     - [x] 2.6.1.1 Complete the pilot's owner-local native installation/full-selected-scope observations and confirm temporary metadata-token revocation, with safe receipts checked against the unchanged reviewed plan; live broker and authoritative authorization joining remain incomplete.
@@ -112,8 +112,11 @@ detailed installation evidence remain in the private solution.
 ## 4. Skills and configuration
 
 - [ ] 4.1 Verify supported skill formats and approved upstream sources; verify a Fabric profile loads the required expertise without installing irrelevant app tools.
+  - [x] 4.1.1 Implement separately authorized supplied-data role policy/profile selection and local source/format/interface checks; actual upstream authentication, expertise and loading remain unfinished. See [the offline skill checklist](../build-offline-role-skills/tasks.md); human implementation review is pending.
 - [ ] 4.2 Implement automatic compatible skill refresh and immutable task snapshots; verify an update cannot change an approved run.
+  - [x] 4.2.1 Implement pure supplied-catalog resolution, exact pins and immutable digest-bound snapshots; automatic acquisition and actual runtime snapshots remain unfinished.
 - [ ] 4.3 Implement visible quarantine and last-known-good selection; verify new package feeds, sources, tools, or rights require the applicable separate approval.
+  - [x] 4.3.1 Implement closed local quarantine and explicit profile/policy-bound per-reference LKG; no source/rights approval or persistent manager is inferred.
 - [ ] 4.4 Implement reviewed framework/control version upgrades independently of skill refresh; verify rollback information and policy invalidation are recorded.
 
 ## 5. Fabric delivery modules
