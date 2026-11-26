@@ -79,6 +79,94 @@ class CompilerTests(unittest.TestCase):
         changed = replace(self.contract, query_timeout_seconds=61)
         self.assertNotEqual(compile_sql_bronze(changed)[0].digest, first[0].digest)
 
+    def test_legacy_example_contract_artifacts_and_release_remain_byte_compatible(self):
+        legacy = replace(
+            self.contract, notebook_name="Synthetic SQL Bronze",
+            targets=tuple(
+                BronzeTarget(
+                    stage, digit * 8 + "-" + digit * 4 + "-4" + digit * 3
+                    + "-8" + digit * 3 + "-" + digit * 12,
+                    lakehouse * 8 + "-" + lakehouse * 4 + "-4" + lakehouse * 3
+                    + "-8" + lakehouse * 3 + "-" + lakehouse * 12,
+                    "synthetic_lakehouse",
+                )
+                for stage, digit, lakehouse in (
+                    ("development", "3", "4"), ("test", "5", "6"), ("production", "7", "8")
+                )
+            ),
+        )
+        self.assertEqual(
+            legacy.digest, "sha256:057a52c8929a38f4e9b504a9b390f0ec2c2aad3073dfcbd26449a633580864ee"
+        )
+        self.assertEqual(
+            tuple(artifact.digest for artifact in compile_sql_bronze(legacy)),
+            (
+                "sha256:cf6fbf6c6d607f2b93ebb7ca2c18d4acce41892143d6e690a9af0d514a9dcf3b",
+                "sha256:68843171d9b985ce915c93f2f5feead4b37c665a38bcde997c4cf6f37c2a2713",
+                "sha256:03e1358374abf974c5fa0f314614618572bb7523005349e3e93a530d482f05cf",
+            ),
+        )
+        destination = self.directory / "legacy"
+        write_sql_bronze_release(legacy, destination)
+        self.assertEqual(
+            sha256_digest((destination / "release.json").read_bytes()),
+            "sha256:2265a0e9b8e2906be76d22d27381209b1c478014c07aad30beb68531c613a2c7",
+        )
+
+    def test_explicit_dev_only_roundtrips_and_uses_identical_development_worker_bytes(self):
+        development = replace(
+            self.contract, schema_version=2, targets=self.contract.targets[:1]
+        )
+        rebuilt = SqlBronzeContract.from_json(json.dumps(asdict(development)))
+        self.assertEqual(rebuilt, development)
+        artifacts = compile_sql_bronze(rebuilt)
+        self.assertEqual(len(artifacts), 1)
+        self.assertEqual(artifacts, compile_sql_bronze(rebuilt))
+        self.assertEqual(artifacts[0], compile_sql_bronze(self.contract)[0])
+        self.assertNotEqual(rebuilt.digest, self.contract.digest)
+
+    def test_contract_versions_do_not_infer_or_expand_development_scope(self):
+        for targets in (
+            (), self.contract.targets[1:2], self.contract.targets[2:],
+            self.contract.targets[:2], self.contract.targets,
+            self.contract.targets[:1] * 2,
+        ):
+            with self.subTest(targets=targets), self.assertRaisesRegex(
+                ValueError, "^development_target_required$"
+            ):
+                replace(self.contract, schema_version=2, targets=targets)
+        with self.assertRaisesRegex(ValueError, "^three_distinct_stage_targets_required$"):
+            replace(self.contract, targets=self.contract.targets[:1])
+        for version in (0, 3, True, 2.0, "2", None):
+            value = asdict(self.contract)
+            value.update(schema_version=version, targets=value["targets"][:1])
+            with self.subTest(version=version), self.assertRaisesRegex(
+                ValueError, "^unsupported_contract_version$"
+            ):
+                SqlBronzeContract.from_json(json.dumps(value))
+
+    def test_dev_only_keeps_identity_row_and_query_bounds_fail_closed(self):
+        development = replace(self.contract, schema_version=2, targets=self.contract.targets[:1])
+        invalid = []
+        for ceiling in (0, -1, 1_000_000_001, 1_000_000_000_000_000_000, True):
+            value = asdict(development)
+            value["tables"][0]["max_rows"] = ceiling
+            invalid.append(value)
+        for timeout in (0, 86401, True):
+            value = asdict(development)
+            value["query_timeout_seconds"] = timeout
+            invalid.append(value)
+        for key, value in (
+            ("authentication", "azure_cli"),
+            ("client_secret", "NEVER_ACCEPT_SECRET_VALUES"),
+        ):
+            data = asdict(development)
+            data["identity"][key] = value
+            invalid.append(data)
+        for value in invalid:
+            with self.subTest(value=value), self.assertRaises((ValueError, TypeError)):
+                SqlBronzeContract.from_json(json.dumps(value))
+
     def test_unknown_duplicate_missing_secret_and_unsupported_configuration_denied(self):
         value = json.dumps(asdict(self.contract))
         invalid = (
@@ -166,6 +254,36 @@ class CompilerTests(unittest.TestCase):
         self.assertEqual(code, 2)
         self.assertNotIn(str(destination), output.getvalue())
 
+    def test_dev_only_cli_exports_one_scoped_hashed_release_without_activation(self):
+        development = replace(self.contract, schema_version=2, targets=self.contract.targets[:1])
+        source = self.directory / "private-dev-contract.json"
+        source.write_text(json.dumps(asdict(development)), encoding="utf-8")
+        destination = self.directory / "development"
+        output = StringIO()
+        with patch("socket.socket.connect", side_effect=AssertionError("network forbidden")):
+            with redirect_stdout(output):
+                code = main(["compile-sql-bronze", str(source), "--output", str(destination)])
+        self.assertEqual(code, 0)
+        self.assertNotIn("synthetic", output.getvalue().lower())
+        self.assertNotIn(str(destination), output.getvalue())
+        record = json.loads((destination / "release.json").read_text())
+        self.assertEqual(record["schema_version"], 2)
+        self.assertEqual(record["release_scope"], "development_only")
+        self.assertIs(record["promotion_supported"], False)
+        self.assertIs(record["execution_enabled"], False)
+        self.assertEqual(record["contract_digest"], development.digest)
+        self.assertEqual(
+            set(path.name for path in destination.iterdir()),
+            {"development.notebook.ipynb", "development.create.json", "release.json"},
+        )
+        self.assertEqual([stage["stage"] for stage in record["stages"]], ["development"])
+        for item in record["stages"][0]["files"]:
+            self.assertEqual(sha256_digest((destination / item["path"]).read_bytes()), item["digest"])
+        before = (destination / "release.json").read_bytes()
+        with self.assertRaises(FileExistsError):
+            write_sql_bronze_release(development, destination)
+        self.assertEqual(before, (destination / "release.json").read_bytes())
+
     def test_partial_manifest_or_failed_publication_never_marks_release_complete(self):
         original = Path.open
 
@@ -176,16 +294,19 @@ class CompilerTests(unittest.TestCase):
                 raise OSError("synthetic interrupted manifest")
             return original(path, *args, **kwargs)
 
-        for failure in ("manifest", "publication"):
-            destination = self.directory / failure
-            context = (
-                patch.object(Path, "open", partial_manifest) if failure == "manifest"
-                else patch("fabric_delivery_core.sql_bronze.os.link", side_effect=OSError("publication failed"))
-            )
-            with self.subTest(failure=failure), context, self.assertRaises(OSError):
-                write_sql_bronze_release(self.contract, destination)
-            self.assertTrue((destination / ".release.pending.json").exists())
-            self.assertFalse((destination / "release.json").exists())
+        development = replace(self.contract, schema_version=2, targets=self.contract.targets[:1])
+        for selected in (self.contract, development):
+            for failure in ("manifest", "publication"):
+                destination = self.directory / (str(selected.schema_version) + failure)
+                context = (
+                    patch.object(Path, "open", partial_manifest) if failure == "manifest"
+                    else patch("fabric_delivery_core.sql_bronze.os.link", side_effect=OSError("publication failed"))
+                )
+                with self.subTest(version=selected.schema_version, failure=failure):
+                    with context, self.assertRaises(OSError):
+                        write_sql_bronze_release(selected, destination)
+                    self.assertTrue((destination / ".release.pending.json").exists())
+                    self.assertFalse((destination / "release.json").exists())
 
 
 class WorkerTests(unittest.TestCase):

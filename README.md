@@ -27,7 +27,7 @@ readiness score; only separately recorded human acceptance completes a release.
 | Complete offline rehearsal | [`demo-delivery`](docs/offline-delivery-demo.md) exercises synthetic issue/skills/proposal/test-grant/one-claim/result plus durable drift refusal in fresh temporary stores. It is not live agent implementation, authenticated human approval or Fabric deployment. |
 | Native GitHub gate proof | Separate public control smoke tests demonstrated human approval, human rejection, and refusal of a representative Actions-bot token. These are bounded gate tests, not production authorization or worker/cloud integration. |
 | Azure runtime and onboarding | Not wired by this package. No released installer, complete cloud preflight, active worker, model call, or verified live Fabric integration is supplied. |
-| First Fabric module | [SQL-to-Bronze compiler](docs/sql-bronze-module.md): explicit metadata to three stage-bound notebook payloads and a hashed release, with a fixed bounded create-only Spark worker. Compilation is usable offline; actual identity/deployment/load behavior is not live-verified. |
+| First Fabric module | [SQL-to-Bronze compiler](docs/sql-bronze-module.md): explicit metadata to three frozen stages (version 1) or an explicitly scoped Dev-only release (version 2), with a fixed bounded create-only Spark worker. Compilation is usable offline; actual identity/deployment/load behavior is not live-verified. |
 
 The [bot-refusal proof run](https://github.com/Remc0000/Fabric-Delivery-OS-Control/actions/runs/44172361707)
 used workflow revision `3c8ab11dfb2660dd451d701e11458527c67bc868`.

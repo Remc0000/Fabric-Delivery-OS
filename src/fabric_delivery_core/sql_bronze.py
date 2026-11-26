@@ -18,6 +18,7 @@ from .preflight import _invalid_constant, _unique
 _NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]{0,127}\Z")
 _TARGET = re.compile(r"[a-z][a-z0-9_]{0,127}\Z")
 _STAGES = ("development", "test", "production")
+_CONTRACT_STAGES = {1: _STAGES, 2: ("development",)}
 
 
 def _uuid(value: object) -> None:
@@ -154,7 +155,7 @@ class SqlBronzeContract:
     schema_version: int = 1
 
     def __post_init__(self) -> None:
-        if type(self.schema_version) is not int or self.schema_version != 1:
+        if type(self.schema_version) is not int or self.schema_version not in _CONTRACT_STAGES:
             raise ValueError("unsupported_contract_version")
         if not isinstance(self.source, BronzeSource) or not isinstance(self.identity, BronzeIdentity):
             raise ValueError("invalid_source_identity")
@@ -166,14 +167,18 @@ class SqlBronzeContract:
                     for table in self.tables}) != len(self.tables)
         ):
             raise ValueError("ambiguous_table_mapping")
+        stages = _CONTRACT_STAGES[self.schema_version]
         if (
-            not isinstance(self.targets, tuple) or len(self.targets) != 3
+            not isinstance(self.targets, tuple) or len(self.targets) != len(stages)
             or not all(isinstance(target, BronzeTarget) for target in self.targets)
-            or {target.stage for target in self.targets} != set(_STAGES)
-            or len({target.workspace_id for target in self.targets}) != 3
-            or len({target.lakehouse_id for target in self.targets}) != 3
+            or {target.stage for target in self.targets} != set(stages)
+            or len({target.workspace_id for target in self.targets}) != len(stages)
+            or len({target.lakehouse_id for target in self.targets}) != len(stages)
         ):
-            raise ValueError("three_distinct_stage_targets_required")
+            raise ValueError(
+                "development_target_required" if self.schema_version == 2
+                else "three_distinct_stage_targets_required"
+            )
         if not isinstance(self.notebook_name, str) or re.fullmatch(
             r"[A-Za-z][A-Za-z0-9 _-]{0,127}", self.notebook_name
         ) is None:
@@ -243,7 +248,7 @@ def compile_sql_bronze(contract: SqlBronzeContract) -> tuple[BronzeArtifact, ...
         for name, source, metadata in sources
     ]
     artifacts = []
-    for stage in _STAGES:
+    for stage in _CONTRACT_STAGES[contract.schema_version]:
         target = next(item for item in contract.targets if item.stage == stage)
         notebook = _canonical({
             "nbformat": 4, "nbformat_minor": 5, "cells": cells,
@@ -296,13 +301,16 @@ def write_sql_bronze_release(contract: SqlBronzeContract, output: str | Path) ->
         for name, value in files:
             with (output / name).open("xb") as stream:
                 stream.write(value.encode("utf-8"))
-    release = _canonical({
-        "schema_version": 1, "module": "sql_bronze_create_only",
+    release_data = {
+        "schema_version": contract.schema_version, "module": "sql_bronze_create_only",
         "contract_digest": contract.digest, "execution_enabled": False,
         "required_deployment_effects": ["deploy_definitions"],
         "required_load_effects": ["read_source", "create_schema", "create_table", "load_data"],
         "stages": entries,
-    })
+    }
+    if contract.schema_version == 2:
+        release_data.update(release_scope="development_only", promotion_supported=False)
+    release = _canonical(release_data)
     pending = output / ".release.pending.json"
     with pending.open("xb") as stream:
         stream.write(release.encode("utf-8"))
